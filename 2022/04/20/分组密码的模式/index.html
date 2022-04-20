@@ -24,12 +24,12 @@ document.addEventListener("pjax:success", initScrollReveal);
   }
   var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(bp, s);
-})();</script><!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M9KWR9L');</script><!-- End Google Tag Manager --><meta name="description" content="[TOC] 分组密码的模式分组密码与流密码​	密码算法可以分为分组密码和流密码两种。​	分组密码（block cipher）是每次只能处理特定长度的一块数据的一类密码算法，这里的“一块”就称为分组（block)。此外，一个分组的比特数就称为分组长度（block length)。​	例如，DES 和三重 DES 的分组长度都是64比特。这些密码算法一次只能加密 64 比特的明文，并生成64比特的密文">
+})();</script><!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M9KWR9L');</script><!-- End Google Tag Manager --><meta name="description" content="[TOC] 分组密码的模式分组密码与流密码密码算法可以分为分组密码和流密码两种。 分组密码（block cipher）是每次只能处理特定长度的一块数据的一类密码算法，这里的“一块”就称为分组（block)。此外，一个分组的比特数就称为分组长度（block length)。 例如，DES 和三重 DES 的分组长度都是64比特。这些密码算法一次只能加密 64 比特的明文，并生成64比特的密文。AES">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分组密码的模式">
 <meta property="og:url" content="http://example.com/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="lbw的小窝">
-<meta property="og:description" content="[TOC] 分组密码的模式分组密码与流密码​	密码算法可以分为分组密码和流密码两种。​	分组密码（block cipher）是每次只能处理特定长度的一块数据的一类密码算法，这里的“一块”就称为分组（block)。此外，一个分组的比特数就称为分组长度（block length)。​	例如，DES 和三重 DES 的分组长度都是64比特。这些密码算法一次只能加密 64 比特的明文，并生成64比特的密文">
+<meta property="og:description" content="[TOC] 分组密码的模式分组密码与流密码密码算法可以分为分组密码和流密码两种。 分组密码（block cipher）是每次只能处理特定长度的一块数据的一类密码算法，这里的“一块”就称为分组（block)。此外，一个分组的比特数就称为分组长度（block length)。 例如，DES 和三重 DES 的分组长度都是64比特。这些密码算法一次只能加密 64 比特的明文，并生成64比特的密文。AES">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420150609136.png">
 <meta property="og:image" content="http://example.com/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420151016833.png">
@@ -46,7 +46,7 @@ document.addEventListener("pjax:success", initScrollReveal);
 <meta property="og:image" content="http://example.com/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420162635732.png">
 <meta property="og:image" content="http://example.com/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420164132143.png">
 <meta property="article:published_time" content="2022-04-20T07:00:00.000Z">
-<meta property="article:modified_time" content="2022-04-20T09:02:21.061Z">
+<meta property="article:modified_time" content="2022-04-20T09:09:35.128Z">
 <meta property="article:author" content="xdlbw">
 <meta property="article:tag" content="ECB、CBC、CFB、OFB、CTR">
 <meta name="twitter:card" content="summary">
@@ -56,9 +56,13 @@ document.addEventListener("pjax:success", initScrollReveal);
   if (setting === 'dark' || (prefersDark && setting !== 'light'))
     document.documentElement.classList.toggle('dark', true)
 })()</script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="xdlbw"><img width="96" loading="lazy" src="/yun.png" alt="xdlbw"><span class="site-author-status" title="永远相信美好的事情即将发生">😊</span></a><div class="site-author-name"><a href="/about/">xdlbw</a></div><span class="site-name">lbw的小窝</span><sub class="site-subtitle">Will is power.</sub><div class="site-desciption">好看的皮囊千篇一律，有趣的灵魂万里挑一</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">1</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">1</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">1</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://blog.csdn.net/lbwnbnbnbnbnbnbn?spm=1000.2115.3001.5343" title="csdn"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-clipboard-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://qm.qq.com/cgi-bin/qm/qr?k=kZJzggTTCf4SpvEQ8lXWoi5ZjhAx0ILZ&amp;jump_from=webapi" title="我的qq：1439040668" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/xdlbw" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/xi-dian-lu-ben-wei" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/697094775?spm_id_from=333.1007.0.0" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.link" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-train-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://cn.bing.com/search?q=%E5%8D%A2%E6%9C%AC%E4%BC%9F&amp;qs=n&amp;form=QBRE&amp;sp=-1&amp;pq=lu%27ben%27wei&amp;sc=8-10&amp;sk=&amp;cvid=C9786016A76A4968BD433107A7B5DC9D" title="大帅哥" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">分组密码的模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E4%B8%8E%E6%B5%81%E5%AF%86%E7%A0%81"><span class="toc-number">1.1.</span> <span class="toc-text">分组密码与流密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">什么是模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%8E%E6%96%87%E5%88%86%E7%BB%84%E4%B8%8E%E5%AF%86%E6%96%87%E5%88%86%E7%BB%84"><span class="toc-number">1.3.</span> <span class="toc-text">明文分组与密文分组</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ECB%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">ECB模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFECB%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text">什么是ECB模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ECB%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">ECB模式的特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9ECB%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%94%BB%E5%87%BB"><span class="toc-number">2.3.</span> <span class="toc-text">对ECB模式的攻击</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CBC%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.</span> <span class="toc-text">CBC模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCBC%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.1.</span> <span class="toc-text">什么是CBC模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%90%91%E9%87%8F"><span class="toc-number">3.2.</span> <span class="toc-text">初始化向量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CBC%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-number">3.3.</span> <span class="toc-text">CBC模式的特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9CBC%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%94%BB%E5%87%BB"><span class="toc-number">3.4.</span> <span class="toc-text">对CBC模式的攻击</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CFB%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">CFB模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCFB%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.1.</span> <span class="toc-text">什么是CFB模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%90%91%E9%87%8F-1"><span class="toc-number">4.2.</span> <span class="toc-text">初始化向量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CFB%E6%A8%A1%E5%BC%8F%E4%B8%8E%E6%B5%81%E5%AF%86%E7%A0%81"><span class="toc-number">4.3.</span> <span class="toc-text">CFB模式与流密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9CFB%E6%A8%A1%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%AF%86"><span class="toc-number">4.4.</span> <span class="toc-text">对CFB模式的解密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9CFB%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%94%BB%E5%87%BB"><span class="toc-number">4.5.</span> <span class="toc-text">对CFB模式的攻击</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OFB%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">OFB模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFOFB%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.1.</span> <span class="toc-text">什么是OFB模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%90%91%E9%87%8F-2"><span class="toc-number">5.2.</span> <span class="toc-text">初始化向量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CFB%E6%A8%A1%E5%BC%8F%E4%B8%8EOFB%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">5.3.</span> <span class="toc-text">CFB模式与OFB模式的对比</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CTR%E6%A8%A1%E5%BC%8F"><span class="toc-number">6.</span> <span class="toc-text">CTR模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCTR%E6%A8%A1%E5%BC%8F"><span class="toc-number">6.1.</span> <span class="toc-text">什么是CTR模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E6%95%B0%E5%99%A8%E7%9A%84%E7%94%9F%E6%88%90%E6%96%B9%E6%B3%95"><span class="toc-number">6.2.</span> <span class="toc-text">计数器的生成方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OFB%E6%A8%A1%E5%BC%8F%E4%B8%8ECTR%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">6.3.</span> <span class="toc-text">OFB模式与CTR模式的对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CTR%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-number">6.4.</span> <span class="toc-text">CTR模式的特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E6%80%A7%E4%B8%8E%E6%9C%BA%E5%AF%86%E6%80%A7"><span class="toc-number">6.5.</span> <span class="toc-text">错误性与机密性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BA%94%E8%AF%A5%E4%BD%BF%E7%94%A8%E9%82%A3%E7%A7%8D%E6%A8%A1%E5%BC%8F-%EF%BC%9F"><span class="toc-number">7.</span> <span class="toc-text">应该使用那种模式 ？</span></a></li></ol></div></div></div><div class="tag-cloud"><div class="tag-cloud-tags"><a href="/tags/ECB%E3%80%81CBC%E3%80%81CFB%E3%80%81OFB%E3%80%81CTR/" style="font-size: 12px; color: #999">ECB、CBC、CFB、OFB、CTR</a></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="http://example.com/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="xdlbw"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="lbw的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">分组密码的模式<a class="post-edit-link" href="https://github.com/YunYouJun/yunyoujun.github.io/tree/hexo/source/_posts/分组密码的模式.md" target="_blank" title="Edit this post" rel="noopener"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-edit-line"></use></svg></a></h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2022-04-20 15:00:00" itemprop="dateCreated datePublished" datetime="2022-04-20T15:00:00+08:00">2022-04-20</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="Views"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">密码学</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/ECB%E3%80%81CBC%E3%80%81CFB%E3%80%81OFB%E3%80%81CTR/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">ECB、CBC、CFB、OFB、CTR</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><p>[TOC]</p>
-<h1 id="分组密码的模式"><a href="#分组密码的模式" class="headerlink" title="分组密码的模式"></a>分组密码的模式</h1><h2 id="分组密码与流密码"><a href="#分组密码与流密码" class="headerlink" title="分组密码与流密码"></a>分组密码与流密码</h2><p>​	密码算法可以分为分组密码和流密码两种。<br>​	<strong>分组密码</strong>（block cipher）是每次只能处理特定长度的一块数据的一类密码算法，这里的“一块”就称为<strong>分组</strong>（block)。此外，一个分组的比特数就称为<strong>分组长度</strong>（block length)。<br>​	例如，DES 和三重 DES 的分组长度都是64比特。这些密码算法一次只能加密 64 比特的明文，并生成64比特的密文。AES 的分组长度可以从128 比特、192比特和256比特中进行选择。当选择 128 比特的分组长度时，AES一次可加密 128 比特的明文，并生成 128 比特的密文。<br>​	<strong>流密码</strong>（streamcipher）是对数据流进行连续处理的一类密码算法。流密码中一般以1比特、8比特或32比特等为单位进行加密和解密。<br>​	分组密码处理完一个分组就结束了，因此不需要通过内部状态来记录加密的进度；相对地，流密码是对一串数据流进行连续处理，因此需要保持内部状态。</p>
-<h2 id="什么是模式"><a href="#什么是模式" class="headerlink" title="什么是模式"></a>什么是模式</h2><p>​	分组密码算法只能加密周定长度的分组，但是我们需要加密的明文长度可能会超过分组密码的分组长度，这时就需要对分组密码算法进行迭代，以便将一段很长的明文全部加密。而迭代的方法就称为分组密码的模式 （mode）。说人话就是<strong>对分组密码加密的方式</strong>。在学习之前，我觉得大部分都会认为：如果明文很长的话，将明文分割成若干个分组再逐个加密不就好了吗？因为我自己就是这么认为的QAQ。事实上可没有那么简单。将明文分割成多个分组并逐个加密的方法称为 ECB模式，这种模式具有很大的弱点（后续介绍）。如果在编写加密软件使用 ECB 模式，会在不经意间产生安全漏洞，所以千万不能使用 ECB模式。</p>
-<p>​	模式有很多种类，分组密码的主要模式有以下5种：</p>
+<h1 id="分组密码的模式"><a href="#分组密码的模式" class="headerlink" title="分组密码的模式"></a>分组密码的模式</h1><h2 id="分组密码与流密码"><a href="#分组密码与流密码" class="headerlink" title="分组密码与流密码"></a>分组密码与流密码</h2><p>密码算法可以分为分组密码和流密码两种。</p>
+<p><strong>分组密码</strong>（block cipher）是每次只能处理特定长度的一块数据的一类密码算法，这里的“一块”就称为<strong>分组</strong>（block)。此外，一个分组的比特数就称为<strong>分组长度</strong>（block length)。</p>
+<p>例如，DES 和三重 DES 的分组长度都是64比特。这些密码算法一次只能加密 64 比特的明文，并生成64比特的密文。AES 的分组长度可以从128 比特、192比特和256比特中进行选择。当选择 128 比特的分组长度时，AES一次可加密 128 比特的明文，并生成 128 比特的密文。</p>
+<p><strong>流密码</strong>（streamcipher）是对数据流进行连续处理的一类密码算法。流密码中一般以1比特、8比特或32比特等为单位进行加密和解密。</p>
+<p>分组密码处理完一个分组就结束了，因此不需要通过内部状态来记录加密的进度；相对地，流密码是对一串数据流进行连续处理，因此需要保持内部状态。</p>
+<h2 id="什么是模式"><a href="#什么是模式" class="headerlink" title="什么是模式"></a>什么是模式</h2><p>分组密码算法只能加密周定长度的分组，但是我们需要加密的明文长度可能会超过分组密码的分组长度，这时就需要对分组密码算法进行迭代，以便将一段很长的明文全部加密。而迭代的方法就称为分组密码的模式 （mode）。说人话就是<strong>对分组密码加密的方式</strong>。在学习之前，我觉得大部分都会认为：如果明文很长的话，将明文分割成若干个分组再逐个加密不就好了吗？因为我自己就是这么认为的QAQ。事实上可没有那么简单。将明文分割成多个分组并逐个加密的方法称为 ECB模式，这种模式具有很大的弱点（后续介绍）。如果在编写加密软件使用 ECB 模式，会在不经意间产生安全漏洞，所以千万不能使用 ECB模式。</p>
+<p>模式有很多种类，分组密码的主要模式有以下5种：</p>
 <blockquote>
 <p>ECB模式：Electronic CodeBook mode（电子密码本模式）</p>
 <p>CBC模式：Cipher Block Chaining mode（密码分组链接模式）</p>
@@ -66,31 +70,31 @@ document.addEventListener("pjax:success", initScrollReveal);
 <p>OFB模式：Output FeedBack mode（输出反馈模式）</p>
 <p>CTR模式：CounTeR mode（计数器模式）</p>
 </blockquote>
-<h2 id="明文分组与密文分组"><a href="#明文分组与密文分组" class="headerlink" title="明文分组与密文分组"></a>明文分组与密文分组</h2><p>​	在了解各个模式之前，先来熟悉一下待会要接触的两个概念。</p>
-<p>​	<strong>明文分组</strong>是指分组密码算法中作为加密对象的明文。明文分组的长度与分组密码算法的分组长度是相等的。</p>
-<p>​	<strong>密文分组</strong>是指使用分组密码算法将明文分组加密之后所生成的密文。</p>
-<p>​	图示为：</p>
+<h2 id="明文分组与密文分组"><a href="#明文分组与密文分组" class="headerlink" title="明文分组与密文分组"></a>明文分组与密文分组</h2><p>在了解各个模式之前，先来熟悉一下待会要接触的两个概念。</p>
+<p><strong>明文分组</strong>是指分组密码算法中作为加密对象的明文。明文分组的长度与分组密码算法的分组长度是相等的。</p>
+<p><strong>密文分组</strong>是指使用分组密码算法将明文分组加密之后所生成的密文。</p>
+<p>图示为：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420150609136.png" alt="image-20220420150609136" loading="lazy"></p>
-<h1 id="ECB模式"><a href="#ECB模式" class="headerlink" title="ECB模式"></a>ECB模式</h1><p>​	将明文分组直接加密的方式就是ECB模式，这种模式是最简单的，也是最逊的，弱点很多，所以根本不用。</p>
-<h2 id="什么是ECB模式"><a href="#什么是ECB模式" class="headerlink" title="什么是ECB模式"></a>什么是ECB模式</h2><p>​	ECB模式的全称是Electronic CodeBook 模式。<strong>在ECB模式中，将明文分组加密之后的结果将直接成为密文分组</strong>。</p>
-<p>​	图示为（这边解密箭头有点问题，应该是密文-&gt;解密-&gt;明文，凑活看）：</p>
+<h1 id="ECB模式"><a href="#ECB模式" class="headerlink" title="ECB模式"></a>ECB模式</h1><p>将明文分组直接加密的方式就是ECB模式，这种模式是最简单的，也是最逊的，弱点很多，所以根本不用。</p>
+<h2 id="什么是ECB模式"><a href="#什么是ECB模式" class="headerlink" title="什么是ECB模式"></a>什么是ECB模式</h2><p>ECB模式的全称是Electronic CodeBook 模式。<strong>在ECB模式中，将明文分组加密之后的结果将直接成为密文分组</strong>。</p>
+<p>图示为（这边解密箭头有点问题，应该是密文-&gt;解密-&gt;明文，凑活看）：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420151016833.png" alt="image-20220420151016833" loading="lazy"></p>
-<p>​	使用 ECB 模式加密时，相同的明文分组会被转换为相同的密文分组。可以将其理解为是一个巨大的“明文分组-&gt;密文分组”的对应表，因此 ECB 模式也称为<strong>电子密码本模式</strong>。当最后一个明文分组的内容小于分组长度时，需要用一些特定的数据进行<strong>填充</strong> (padding )。</p>
-<h2 id="ECB模式的特点"><a href="#ECB模式的特点" class="headerlink" title="ECB模式的特点"></a>ECB模式的特点</h2><p>​	ECB 模式是所有模式中最简单的一种。ECB 模式中，明文分组与密文分组是一一对应的关系，因此，如果明文中存在多个相同的明文分组，则这此明文分组最终都将被转换为相同的密文分组。这样一来，只要观察一下密文，就可以知道明文中存在怎样的重复组合，并可以以此为线索来破译密码，因此 ECB 模式是存在一定风险的。</p>
-<h2 id="对ECB模式的攻击"><a href="#对ECB模式的攻击" class="headerlink" title="对ECB模式的攻击"></a>对ECB模式的攻击</h2><p>​	ECB 模式中，每个明文分组都各自独立地进行加密和解密，但这其实是一个很大的弱点。假如存在主动攻击者，他能够改变密文分组的顺序。当接收者对密文进行解密时，由于密文分组的顺序被改变了，因此相应的明文分组的顺序也会被改变。也就是说，<strong>攻击者无需破译密码就能够操纵明文</strong>。在这个场景中，攻击者不需要破译密码，也不需要知道分组密码算法，他只要知道哪个分组记录了什么样的数据（即电文的格式）就可以了。</p>
-<p>​	看个简单的例子。假设分组长度为 128 比特（16字节），某银行的转账请求数据由以下了个分组构成：</p>
+<p>使用 ECB 模式加密时，相同的明文分组会被转换为相同的密文分组。可以将其理解为是一个巨大的“明文分组-&gt;密文分组”的对应表，因此 ECB 模式也称为<strong>电子密码本模式</strong>。当最后一个明文分组的内容小于分组长度时，需要用一些特定的数据进行<strong>填充</strong> (padding )。</p>
+<h2 id="ECB模式的特点"><a href="#ECB模式的特点" class="headerlink" title="ECB模式的特点"></a>ECB模式的特点</h2><p>ECB 模式是所有模式中最简单的一种。ECB 模式中，明文分组与密文分组是一一对应的关系，因此，如果明文中存在多个相同的明文分组，则这此明文分组最终都将被转换为相同的密文分组。这样一来，只要观察一下密文，就可以知道明文中存在怎样的重复组合，并可以以此为线索来破译密码，因此 ECB 模式是存在一定风险的。</p>
+<h2 id="对ECB模式的攻击"><a href="#对ECB模式的攻击" class="headerlink" title="对ECB模式的攻击"></a>对ECB模式的攻击</h2><p>ECB 模式中，每个明文分组都各自独立地进行加密和解密，但这其实是一个很大的弱点。假如存在主动攻击者，他能够改变密文分组的顺序。当接收者对密文进行解密时，由于密文分组的顺序被改变了，因此相应的明文分组的顺序也会被改变。也就是说，<strong>攻击者无需破译密码就能够操纵明文</strong>。在这个场景中，攻击者不需要破译密码，也不需要知道分组密码算法，他只要知道哪个分组记录了什么样的数据（即电文的格式）就可以了。</p>
+<p>看个简单的例子。假设分组长度为 128 比特（16字节），某银行的转账请求数据由以下了个分组构成：</p>
 <blockquote>
 <p>分组1&#x3D;付款人的银行账号<br>分组2&#x3D;收款人的银行账号<br>分组了&#x3D;转账金额</p>
 </blockquote>
-<p>​	银行在收到转账请求数据后，就会将数据中指定的金额从付款人的账户转移到收款人的账户中。现假设一个“从 A-5374 账户向 B-6671账户转账1亿元”的转账请求数据，用16进制数据表示如下：</p>
+<p>银行在收到转账请求数据后，就会将数据中指定的金额从付款人的账户转移到收款人的账户中。现假设一个“从 A-5374 账户向 B-6671账户转账1亿元”的转账请求数据，用16进制数据表示如下：</p>
 <blockquote>
 <p>明文分组1&#x3D; 41 2D 35 33 37 34 20 20 20 20 20 20 20 20 20 20（付款人：A-5374)<br>明文分组2&#x3D; 42 2D 36 35 37 31 20 20 20 20 20 20 20 20 20 20（收款人：B-6671）<br>明文分组3&#x3D; 31 30 30 30 30 30 30 30 30 20 20 20 20 20 20 20（转账金额：100000000）</p>
 </blockquote>
-<p>​	下面我们将上述数据用 ECB 模式进行加密，从加密后的数据是看不出明文分组的内容的。</p>
+<p>下面我们将上述数据用 ECB 模式进行加密，从加密后的数据是看不出明文分组的内容的。</p>
 <blockquote>
 <p>密文分组1&#x3D; 59 7D DE CC EF EC BA 9B BF 83 99 CF 60 D2 59 B9（付款人：? ? ? ?）<br>密文分组2&#x3D; DF 49 2A 1C 14 8E 18 B6 53 1F 38 BD 5A A9 D7 D7（收款人：? ? ? ?)<br>密文分组3&#x3D; CD AF D5 9E 39 FE FD 5D 64 8B CC CB 52 56 8D 79（转账金额：? ? ? ?）</p>
 </blockquote>
-<p>​	接下来，攻击者将密文分组1和2的内容进行对调：</p>
+<p>接下来，攻击者将密文分组1和2的内容进行对调：</p>
 <blockquote>
 <p>密文分组1&#x3D; DF 49 2A 1C 14 8E 18 B6 53 1F 38 BD 5A A9 D7 D7（收款人：? ? ? ?)<br>密文分组2&#x3D; 59 7D DE CC EF EC BA 9B BF 83 99 CF 60 D2 59 B9（付款人：? ? ? ?）<br>密文分组3&#x3D; CD AF D5 9E 39 FE FD 5D 64 8B CC CB 52 56 8D 79（转账金额：? ? ? ?）</p>
 </blockquote>
@@ -99,57 +103,61 @@ document.addEventListener("pjax:success", initScrollReveal);
 <p>明文分组1&#x3D; 42 2D 36 35 37 31 20 20 20 20 20 20 20 20 20 20（付款人：B-6671）<br>明文分组2&#x3D; 41 2D 35 33 37 34 20 20 20 20 20 20 20 20 20 20（收款人：A-5374)<br>明文分组3&#x3D; 31 30 30 30 30 30 30 30 30 20 20 20 20 20 20 20（转账金额：100000000）</p>
 </blockquote>
 <p>原本请求的内容是从 A-5374 账户向 B-6671 账户转账1亿元，现在却变成了从 B-5671 账户向 A-5374 账户转账1亿元，完全相反！通过这个例子可以看出，BCB模式的一大弱点就是可以在不破译密文的情况下操纵明文。在ECB 模式中，只要对任意密文分组进行替换，相应的明文分组也会被替换。此外，攻击者所能做的还不仅限于替换，例如，如果将密文分组删除，则相应的明文分组也会被删除；如果对密文分组进行复制，则相应的明文分组也会被复制。</p>
-<h1 id="CBC模式"><a href="#CBC模式" class="headerlink" title="CBC模式"></a>CBC模式</h1><p>​	CBC模式是将前一个密文分组与当前明文分组的内容混合起来进行加密的，这样就可以避免ECB模式的弱点。</p>
-<h2 id="什么是CBC模式"><a href="#什么是CBC模式" class="headerlink" title="什么是CBC模式"></a>什么是CBC模式</h2><p>​	CBC模式的全称是Cipher Block Chaining模式，因为它的密文分组像链条一样相互连接在一起，所以就叫这名儿。</p>
-<p>​	在CBC模式中，<strong>首先将明文分组与前一个密文分组进行XOR运算（异或），然后再进行加密</strong>。</p>
-<p>​	图示为（这边解密箭头有点问题，应该是密文-&gt;解密-&gt;XOR-&gt;明文，凑活看）：</p>
+<h1 id="CBC模式"><a href="#CBC模式" class="headerlink" title="CBC模式"></a>CBC模式</h1><p>CBC模式是将前一个密文分组与当前明文分组的内容混合起来进行加密的，这样就可以避免ECB模式的弱点。</p>
+<h2 id="什么是CBC模式"><a href="#什么是CBC模式" class="headerlink" title="什么是CBC模式"></a>什么是CBC模式</h2><p>CBC模式的全称是Cipher Block Chaining模式，因为它的密文分组像链条一样相互连接在一起，所以就叫这名儿。</p>
+<p>在CBC模式中，<strong>首先将明文分组与前一个密文分组进行XOR运算（异或），然后再进行加密</strong>。</p>
+<p>图示为（这边解密箭头有点问题，应该是密文-&gt;解密-&gt;XOR-&gt;明文，凑活看）：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420154157570.png" alt="image-20220420154157570" loading="lazy"></p>
-<p>​	如果将一个分组的加密过程分离出来，就可以容易比较出ECB模式和CBC模式的区别。ECB模式只进行了加密，而CBC模式则在加密之前进行了一次XOR。</p>
-<p>​	图示为：</p>
+<p>如果将一个分组的加密过程分离出来，就可以容易比较出ECB模式和CBC模式的区别。ECB模式只进行了加密，而CBC模式则在加密之前进行了一次XOR。</p>
+<p>图示为：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420154817529.png" alt="image-20220420154817529" loading="lazy"></p>
-<h2 id="初始化向量"><a href="#初始化向量" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>​	当加密第一个明文分组时，由于不存在”前一个密文分组“，所以需要事先准备一个长度为一个分组的二进制序列来代替，这个序列称为<strong>初始化向量</strong>（initialization vector），通常缩写为 IV。一般来说，每次加密时都会随机产生一个不同的二进制序列来作为初始化向量。</p>
-<h2 id="CBC模式的特点"><a href="#CBC模式的特点" class="headerlink" title="CBC模式的特点"></a>CBC模式的特点</h2><p>​	明文分组在加密之前一定会与”前一个密文分组“进行XOR运算，因此即便明文分组1和2的值是相等的，密文分组1和2的值也不一定是相等的。这样一来，ECB模式的缺陷在 CBC模式中就不存在了。<br>​	详细看一看 CBC 模式的加密过程。在CBC模式中，我们无法单独对一个中间的明文分组进行加密。例如，如果要生成密文分组 3，则至少需要凑齐明文分组 1、2、3才行。再来看看CBC模式的解密过程。现在假设CBC 模式加密的密文分组中有一个分组损坏了（例如由于硬盘故障导致密文分组的值发生了改变等）。在这种情况下，只要密文分组的长度没有发生变化，则解密时最多只会有2个分组受到数据损坏的影响。</p>
-<p>​	图示为：<img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420155329177.png" alt="image-20220420155329177" loading="lazy"></p>
-<p>​	假设CBC 模式的密文分组中有一些比特缺失了（例如由于通信错误导致没有收到某些比特等等），那么此时即便只缺失了1比特，也会导致密文分组的长度发生变化，此后的分组发生错位，这样一来，缺失比特的位置之后的密文分组也就全部无法解密了。</p>
-<p>​	图示为：</p>
+<h2 id="初始化向量"><a href="#初始化向量" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>当加密第一个明文分组时，由于不存在”前一个密文分组“，所以需要事先准备一个长度为一个分组的二进制序列来代替，这个序列称为<strong>初始化向量</strong>（initialization vector），通常缩写为 IV。一般来说，每次加密时都会随机产生一个不同的二进制序列来作为初始化向量。</p>
+<h2 id="CBC模式的特点"><a href="#CBC模式的特点" class="headerlink" title="CBC模式的特点"></a>CBC模式的特点</h2><p>明文分组在加密之前一定会与”前一个密文分组“进行XOR运算，因此即便明文分组1和2的值是相等的，密文分组1和2的值也不一定是相等的。这样一来，ECB模式的缺陷在 CBC模式中就不存在了。</p>
+<p>详细看一看 CBC 模式的加密过程。在CBC模式中，我们无法单独对一个中间的明文分组进行加密。例如，如果要生成密文分组 3，则至少需要凑齐明文分组 1、2、3才行。再来看看CBC模式的解密过程。现在假设CBC 模式加密的密文分组中有一个分组损坏了（例如由于硬盘故障导致密文分组的值发生了改变等）。在这种情况下，只要密文分组的长度没有发生变化，则解密时最多只会有2个分组受到数据损坏的影响。</p>
+<p>图示为：<img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420155329177.png" alt="image-20220420155329177" loading="lazy"></p>
+<p>假设CBC 模式的密文分组中有一些比特缺失了（例如由于通信错误导致没有收到某些比特等等），那么此时即便只缺失了1比特，也会导致密文分组的长度发生变化，此后的分组发生错位，这样一来，缺失比特的位置之后的密文分组也就全部无法解密了。</p>
+<p>图示为：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420155518425.png" alt="image-20220420155518425" loading="lazy"></p>
-<h2 id="对CBC模式的攻击"><a href="#对CBC模式的攻击" class="headerlink" title="对CBC模式的攻击"></a>对CBC模式的攻击</h2><p>​	假设主动攻击者的目的是通过修改密文来操纵解密后的明文。如果攻击者能够对初始化向量中的任意比特进行反转（即将1变为0，将0变为1），则明文分组（解密后得到的明文分组）中相应的比特也会被反转。这是因为在CBC 模式的解密过程中，第一个明文分组会和初始化向量进行XOR运算。</p>
-<p>​	图示为：</p>
+<h2 id="对CBC模式的攻击"><a href="#对CBC模式的攻击" class="headerlink" title="对CBC模式的攻击"></a>对CBC模式的攻击</h2><p>假设主动攻击者的目的是通过修改密文来操纵解密后的明文。如果攻击者能够对初始化向量中的任意比特进行反转（即将1变为0，将0变为1），则明文分组（解密后得到的明文分组）中相应的比特也会被反转。这是因为在CBC 模式的解密过程中，第一个明文分组会和初始化向量进行XOR运算。</p>
+<p>图示为：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420155622664.png" alt="image-20220420155622664" loading="lazy"></p>
-<p>​	这样，攻击者就可以对初始化向量进行攻击，但是想要对密文分组也进行同样的攻击就非常困难。例如，攻击者将密文分组1中的某个比特进行了反转，则明文分组2中相应的比特也会被反转，然而这1比特的变化却会对解密后的密文分组1中的多个比特造成影响。说人话就是，攻击者只想让明文分组1产生所期望的特定变化是很蓝的啦。</p>
-<h1 id="CFB模式"><a href="#CFB模式" class="headerlink" title="CFB模式"></a>CFB模式</h1><h2 id="什么是CFB模式"><a href="#什么是CFB模式" class="headerlink" title="什么是CFB模式"></a>什么是CFB模式</h2><p>​	CFB模式的全称是Cipher FeedBack模式。在CFB模式中，<strong>前一个密文分组会被送回到密码算法的输入端</strong>。所谓反馈（feedback），这里指的就是返回输入端的意思。</p>
-<p>​	图示为（这边箭头没错了捏）：</p>
+<p>这样，攻击者就可以对初始化向量进行攻击，但是想要对密文分组也进行同样的攻击就非常困难。例如，攻击者将密文分组1中的某个比特进行了反转，则明文分组2中相应的比特也会被反转，然而这1比特的变化却会对解密后的密文分组1中的多个比特造成影响。说人话就是，攻击者只想让明文分组1产生所期望的特定变化是很蓝的啦。</p>
+<h1 id="CFB模式"><a href="#CFB模式" class="headerlink" title="CFB模式"></a>CFB模式</h1><h2 id="什么是CFB模式"><a href="#什么是CFB模式" class="headerlink" title="什么是CFB模式"></a>什么是CFB模式</h2><p>CFB模式的全称是Cipher FeedBack模式。在CFB模式中，<strong>前一个密文分组会被送回到密码算法的输入端</strong>。所谓反馈（feedback），这里指的就是返回输入端的意思。</p>
+<p>图示为（这边箭头没错了捏）：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420160236648.png" alt="image-20220420160236648" loading="lazy"></p>
-<p>​	在ECB模式和CBC模式中，明文分组都是通过密码算法进行加密的。然而，在CFB模式中，明文分组并没有通过密码算法来直接进行加密。从图示可以看出明文分组和密文分组之间并没有经过“加密”这一步骤。在CFB 模式中，明文分组和密文分组之间只有一个XOR。</p>
-<p>​	将 CBC 模式与 CFB 模式对比一下，就可以看出其中的差异了。在CBC模式中，明文分组和密文分组之间有XOR和密码算法两个步骤，而在CFB 模式中，明文分组和密文分组之间则只有 XOR。</p>
-<p>​	图示为：</p>
+<p>在ECB模式和CBC模式中，明文分组都是通过密码算法进行加密的。然而，在CFB模式中，明文分组并没有通过密码算法来直接进行加密。从图示可以看出明文分组和密文分组之间并没有经过“加密”这一步骤。在CFB 模式中，明文分组和密文分组之间只有一个XOR。</p>
+<p>将 CBC 模式与 CFB 模式对比一下，就可以看出其中的差异了。在CBC模式中，明文分组和密文分组之间有XOR和密码算法两个步骤，而在CFB 模式中，明文分组和密文分组之间则只有 XOR。</p>
+<p>图示为：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420160620607.png" alt="image-20220420160620607" loading="lazy"></p>
-<h2 id="初始化向量-1"><a href="#初始化向量-1" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>​	在生成第一个密文分组时，由于不存在前一个输出的数据，因此需要使用初始化向量（IV）来代替，这一点和CBC模式是相同的。一般来说，我们需要在每次加密时生成一个不同的随机二进制序列用作初始化向量。</p>
-<h2 id="CFB模式与流密码"><a href="#CFB模式与流密码" class="headerlink" title="CFB模式与流密码"></a>CFB模式与流密码</h2><p>​	CFB 模式是通过将“明文分组”与“密码算法的输出“进行XOR运算来生成“密文分组”的。在CFB模式中，密码算法的输出相当于一次性密码本中的随机二进制序列。由于密码算法的输出是通过计算得到的，并不是真正的随机数，因此 CFB模式不可能像一次性密码本那样具备理论上不可破译的性质。<br>​	CFB 模式中由密码算法所生成的二进制序列称为<strong>密钥流</strong>（key stream）。在CFB模式中，密码算法就相当于用来生成密钥流的伪随机数生成器，而初始化向量就相当于伪随机数生成器的“种子”。在CFB模式中，明文数据可以被逐比特加密，因此我们<strong>可以将CFB模式看做是一种使用分组密码来实现流密码的方式</strong>。</p>
-<h2 id="对CFB模式的解密"><a href="#对CFB模式的解密" class="headerlink" title="对CFB模式的解密"></a>对CFB模式的解密</h2><p>​	CFB 模式的解密过程见前图。CFB模式解密时，需要注意的是分组密码算法依然执行加密操作，因为<strong>密钥流是通过加密操作来生成的</strong>。</p>
-<h2 id="对CFB模式的攻击"><a href="#对CFB模式的攻击" class="headerlink" title="对CFB模式的攻击"></a>对CFB模式的攻击</h2><p>​	对 CFB 模式可以实施<strong>重放攻击</strong> （replay attack）。<br>​	举个不恰当的例子。有一天，lbw向tx发送了一条消息，这条消息由4个密文分组组成。主动攻击者将该消息中的后了个密文分组保存了下来。转天，lbw又向tx发送了内容不同的4个密文分组（假设lbw使用了相同的密钥)。攻击者用昨天保存下来的3个密文分组将今天发送的后3个密文分组进行了替换。于是，当tx解密时，4个分组中就只有第1个可以解密成正确的明文分组，第2个会出错，而第3个和第4个则变成了被攻击者替换的内容（也就是昨天发送的明文内容）。这边解释一下：明文分组2出错是因为密文分组1是正确的，经过加密形成的密钥流也是正确的，但是密文分组2是错误的，所以明文分组2出错；而明文分组3和4是以前的明文分组是因为密文分组2和3都是昨天的内容，所以加密之后进行XOR运算得到的是以前的明文分组。可以看到，攻击者没有破解密码，就成功地将以前的电文混入了新电文中。而第2个分组出错到底是通信错误呢，还是被人攻击所造成的呢？tx是无法做出判断的。</p>
-<p>​	图示为：</p>
+<h2 id="初始化向量-1"><a href="#初始化向量-1" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>在生成第一个密文分组时，由于不存在前一个输出的数据，因此需要使用初始化向量（IV）来代替，这一点和CBC模式是相同的。一般来说，我们需要在每次加密时生成一个不同的随机二进制序列用作初始化向量。</p>
+<h2 id="CFB模式与流密码"><a href="#CFB模式与流密码" class="headerlink" title="CFB模式与流密码"></a>CFB模式与流密码</h2><p>CFB 模式是通过将“明文分组”与“密码算法的输出“进行XOR运算来生成“密文分组”的。在CFB模式中，密码算法的输出相当于一次性密码本中的随机二进制序列。由于密码算法的输出是通过计算得到的，并不是真正的随机数，因此 CFB模式不可能像一次性密码本那样具备理论上不可破译的性质。</p>
+<p>CFB 模式中由密码算法所生成的二进制序列称为<strong>密钥流</strong>（key stream）。在CFB模式中，密码算法就相当于用来生成密钥流的伪随机数生成器，而初始化向量就相当于伪随机数生成器的“种子”。在CFB模式中，明文数据可以被逐比特加密，因此我们<strong>可以将CFB模式看做是一种使用分组密码来实现流密码的方式</strong>。</p>
+<h2 id="对CFB模式的解密"><a href="#对CFB模式的解密" class="headerlink" title="对CFB模式的解密"></a>对CFB模式的解密</h2><p>CFB 模式的解密过程见前图。CFB模式解密时，需要注意的是分组密码算法依然执行加密操作，因为<strong>密钥流是通过加密操作来生成的</strong>。</p>
+<h2 id="对CFB模式的攻击"><a href="#对CFB模式的攻击" class="headerlink" title="对CFB模式的攻击"></a>对CFB模式的攻击</h2><p>对 CFB 模式可以实施<strong>重放攻击</strong> （replay attack）。</p>
+<p>举个不恰当的例子。有一天，lbw向tx发送了一条消息，这条消息由4个密文分组组成。主动攻击者将该消息中的后了个密文分组保存了下来。转天，lbw又向tx发送了内容不同的4个密文分组（假设lbw使用了相同的密钥)。攻击者用昨天保存下来的3个密文分组将今天发送的后3个密文分组进行了替换。于是，当tx解密时，4个分组中就只有第1个可以解密成正确的明文分组，第2个会出错，而第3个和第4个则变成了被攻击者替换的内容（也就是昨天发送的明文内容）。这边解释一下：明文分组2出错是因为密文分组1是正确的，经过加密形成的密钥流也是正确的，但是密文分组2是错误的，所以明文分组2出错；而明文分组3和4是以前的明文分组是因为密文分组2和3都是昨天的内容，所以加密之后进行XOR运算得到的是以前的明文分组。可以看到，攻击者没有破解密码，就成功地将以前的电文混入了新电文中。而第2个分组出错到底是通信错误呢，还是被人攻击所造成的呢？tx是无法做出判断的。</p>
+<p>图示为：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420161353849.png" alt="image-20220420161353849" loading="lazy"></p>
-<h1 id="OFB模式"><a href="#OFB模式" class="headerlink" title="OFB模式"></a>OFB模式</h1><h2 id="什么是OFB模式"><a href="#什么是OFB模式" class="headerlink" title="什么是OFB模式"></a>什么是OFB模式</h2><p>​	OFB模式的全称是Output FeedBack模式。在OFB模式中，<strong>密码算法的输入会反馈到密码算法的输入中</strong>。</p>
-<p>​	OFB模式并不是通过密码算法对明文直接进行加密的，而是通过将“明文分组”和“密码算法的输出”进行XOR来产生“密文分组”的，在这一点上OFB模式和CFB模式非常相似。</p>
-<p>​	图示为：</p>
+<h1 id="OFB模式"><a href="#OFB模式" class="headerlink" title="OFB模式"></a>OFB模式</h1><h2 id="什么是OFB模式"><a href="#什么是OFB模式" class="headerlink" title="什么是OFB模式"></a>什么是OFB模式</h2><p>OFB模式的全称是Output FeedBack模式。在OFB模式中，<strong>密码算法的输入会反馈到密码算法的输入中</strong>。</p>
+<p>OFB模式并不是通过密码算法对明文直接进行加密的，而是通过将“明文分组”和“密码算法的输出”进行XOR来产生“密文分组”的，在这一点上OFB模式和CFB模式非常相似。</p>
+<p>图示为：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420161950688.png" alt="image-20220420161950688" loading="lazy"></p>
-<h2 id="初始化向量-2"><a href="#初始化向量-2" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>​	和CBC、CBF一样，OFB模式也需要使用初始化向量。一般来说，我们需要在每次加密时生成一个不同的随机二进制序列用作初始化向量。</p>
-<h2 id="CFB模式与OFB模式的对比"><a href="#CFB模式与OFB模式的对比" class="headerlink" title="CFB模式与OFB模式的对比"></a>CFB模式与OFB模式的对比</h2><p>​	OFB模式和CFB模式的区别仅仅在于密码算法的输入。</p>
-<p>​	CFB模式中，密码算法的输入是前一个密文分组，也就是将密文分组反馈到密码算法中，因此就有了“密文反馈模式”这个名儿。</p>
-<p>​	相对的，OFB模式中，密码算法的输入则是密码算法的前一个输出，也就是将输出反馈回密码算法，因此就有了“输出反馈模式”这个名儿。</p>
-<p>​	图示为：</p>
+<h2 id="初始化向量-2"><a href="#初始化向量-2" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>和CBC、CBF一样，OFB模式也需要使用初始化向量。一般来说，我们需要在每次加密时生成一个不同的随机二进制序列用作初始化向量。</p>
+<h2 id="CFB模式与OFB模式的对比"><a href="#CFB模式与OFB模式的对比" class="headerlink" title="CFB模式与OFB模式的对比"></a>CFB模式与OFB模式的对比</h2><p>OFB模式和CFB模式的区别仅仅在于密码算法的输入。</p>
+<p>CFB模式中，密码算法的输入是前一个密文分组，也就是将密文分组反馈到密码算法中，因此就有了“密文反馈模式”这个名儿。</p>
+<p>相对的，OFB模式中，密码算法的输入则是密码算法的前一个输出，也就是将输出反馈回密码算法，因此就有了“输出反馈模式”这个名儿。</p>
+<p>图示为：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420162329421.png" alt="image-20220420162329421" loading="lazy"></p>
-<p>​	由于CFB模式中是对密文分组进行反馈的，因此必须从第一个明文分组开始按顺序进行加密，也就是说无法跳过明文分组1而先对明文分组2进行加密。相对地，在OFB模式中，XOR所需要的比特序列（密钥流）可以事先通过密码算法生成，和明文分组无关。只要提前准备好所需的密钥流，则在实际从明文生成密文的过程中，就完全不需要动用密码算法了，只要将明文与密钥流进行XOR就可以了。这就意味着只要提前准备好密钥流就可以快速完成加密。换个角度来看，生成密钥流的操作和进行XOR运算的操作是可以并行的。</p>
-<h1 id="CTR模式"><a href="#CTR模式" class="headerlink" title="CTR模式"></a>CTR模式</h1><h2 id="什么是CTR模式"><a href="#什么是CTR模式" class="headerlink" title="什么是CTR模式"></a>什么是CTR模式</h2><p>​	CTR 模式的全称是CounTeR 模式。CTR 模式是一种<strong>通过将逐次累加的计数器进行加密来生成密钥流的流密码</strong>。<br>​	CTR 模式中，每个分组对应一个逐次累加的计数器，并通过对计数器进行加密来生成密钥流。也就是说，最终的密文分组是通过将计数器加密得到的比特序列，与明文分组进行XOR而得到的。</p>
-<p>​	图示为：</p>
+<p>由于CFB模式中是对密文分组进行反馈的，因此必须从第一个明文分组开始按顺序进行加密，也就是说无法跳过明文分组1而先对明文分组2进行加密。相对地，在OFB模式中，XOR所需要的比特序列（密钥流）可以事先通过密码算法生成，和明文分组无关。只要提前准备好所需的密钥流，则在实际从明文生成密文的过程中，就完全不需要动用密码算法了，只要将明文与密钥流进行XOR就可以了。这就意味着只要提前准备好密钥流就可以快速完成加密。换个角度来看，生成密钥流的操作和进行XOR运算的操作是可以并行的。</p>
+<h1 id="CTR模式"><a href="#CTR模式" class="headerlink" title="CTR模式"></a>CTR模式</h1><h2 id="什么是CTR模式"><a href="#什么是CTR模式" class="headerlink" title="什么是CTR模式"></a>什么是CTR模式</h2><p>CTR 模式的全称是CounTeR 模式。CTR 模式是一种<strong>通过将逐次累加的计数器进行加密来生成密钥流的流密码</strong>。</p>
+<p>CTR 模式中，每个分组对应一个逐次累加的计数器，并通过对计数器进行加密来生成密钥流。也就是说，最终的密文分组是通过将计数器加密得到的比特序列，与明文分组进行XOR而得到的。</p>
+<p>图示为：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420162635732.png" alt="image-20220420162635732" loading="lazy"></p>
-<h2 id="计数器的生成方法"><a href="#计数器的生成方法" class="headerlink" title="计数器的生成方法"></a>计数器的生成方法</h2><p>​	每次加密时都会生成一个不同的值（nonce）来作为计数器的初始值。当分组长度为128比特（16字节）时，计数器的初始值可能是类似于下面这种形式：</p>
+<h2 id="计数器的生成方法"><a href="#计数器的生成方法" class="headerlink" title="计数器的生成方法"></a>计数器的生成方法</h2><p>每次加密时都会生成一个不同的值（nonce）来作为计数器的初始值。当分组长度为128比特（16字节）时，计数器的初始值可能是类似于下面这种形式：</p>
 <blockquote>
 <p>66 1F 98 CD 37 A3 8B 4B 00 00 00 00 00 00 00 01</p>
 <p>————nonce————- |———分组序号————</p>
 </blockquote>
-<p>​	其中前8个字节为nonce，这个值在每次加密时必须都是不同的。后8个字节为分组序号，这个部分是会逐次累加的。在加密过程中，计数器的值会产生如下变化：</p>
+<p>其中前8个字节为nonce，这个值在每次加密时必须都是不同的。后8个字节为分组序号，这个部分是会逐次累加的。在加密过程中，计数器的值会产生如下变化：</p>
 <blockquote>
 <p>66 1F 98 CD 37 A3 8B 4B 00 00 00 00 00 00 00 01    明文分组1的计数器（初始值）</p>
 <p>66 1F 98 CD 37 A3 8B 4B 00 00 00 00 00 00 00 02    明文分组2的计数器</p>
@@ -157,13 +165,14 @@ document.addEventListener("pjax:success", initScrollReveal);
 <p>66 1F 98 CD 37 A3 8B 4B 00 00 00 00 00 00 00 04    明文分组4的计数器</p>
 <p>​							          …                                                               …</p>
 </blockquote>
-<p>​	按照上述生成方法，可以保证计数器的值每次都不同。由于计数器的值每次都不同，因此每个分组中将计数器进行加密所得到的密钥流也是不同的。也就是说，这种方法是用分组密码来模拟生成随机的比特序列。</p>
-<h2 id="OFB模式与CTR模式的对比"><a href="#OFB模式与CTR模式的对比" class="headerlink" title="OFB模式与CTR模式的对比"></a>OFB模式与CTR模式的对比</h2><p>​	CTR模式和OFB模式一样，都属于流密码。OFB模式是将加密的输出反馈到输入，而CTR模式则是将计数器的值用作输入。</p>
-<p>​	图示为：</p>
+<p>按照上述生成方法，可以保证计数器的值每次都不同。由于计数器的值每次都不同，因此每个分组中将计数器进行加密所得到的密钥流也是不同的。也就是说，这种方法是用分组密码来模拟生成随机的比特序列。</p>
+<h2 id="OFB模式与CTR模式的对比"><a href="#OFB模式与CTR模式的对比" class="headerlink" title="OFB模式与CTR模式的对比"></a>OFB模式与CTR模式的对比</h2><p>CTR模式和OFB模式一样，都属于流密码。OFB模式是将加密的输出反馈到输入，而CTR模式则是将计数器的值用作输入。</p>
+<p>图示为：</p>
 <p><img src="/2022/04/20/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/image-20220420164132143.png" alt="image-20220420164132143" loading="lazy"></p>
-<h2 id="CTR模式的特点"><a href="#CTR模式的特点" class="headerlink" title="CTR模式的特点"></a>CTR模式的特点</h2><p>​	CTR模式的加密和解密使用了完全相同的结构，这个特点和OFB模式一样。</p>
-<p>​	此外，CTR模式中可以以任意顺序对分组进行加密和解密，因此在加密和解密时需要用到的“计数器”的值可以由nonce和分组序号直接计算出来。这一性质是OFB模式所不具备的。能够以任意顺序处理分组，就意味着能够实现并行计算。在支持并行计算的系统中，CTR<br>模式的速度是非常快的。</p>
-<h2 id="错误性与机密性"><a href="#错误性与机密性" class="headerlink" title="错误性与机密性"></a>错误性与机密性</h2><p>​	错误与机密性方面，CTR 模式也具备和OFB模式差不多的性质。假设CTR模式的密文分组中有一个比特被反转了，则解密后明文分组中仅有与之对应的比特会被反转，这一错误不会放大。<br>​	换言之，在CTR 模式中，主动攻击者可以通过反转密文分组中的某些比特，引起解密后明文中的相应比特也发生反转。这一弱点和OFB模式是相同的。不过CTR模式具备一个比OF 模式要好的性质。在OFB模式中，如果对密钥流的一个分组进行加密后其结果碰巧和加密前是相同的，那么这一分组之后的密钥流就会变成同一值的不断反复。在CTR模式中就不存在这一问题。</p>
+<h2 id="CTR模式的特点"><a href="#CTR模式的特点" class="headerlink" title="CTR模式的特点"></a>CTR模式的特点</h2><p>CTR模式的加密和解密使用了完全相同的结构，这个特点和OFB模式一样。</p>
+<p>此外，CTR模式中可以以任意顺序对分组进行加密和解密，因此在加密和解密时需要用到的“计数器”的值可以由nonce和分组序号直接计算出来。这一性质是OFB模式所不具备的。能够以任意顺序处理分组，就意味着能够实现并行计算。在支持并行计算的系统中，CTR<br>模式的速度是非常快的。</p>
+<h2 id="错误性与机密性"><a href="#错误性与机密性" class="headerlink" title="错误性与机密性"></a>错误性与机密性</h2><p>错误与机密性方面，CTR 模式也具备和OFB模式差不多的性质。假设CTR模式的密文分组中有一个比特被反转了，则解密后明文分组中仅有与之对应的比特会被反转，这一错误不会放大。</p>
+<p>换言之，在CTR 模式中，主动攻击者可以通过反转密文分组中的某些比特，引起解密后明文中的相应比特也发生反转。这一弱点和OFB模式是相同的。不过CTR模式具备一个比OF 模式要好的性质。在OFB模式中，如果对密钥流的一个分组进行加密后其结果碰巧和加密前是相同的，那么这一分组之后的密钥流就会变成同一值的不断反复。在CTR模式中就不存在这一问题。</p>
 <h1 id="应该使用那种模式-？"><a href="#应该使用那种模式-？" class="headerlink" title="应该使用那种模式 ？"></a>应该使用那种模式 ？</h1><table>
 <thead>
 <tr>
