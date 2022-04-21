@@ -206,6 +206,8 @@
 <span class="token function">String2Array</span><span class="token punctuation">(</span><span class="token variable">$attrstr</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
+<span id="more"></span>
+
 <h2 id="函数分析"><a href="#函数分析" class="headerlink" title="函数分析"></a>函数分析</h2><p>先来看看其中的<code>String2Array()</code>函数，我在<a href="https://blog.csdn.net/weixin_36440677/article/details/115629343">其它博客</a>中看到了这么个说法：</p>
 <blockquote>
 <p>PHP CMS中 很常用的string2array函数：</p>
