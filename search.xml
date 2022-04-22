@@ -266,10 +266,9 @@ if($data &#x3D;&#x3D; &#39;&#39;)&#123;undefined
       </tags>
   </entry>
   <entry>
-    <title></title>
+    <title>CmsEasy7.6.3.2逻辑漏洞</title>
     <url>/2022/04/22/CmsEasy7-6-3-2%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js"></script><p>title: CmsEasy7.6.3.2逻辑漏洞<br>date: 2022-04-22 12:32:01<br>readmore: true<br>categories: 网络安全<br>tags: 逻辑漏洞</p>
-<h1 id="漏洞概述"><a href="#漏洞概述" class="headerlink" title="漏洞概述"></a>漏洞概述</h1><p>在CmsEasy7.6.3.2版本中,存在<strong>订单金额任意修改</strong>逻辑漏洞，攻击者利用业务逻辑层的应用安全问题，在提交订单时抓取数据包并修改，以及对订单的数量进行任意修改（打到资本家！）。此漏洞可能造成企业的资产损失和名誉受损，传统的安全防御设备和措施收效甚微，危害还是比较大的捏。</p>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js"></script><h1 id="漏洞概述"><a href="#漏洞概述" class="headerlink" title="漏洞概述"></a>漏洞概述</h1><p>在CmsEasy7.6.3.2版本中,存在<strong>订单金额任意修改</strong>逻辑漏洞，攻击者利用业务逻辑层的应用安全问题，在提交订单时抓取数据包并修改，以及对订单的数量进行任意修改（打到资本家！）。此漏洞可能造成企业的资产损失和名誉受损，传统的安全防御设备和措施收效甚微，危害还是比较大的捏。</p>
 <span id="more"></span>
 
 <h1 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h1><p>通过phpstudy（以下简称为小皮）搭建网站后用burpsuite抓包修改数据从而复现漏洞</p>
@@ -297,5 +296,11 @@ if($data &#x3D;&#x3D; &#39;&#39;)&#123;undefined
 <p>2、订单多重验证</p>
 <p>3、数额巨大时采用人工验证</p>
 ]]></content>
+      <categories>
+        <category>网络安全</category>
+      </categories>
+      <tags>
+        <tag>逻辑漏洞</tag>
+      </tags>
   </entry>
 </search>
