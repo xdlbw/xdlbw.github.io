@@ -308,6 +308,8 @@ if($data &#x3D;&#x3D; &#39;&#39;)&#123;undefined
     <url>/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js"></script><h1 id="测试环境"><a href="#测试环境" class="headerlink" title="测试环境"></a>测试环境</h1><p>靶机：云演考试题，whoami靶机（源码没有找到没有在本地搭）</p>
 <p>攻击机：kali</p>
+<span id="more"></span>
+
 <h1 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h1><p>开始时访问网站发现啥信息也没有</p>
 <p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426202955993.png" alt="image-20220426202955993" loading="lazy"></p>
 <h2 id="获取靶机ip"><a href="#获取靶机ip" class="headerlink" title="获取靶机ip"></a>获取靶机ip</h2><p>windows 终端 ping 即可</p>
