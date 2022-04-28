@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>DASCTF-Sept-X-双目失明，身残志坚</title>
+      <link href="/2022/04/28/DASCTF-Sept-X-%E5%8F%8C%E7%9B%AE%E5%A4%B1%E6%98%8E%EF%BC%8C%E8%BA%AB%E6%AE%8B%E5%BF%97%E5%9D%9A/"/>
+      <url>/2022/04/28/DASCTF-Sept-X-%E5%8F%8C%E7%9B%AE%E5%A4%B1%E6%98%8E%EF%BC%8C%E8%BA%AB%E6%AE%8B%E5%BF%97%E5%9D%9A/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js"></script><h1 id="题目内涵"><a href="#题目内涵" class="headerlink" title="题目内涵"></a>题目内涵</h1><p>一开始不知道题目是啥意思，把压缩包下载解压得到两张图片，瞬间明白了，绷不住了…</p><p><img src="/2022/04/28/DASCTF-Sept-X-%E5%8F%8C%E7%9B%AE%E5%A4%B1%E6%98%8E%EF%BC%8C%E8%BA%AB%E6%AE%8B%E5%BF%97%E5%9D%9A/image-20220428142736975.png" alt="image-20220428142736975" loading="lazy"></p><p>这是大图，想必大家都知道东京奥运会体操裁判双目失明仍然坚守岗位的事吧（狗头保命）</p><p><img src="/2022/04/28/DASCTF-Sept-X-%E5%8F%8C%E7%9B%AE%E5%A4%B1%E6%98%8E%EF%BC%8C%E8%BA%AB%E6%AE%8B%E5%BF%97%E5%9D%9A/image-20220428142913209.png" alt="image-20220428142913209" loading="lazy"></p><span id="more"></span><h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>给了两张图，看来是双图隐写的类型。针对双图，有两个解题思路。</p><p>其一：我们可以通过小工具进行比较，对图片中的数据进行计算得到新的图片获取信息；</p><p>其二：盲水印攻击，提取水印图片。</p><p>由于拿到图片不知道是什么类型，只能一个个试。</p><h2 id="两图对比"><a href="#两图对比" class="headerlink" title="两图对比"></a>两图对比</h2><p>首先用StegSolve看看能不能比较出啥</p><p>先看看原图的各个通道有没有什么信息</p><p><img src="/2022/04/28/DASCTF-Sept-X-%E5%8F%8C%E7%9B%AE%E5%A4%B1%E6%98%8E%EF%BC%8C%E8%BA%AB%E6%AE%8B%E5%BF%97%E5%9D%9A/image-20220428143524342.png" alt="image-20220428143524342" loading="lazy"></p><p><img src="/2022/04/28/DASCTF-Sept-X-%E5%8F%8C%E7%9B%AE%E5%A4%B1%E6%98%8E%EF%BC%8C%E8%BA%AB%E6%AE%8B%E5%BF%97%E5%9D%9A/image-20220428143532137.png" alt="image-20220428143532137" loading="lazy"></p><p>看不出啥，直接两图对比，实验发现进行的一些数据对比运算也得不到有效的图片</p><p><img src="/2022/04/28/DASCTF-Sept-X-%E5%8F%8C%E7%9B%AE%E5%A4%B1%E6%98%8E%EF%BC%8C%E8%BA%AB%E6%AE%8B%E5%BF%97%E5%9D%9A/image-20220428143326273.png" alt="image-20220428143326273" loading="lazy"></p><p><img src="/2022/04/28/DASCTF-Sept-X-%E5%8F%8C%E7%9B%AE%E5%A4%B1%E6%98%8E%EF%BC%8C%E8%BA%AB%E6%AE%8B%E5%BF%97%E5%9D%9A/image-20220428143337173.png" alt="image-20220428143337173" loading="lazy"></p><p>试试另一款小工具Beyond Compare3，然鹅也不行</p><p><img src="/2022/04/28/DASCTF-Sept-X-%E5%8F%8C%E7%9B%AE%E5%A4%B1%E6%98%8E%EF%BC%8C%E8%BA%AB%E6%AE%8B%E5%BF%97%E5%9D%9A/image-20220428143736250.png" alt="image-20220428143736250" loading="lazy"></p><h2 id="盲水印攻击"><a href="#盲水印攻击" class="headerlink" title="盲水印攻击"></a>盲水印攻击</h2><p>啥都对比不出来，那可能就是盲水印攻击了。</p><p>这是GitHub上的一个盲水印脚本：<a href="https://github.com/chishaxie/BlindWaterMark">https://github.com/chishaxie/BlindWaterMark</a></p><p>由于我是python2的版本，所以就用命令<code>python bwm.py decode original.png blind.png flag.png</code> 得到图片</p><p><img src="/2022/04/28/DASCTF-Sept-X-%E5%8F%8C%E7%9B%AE%E5%A4%B1%E6%98%8E%EF%BC%8C%E8%BA%AB%E6%AE%8B%E5%BF%97%E5%9D%9A/202109251641501.png" alt="img" loading="lazy"></p><p>可以看到有一行行的白点和黑点。是不是二进制序列呢？设白点为0，黑点为1或白点为1黑点为0的两种情况都是不行的。</p><p>后来网上查了一些资料了解到这应该是盲文，属于是和标题呼应了。具体参见：<a href="https://zhuanlan.zhihu.com/p/24445456">https://zhuanlan.zhihu.com/p/24445456</a></p><p>对照着表翻译过来为<code>zhejianggongiedaxüe</code>，提交上去是不对的。由于是浙江工业大学春季挑战赛，故修正为<code>zhejianggongyedaxue</code></p><p>即<code>flag&#123;zhejianggongyedaxue&#125;</code></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> CTF </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MISC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>whoami靶场渗透测试</title>
       <link href="/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
       <url>/2022/04/26/whoami%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/</url>
