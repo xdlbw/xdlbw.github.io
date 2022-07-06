@@ -1,0 +1,362 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="xdlbw"><meta name="copyright" content="xdlbw"><meta name="generator" content="Hexo 5.4.2"><meta name="theme" content="hexo-theme-yun"><title>西电软工操作系统复习纲要 | lbw的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.2.4/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", () => {
+  Yun.utils.renderKatex();
+});</script><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"xdlbw.github.io","root":"/","title":"lbw的小窝","version":"1.8.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"想要搜些什么？","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]},"vendors":{"darken":"https://cdn.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-1LL0D86CY9"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1LL0D86CY9');
+}</script><script data-ad-client="ca-pub-2245427233262012" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M9KWR9L');</script><!-- End Google Tag Manager --><meta name="description" content="写在前面时间过得真快，转眼大二已经结束了。这学期软工的课程虽然不多，但是感觉都挺抽象的，个人也是在复习上下了比较大的功夫（主要是平时也没学），但最后的结果怎么说的，不咋地… 以下内容是个人根据复习提纲以及往年题进行的知识点总结，其中也会包含今年试题的回忆版，复习时只做了部分总结就没有发出来。考完试再着手一方面是帮助自己回忆os的相关知识，另一方面方便后来的学弟学妹可以借鉴一下。今年的成绩，贴张图自">
+<meta property="og:type" content="article">
+<meta property="og:title" content="西电软工操作系统复习纲要">
+<meta property="og:url" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/index.html">
+<meta property="og:site_name" content="lbw的小窝">
+<meta property="og:description" content="写在前面时间过得真快，转眼大二已经结束了。这学期软工的课程虽然不多，但是感觉都挺抽象的，个人也是在复习上下了比较大的功夫（主要是平时也没学），但最后的结果怎么说的，不咋地… 以下内容是个人根据复习提纲以及往年题进行的知识点总结，其中也会包含今年试题的回忆版，复习时只做了部分总结就没有发出来。考完试再着手一方面是帮助自己回忆os的相关知识，另一方面方便后来的学弟学妹可以借鉴一下。今年的成绩，贴张图自">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706142959467.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706150419474.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706161229230.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706161254052.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706161511825.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706161537321.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706163145358.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706163214141.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706170058754.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706170135013.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706165225722.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706165954162.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706170204542.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706170258231.png">
+<meta property="article:published_time" content="2022-07-06T06:20:35.000Z">
+<meta property="article:modified_time" content="2022-07-06T09:03:10.965Z">
+<meta property="article:author" content="xdlbw">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706142959467.png"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="xdlbw"><img width="96" loading="lazy" src="/yun.png" alt="xdlbw"><span class="site-author-status" title="永远相信美好的事情即将发生">😊</span></a><div class="site-author-name"><a href="/about/">xdlbw</a></div><span class="site-name">lbw的小窝</span><sub class="site-subtitle">Will is power.</sub><div class="site-desciption">好看的皮囊千篇一律，有趣的灵魂万里挑一</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">10</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">5</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://blog.csdn.net/lbwnbnbnbnbnbnbn?spm=1000.2115.3001.5343" title="csdn"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-clipboard-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://qm.qq.com/cgi-bin/qm/qr?k=kZJzggTTCf4SpvEQ8lXWoi5ZjhAx0ILZ&amp;jump_from=webapi" title="我的qq：1439040668" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/xdlbw" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/xi-dian-lu-ben-wei" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/697094775?spm_id_from=333.1007.0.0" title="bilibili" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.link" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-train-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://cn.bing.com/search?q=%E5%8D%A2%E6%9C%AC%E4%BC%9F&amp;qs=n&amp;form=QBRE&amp;sp=-1&amp;pq=lu%27ben%27wei&amp;sc=8-10&amp;sk=&amp;cvid=C9786016A76A4968BD433107A7B5DC9D" title="大帅哥" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%BC%95%E8%AE%BA%EF%BC%88Overview%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">第一章 引论（Overview）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80-%E4%BB%80%E4%B9%88%E6%98%AF%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">一. 什么是操作系统？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%EF%BC%88Process-amp-Thread%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">第二章 进程与线程（Process &amp; Thread）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80-%E4%BB%80%E4%B9%88%E6%98%AF%E8%BF%9B%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">一. 什么是进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C-%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%BF%E7%A8%8B"><span class="toc-number">3.2.</span> <span class="toc-text">二. 什么是线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1"><span class="toc-number">3.3.</span> <span class="toc-text">三. 进程间通信</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B-%E8%B0%83%E5%BA%A6"><span class="toc-number">3.4.</span> <span class="toc-text">四. 调度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94-%E7%BB%8F%E5%85%B8IPC%E9%97%AE%E9%A2%98"><span class="toc-number">3.5.</span> <span class="toc-text">五. 经典IPC问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%88Memory-Management%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">第三章 内存管理（Memory Management）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80-%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98"><span class="toc-number">4.1.</span> <span class="toc-text">一. 虚拟内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C-%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">4.2.</span> <span class="toc-text">二. 页面置换算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89-%E5%86%85%E5%AD%98%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA%E5%88%86%E9%85%8D"><span class="toc-number">4.3.</span> <span class="toc-text">三. 内存动态分区分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E9%97%AE%E9%A2%98"><span class="toc-number">4.4.</span> <span class="toc-text">四. 系统设计问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88File-System%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">第四章 文件系统（File System）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.1.</span> <span class="toc-text">一. 文件系统的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C-%E6%9D%82%E9%A1%B9"><span class="toc-number">5.2.</span> <span class="toc-text">二. 杂项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E8%BE%93%E5%85%A5-x2F-%E8%BE%93%E5%87%BA%EF%BC%88Input-x2F-Output%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">第五章 输入&#x2F;输出（Input&#x2F;Output）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%AD%BB%E9%94%81%EF%BC%88Deadlock%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">第六章 死锁（Deadlock）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E7%AB%A0-%E5%A4%9A%E6%9C%BA%E7%B3%BB%E7%BB%9F%EF%BC%88Multiprocessor-System%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">第七章 多机系统（Multiprocessor System）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AB%E7%AB%A0-%E5%AE%89%E5%85%A8%EF%BC%88Security%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">第八章 安全（Security）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E4%BE%8B%E9%A2%98"><span class="toc-number">10.</span> <span class="toc-text">其他例题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">11.</span> <span class="toc-text">总结</span></a></li></ol></div></div></div><div class="tag-cloud"><div class="tag-cloud-tags"><a href="/tags/ECB%E3%80%81CBC%E3%80%81CFB%E3%80%81OFB%E3%80%81CTR/" style="font-size: 12px; color: #999">ECB、CBC、CFB、OFB、CTR</a> <a href="/tags/MISC/" style="font-size: 12px; color: #999">MISC</a> <a href="/tags/Reverse/" style="font-size: 12px; color: #999">Reverse</a> <a href="/tags/WEB/" style="font-size: 12px; color: #999">WEB</a> <a href="/tags/%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5/" style="font-size: 30px; color: #0078e7">变换矩阵</a> <a href="/tags/%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3/" style="font-size: 12px; color: #999">暴力破解</a> <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="font-size: 12px; color: #999">渗透测试</a> <a href="/tags/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/" style="font-size: 12px; color: #999">逻辑漏洞</a></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="xdlbw"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="lbw的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">西电软工操作系统复习纲要<a class="post-edit-link" href="https://github.com/xdlbw/xdlbw.github.io/tree/master_posts/西电软工操作系统复习纲要.md" target="_blank" title="编辑" rel="noopener"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-edit-line"></use></svg></a></h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2022-07-06 14:20:35" itemprop="dateCreated datePublished" datetime="2022-07-06T14:20:35+08:00">2022-07-06</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">4.8k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">17m</span></span></span><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">操作系统</span></a></span></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>时间过得真快，转眼大二已经结束了。这学期软工的课程虽然不多，但是感觉都挺抽象的，个人也是在复习上下了比较大的功夫（主要是平时也没学），但最后的结果怎么说的，不咋地…</p>
+<p>以下内容是个人根据复习提纲以及往年题进行的知识点总结，其中也会包含今年试题的回忆版，复习时只做了部分总结就没有发出来。考完试再着手一方面是帮助自己回忆os的相关知识，另一方面方便后来的学弟学妹可以借鉴一下。今年的成绩，贴张图自己体会吧…90+的只有12个人，当然没有我（哭）</p>
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706142959467.png" alt="image-20220706142959467" style="zoom:30%;" loading="lazy">
+
+<h2 id="第一章-引论（Overview）"><a href="#第一章-引论（Overview）" class="headerlink" title="第一章 引论（Overview）"></a>第一章 引论（Overview）</h2><p>引论是对整本书要学的知识点的总结，要点挺少的。</p>
+<h3 id="一-什么是操作系统？"><a href="#一-什么是操作系统？" class="headerlink" title="一. 什么是操作系统？"></a>一. 什么是操作系统？</h3><ol>
+<li>os是什么？</li>
+</ol>
+<p>答：是运行在内核态的软件（Software that runs in kernel mode），是源管理器（Source manager），扩展机器（extended machine），是用户与系统硬件的接口。</p>
+<p><strong>2022原题：</strong></p>
+<p>From the user’s point of view，the operating system is（<strong>A</strong>）</p>
+<p>A. Extended machine, i.e. providing an abstract interface between user and computer hardware.<br>B. Software for limiting the speed of processes.<br>C. Software for organizing computer workflow reasonably.<br>D. A set of resources.</p>
+<ol start="2">
+<li>os的结构特征？</li>
+</ol>
+<p>答：层次结构（Layered）、虚拟机器（virtual machine）、庞大而单一的（monolithic）。</p>
+<ol start="3">
+<li>什么是系统调用（system call）？</li>
+</ol>
+<p>答：为了从操作系统获取服务，用户程序必须进行系统调用，该调用进入内核并调 用操作系统。TRAP指令从用户模式切换到内核模式，启动操作系统。当工作完成后，根据系统调 用之后的指令将控制返回给用户程序。</p>
+<p>呃呃这个好像今年也考了一个概念题，背就行了。</p>
+<h2 id="第二章-进程与线程（Process-amp-Thread）"><a href="#第二章-进程与线程（Process-amp-Thread）" class="headerlink" title="第二章 进程与线程（Process &amp; Thread）"></a>第二章 进程与线程（Process &amp; Thread）</h2><p>这章就是重量级咯，属于是十分重点的内容。</p>
+<p>书上是这么说的：</p>
+<blockquote>
+<p>操作系统中最核心的概念是进程：这是对正在运行程序的一个抽象。操作系统的其他所有内容都是围绕着进程的概念展开的，所以，让操作系统的设计者（及学生）尽快并透彻地理解进程是非常重要的。</p>
+</blockquote>
+<h3 id="一-什么是进程"><a href="#一-什么是进程" class="headerlink" title="一. 什么是进程"></a>一. 什么是进程</h3><ol>
+<li>什么是进程？</li>
+</ol>
+<p>答：正在运行的程序的实例。</p>
+<ol start="2">
+<li>进程与程序的本质区别？</li>
+</ol>
+<p>答：进程是动态的而程序是静态的（进程是程序的一次执行）；进程是暂时的，程序是永久的；进程和程序的组成不同。</p>
+<ol start="3">
+<li>fork( )和exec( )的区别？</li>
+</ol>
+<p>答：这个就十分重要了，可能你都没听说过，其实这是os课设中的内容。往年常考，算是老演员了。具体区别用下面两个例子来说明，问题是下面两段程序分别打印几个<code>os exam</code></p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	<span class="token class-name">pid_t</span> pid<span class="token punctuation">;</span>
+	pid <span class="token operator">=</span> <span class="token function">fork</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">if</span><span class="token punctuation">(</span>pid <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+		<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"os exam\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">if</span><span class="token punctuation">(</span>pid <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span>
+		<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"os exam\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>	
+	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	<span class="token class-name">pid_t</span> pid<span class="token punctuation">;</span>
+	pid <span class="token operator">=</span> <span class="token function">fork</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">if</span><span class="token punctuation">(</span>pid <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+		<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"os exam\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其实知道fork( )和exec( )两个函数的作用这题就十分简单了。fork( )是由父进程创建一个一模一样的子进程，子进程从fork( )函数结束处开始执行，而父子进程之间执行的先后顺序是随机的，且此函数执行返回的结果为0。所以这题答案就是两次和一次了，首先第一段程序是父进程执行fork( )后生成子进程，pid&#x3D;0，之后父子进程执行后面的判断语句，父进程pid &gt; 0，子进程pid&#x3D;0，故打印两次；下面这题一样。</p>
+<p>将第二段代码改一下呢？</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	<span class="token class-name">pid_t</span> pid<span class="token punctuation">;</span>
+	pid <span class="token operator">=</span> <span class="token function">fork</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">if</span><span class="token punctuation">(</span>pid <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+		<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"os exam\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">if</span><span class="token punctuation">(</span>pid <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        <span class="token function">execl</span><span class="token punctuation">(</span><span class="token string">"/bin/ls"</span><span class="token punctuation">,</span><span class="token string">"ls"</span><span class="token punctuation">,</span><span class="token string">"-1"</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"os exam\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>	
+	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>此段代码出现了execl( )，这又是啥呢？它其实是exec函数族中的一个函数。</p>
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706150419474.png" alt="image-20220706150419474" style="zoom: 67%;" loading="lazy">
+
+<p>exec函数族可以根据指定的文件名或目录名找到可执行文件，并用它来取代原调用进程的数据段、代码段和堆栈段。在执行完后，原调用进程的内容除了进程号外，其它全部被新程序的内容替换了。啥意思呢，可以简单地理解为执行exec函数族之后，其后面的代码都不执行了。回到题目，上述的 ”os exam“ 的打印次数肯定就是一次了。父进程打印一次，子进程会执行execl( )函数，之后的打印语句不再执行。</p>
+<p>再来一题，20年原题：</p>
+<p>For the program listed below, how many “hello” will be printed? Please explain your answer.</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+	<span class="token function">fork</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"hello\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+	<span class="token function">execl</span><span class="token punctuation">(</span><span class="token string">"/bin/ls"</span><span class="token punctuation">,</span><span class="token string">"ls"</span><span class="token punctuation">,</span><span class="token string">"-l"</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"hello\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>答案自行解决吧嘻嘻。这题22年也考了，作为最后一个大题，两个小问，第一个比较平常就问你打印次数，第二题就比较怪了，问你如何证明exec函数执行为啥之后的程序不会执行？（好像是这个吧，记不太清了，反正是问原理的，当然我不会zzz）</p>
+<ol start="4">
+<li>什么是shell？</li>
+</ol>
+<p>答：命令解释器。</p>
+<ol start="5">
+<li>进程创建的四种状态（four events for process creation）</li>
+</ol>
+<ul>
+<li>系统初始化</li>
+<li>正在运行的进程执行了一个创建进程的系统调用</li>
+<li>用户请求创建一个新进程</li>
+<li>一个批处理作业的初始化</li>
+</ul>
+<ol start="6">
+<li>进程终止的四种状态（four events for process creation）</li>
+</ol>
+<ul>
+<li>正常退出（自愿的）</li>
+<li>出错退出（自愿的）</li>
+<li>严重错误（非自愿的）</li>
+<li>被其他进程杀死  （非自愿的）</li>
+</ul>
+<ol start="7">
+<li>什么是PCB？</li>
+</ol>
+<p>答：PCB（process control block）进程控制块。包含寄存器，程序寄存器，程序状态字psw，堆栈指针，堆栈状态，进程ID。每一个进程都对应一个PCB，是进程存在的唯一标志。</p>
+<ol start="8">
+<li>进程的五种状态：创建（new）、就绪（ready）、运行（run）、阻塞（block）、终止（terminated）</li>
+</ol>
+<h3 id="二-什么是线程"><a href="#二-什么是线程" class="headerlink" title="二. 什么是线程"></a>二. 什么是线程</h3><ol>
+<li>什么是线程？线程与进程的区别？</li>
+</ol>
+<p>答：线程是轻量级进程。二者区别：线程有自己的程序计数器，寄存器，堆栈，状态。可以共享进程的地址空间，全局变量，打开文件等。进程是资源的管理者，线程是进程中运行的实体，是cpu的调用者。</p>
+<p>这题今年作为简答题出现。</p>
+<ol start="2">
+<li>什么是用户级线程，什么是内核级线程，其各自的优缺点是什么？</li>
+</ol>
+<p>答：① 用户级线程  User Level Thread：线程表在用户空间，进程表在内核空间。内核不知道线程的存在。</p>
+<p>​			优点：线程的切换不需要陷入内核，进行上下文切换；允许进程有自己的调度算法</p>
+<p>​			缺点：线程阻塞时会导致进程的阻塞。</p>
+<p>​		② 内核级线程 Kernel Level Thread：线程表和进程表都在内核空间。</p>
+<p>​			优点：线程阻塞时可以检查是否有其他可运行的线程（不止当前进程，也有可能其他进程）</p>
+<p>​			缺点：线程切换开销很大</p>
+<h3 id="三-进程间通信"><a href="#三-进程间通信" class="headerlink" title="三. 进程间通信"></a>三. 进程间通信</h3><p>这边的概念以及程序都十分重要，集中在70-83页，理解并会写代码，很可能考代码补全，虽然22年没考…其中peterson算法，TSL避免死锁，信号量解决生产者消费者（有一年考了利用线程解决生产者消费者问题，书上93页有代码，其实和其他方法大差不差，但是其中有的函数名称不看的话可能不知道）都是很重要的。</p>
+<ol>
+<li>竞争条件 Race condition：两个或多个进程读写某些共享数据，而最后的结果取决于进程运行的精确时序。</li>
+<li>互斥 mutual exclusion：以某种手段确保，当一个进程在使用共享变量或文件时，其他进程不能进行同样操作。</li>
+<li>四种解决互斥的方案 four conditions to hold to have a good solution for race condition&#x2F;mutual exclusion：<ul>
+<li>任何两个进程不能同时处于临界区</li>
+<li>不应对CPU的速度和数量作出假设</li>
+<li>临界区外运行的进程不能阻塞其他进程</li>
+<li>不能使进程无期限等待进入临界区</li>
+</ul>
+</li>
+<li>临界区 critical region：对共享内存进行访问的程序片段称为临界区。</li>
+<li>自旋锁 spin lock：用于忙等待，也叫忙等锁（busy-waiting lock）</li>
+<li>自旋锁和信号量的区别？信号量和互斥量的区别？</li>
+</ol>
+<p>答：自旋锁是自选等待，用于忙等待，对系统负载大，浪费cpu时间，效率较高，是关抢占的；信号量是睡眠等待，对系统消耗小，因为进行了进程间的切换效率较低，没有关抢占。信号量的值是0或者正数，而互斥量的值只能是0或者1；信号量一般是实现在内核态的，而互斥量是实现在用户态的。</p>
+<ol start="7">
+<li>管程：是一个由过程，变量，数据结构组成的一个集合。进程只能通过访问管程中的过程来访问过程中的数据结构。</li>
+</ol>
+<h3 id="四-调度"><a href="#四-调度" class="headerlink" title="四. 调度"></a>四. 调度</h3><p>进程调度算法，主要掌握FCFS、SJF、Round-Robin、Multiple Queue四种方法即可，考的比较少，近几年都没有考到。</p>
+<p>但是这种调度方法还是要掌握的，对进程就绪、运行等状态有更好的认识，且跟后面的页面调度算法类似，要注意会画调度的甘特图。</p>
+<h3 id="五-经典IPC问题"><a href="#五-经典IPC问题" class="headerlink" title="五. 经典IPC问题"></a>五. 经典IPC问题</h3><p>老演员了，哲学家进餐和读者写者问题。书上的代码，理解会写。</p>
+<h2 id="第三章-内存管理（Memory-Management）"><a href="#第三章-内存管理（Memory-Management）" class="headerlink" title="第三章 内存管理（Memory Management）"></a>第三章 内存管理（Memory Management）</h2><p>也是一个重点章节，22级考的特别多…</p>
+<h3 id="一-虚拟内存"><a href="#一-虚拟内存" class="headerlink" title="一. 虚拟内存"></a>一. 虚拟内存</h3><ol>
+<li><p>static relocation &amp; dynamic relocation</p>
+<p>静态重定位：用户程序加载到内存时，一次性实现逻辑地址到物理地址的转化。把作业装入内存时的地址变化。当一个程序装载到地址x时，常数x被加到每一个程序地址上。</p>
+<p>动态重定位：在逐条指令执行时，完成地址转换。在装载时无需重定位。</p>
+</li>
+<li><p>Paging：物理内存按照固定大小划分成若干单元，单元就是页框。</p>
+</li>
+<li><p>MMU：memory management unit内存管理单元，虚拟地址被送到MMU，MMU将虚拟地址映射为物理地址</p>
+</li>
+<li><p>Page Table：页表的目的就是将虚拟页面映射成页框。页表由页表项构成。实际内存的每个页框对应了一个表项，而不是每个虚拟页面对应一个表项。</p>
+</li>
+<li><p>TLB：Translation Looked aside buffer转换检测缓冲区，又叫快表。</p>
+<p>计算机的一个小型硬件设备，将虚拟地址直接映射到物理地址，不需要再访问页表，通常在MMU中，包含少量的表项。当虚拟地址放入MMU中时，首先通过硬件在TLB中将虚拟页号与TLB中所有表项进行同时匹配，如果有效匹配，则取出页框号，不用访问页表。如果虚拟页号不在TLB中，MMU就会进行正常的页表查找，并且替换TLB 的表项。</p>
+</li>
+</ol>
+<h3 id="二-页面置换算法"><a href="#二-页面置换算法" class="headerlink" title="二. 页面置换算法"></a>二. 页面置换算法</h3><p>没啥好说的，OPT、FIFO、LRU都要掌握，这三种今年都考了，问你缺页次数。看个例题吧：</p>
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706161229230.png" alt="image-20220706161229230" style="zoom: 80%;" loading="lazy">
+
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706161254052.png" alt="image-20220706161254052" style="zoom:80%;" loading="lazy">
+
+<h3 id="三-内存动态分区分配"><a href="#三-内存动态分区分配" class="headerlink" title="三. 内存动态分区分配"></a>三. 内存动态分区分配</h3><p>也没啥好说的，首次适应、最好适应、最坏适应、领近适应，今年考了。这是原题：</p>
+<p><img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706161511825.png" alt="image-20220706161511825" loading="lazy"></p>
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706161537321.png" alt="image-20220706161537321" style="zoom:67%;" loading="lazy">
+
+<h3 id="四-系统设计问题"><a href="#四-系统设计问题" class="headerlink" title="四. 系统设计问题"></a>四. 系统设计问题</h3><p>可把我坑惨了，我没细看，结果考了两题。</p>
+<ol>
+<li>Memory mapped files：进程通过一个系统调用(mmap)，将一个文件映射到其虚拟地址空间的一部分。对文件的读写，就像内存中的字符数组，而不用通过读写来访问文件。（这个考了）</li>
+<li>DLL：shared library，dynamic linked libraries 共享库又称动态链接库，当一个程序和一个共享库链接时，连接器并没有加载所有的函数，有的函数只是加载了一段能在运行时绑定被调用函数的存根历程。当一个共享库被装载和使用时，整个库并不是一次性并装入内存。而是根据需要，以页面为单位装载的，没有被调用的函数是不会被装入内存的。（这个考了）</li>
+<li>Shared Pages:进程实用相同的 i 空间页表。</li>
+</ol>
+<h2 id="第四章-文件系统（File-System）"><a href="#第四章-文件系统（File-System）" class="headerlink" title="第四章 文件系统（File System）"></a>第四章 文件系统（File System）</h2><h3 id="一-文件系统的实现"><a href="#一-文件系统的实现" class="headerlink" title="一. 文件系统的实现"></a>一. 文件系统的实现</h3><ol>
+<li>hard link &amp; soft link</li>
+</ol>
+<p>​		硬链接：两个文件目录指向一个inode；磁盘块不列入目录，列入目录的是i节点</p>
+<p>​		软连接：符号链接，创建一个链接文件link，文件内容为要共享的文件的路径，把该文件放在B的目录下，只有真正的文件拥有者才拥有者真正的Inode。</p>
+<ol start="2">
+<li>FAT作用</li>
+</ol>
+<p>​		FAT表：取出每个磁盘块的指针字，放到内存的一个表中。</p>
+<p>​		作用：整个块都可以存放数据（不用第一个字放指针），随机访问也变容易了）。只要目录项中记录一个整数，按照它可以找到文件的所有块。</p>
+<ol start="3">
+<li>inode：最后一个记录了各个文件分别包含哪些磁盘块的方式是给每个文件赋予一个称为 i 节点的数据结构，其中列出了文件属性和文件块的磁盘地址。给定 i 节点，就能找到文件的所有块。</li>
+<li>inode相较于FAT的优势：只有在文件打开时，i 节点才在内存中，为了打开文件而保留 i 节点的数组所占据的空间比FAT表要小得多。（今年考了）</li>
+</ol>
+<h3 id="二-杂项"><a href="#二-杂项" class="headerlink" title="二. 杂项"></a>二. 杂项</h3><ol>
+<li><p>LFS：把磁盘当成一个大的循环使用的Log，每次 都是从当前位置连续向后写，写到末尾，再返回从头 开始向后写，这样就可大大降低寻道时间。所有的写操作最初都被缓冲在内存中，然后周期性的把已缓冲的写作为一个单独的段，在日志的末尾写入磁盘。要打开一个文件，则首先需要在i节点图中找到文件i节点。一旦文件定位后就可以找到相应的块的地址。</p>
+</li>
+<li><p>Journaling File System:保存一个用于记录系统下一步要做什么的日志。</p>
+</li>
+<li><p>VFS：将多种的文件系统统一成一个有序的结构。抽象出所有文件系统的共有部分，并将这部分代码放在单独的一层，该层调用底层的实际文件系统来管理数据。</p>
+</li>
+</ol>
+<p>呃呃反正22级没考。</p>
+<h2 id="第五章-输入-x2F-输出（Input-x2F-Output）"><a href="#第五章-输入-x2F-输出（Input-x2F-Output）" class="headerlink" title="第五章 输入&#x2F;输出（Input&#x2F;Output）"></a>第五章 输入&#x2F;输出（Input&#x2F;Output）</h2><ol>
+<li><p>Memory-Mapped I&#x2F;O  definition：内存映射IO,将所有控制器映射到内存空间中，每个控制器被分配唯一的一个内存地址，并且不会有内存被分配这个地址。这样的系统称为内存映射I&#x2F;O。</p>
+</li>
+<li><p>Programmed I&#x2F;O &amp;Interrupted-Driven I&#x2F;O &amp;DMA I&#x2F;O difference   </p>
+<p>这一章讲的不深，最重要的也就这个知识点了，年年考</p>
+<p>Programmed I&#x2F;O：CPU一直检查外设</p>
+<p>Interrupted-Driven I&#x2F;O：允许CPU在等待外设的时候，做些其他的事情，使用中断机制，中断发生在每个字符上。</p>
+<p>IO using DMA：每个缓冲区中断一次，CPU可以自由在IO期间做其他事情。数据传输由DMA在内存和I&#x2F;O中完成。</p>
+</li>
+<li><p>磁臂调度算法：FCFS、SSF、ELEVATOR。看个例题就理解了，22年没考</p>
+</li>
+</ol>
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706163145358.png" alt="image-20220706163145358" style="zoom: 67%;" loading="lazy">
+
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706163214141.png" alt="image-20220706163214141" style="zoom:67%;" loading="lazy">
+
+<h2 id="第六章-死锁（Deadlock）"><a href="#第六章-死锁（Deadlock）" class="headerlink" title="第六章 死锁（Deadlock）"></a>第六章 死锁（Deadlock）</h2><ol>
+<li><p>Deadlock：如果一个进程集合中的每一个进程都在等待只能由该进程集合中的其他进程才能引发的事件，那么该进程集合就是死锁的。</p>
+</li>
+<li><p>四个死锁必要条件及解决方案</p>
+</li>
+</ol>
+<ul>
+<li>互斥条件：将临界资源改造为可共享使用的资源，如spooling技术</li>
+<li>占有并等待：运行前分配好所有需要的资源，之后一直保持</li>
+<li>不可抢占条件：申请的资源得不到满足时，立即释放拥有的所有资源；申请的资源被其他进程占用时，由操作系统协作剥夺</li>
+<li>环路等待：给资源编号，必须按照编号从小到大的顺序申请资源</li>
+</ul>
+<ol start="3">
+<li><p>safe state：没有死锁发生，即使每一个进程突然请求对资源的最大需求，也可能存在某种调度次序能够使每一个进程运行完毕。</p>
+</li>
+<li><p>Unsafe state：从安全状态出发，系统能保证所有的进程都能完成，从不安全状态出发，就没有这样的保证。</p>
+</li>
+</ol>
+<p>安全状态不一定一定不会发生死锁。不安全状态也不代表当前状态就是死锁状态，当前状态也可能是非死锁，但继续向下运行，一定发生死锁。</p>
+<ol start="5">
+<li><p>银行家算法：你懂的，必考，也不难</p>
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706170058754.png" alt="image-20220706170058754" style="zoom:67%;" loading="lazy">
+
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706170135013.png" alt="image-20220706170135013" style="zoom:67%;" loading="lazy">
+</li>
+<li><p>两阶段锁two-phase lock：第一阶段进程对所有所需的记录进行加锁，一次锁住一个记录。第二阶段完成更新然后释放锁。如果第一阶段某个进程需要的记录已经被加锁，该进程释放它所有加锁的记录，然后重新开始第一阶段。</p>
+</li>
+<li><p>活锁live lock：两个进程都在运行，但都没有实质性的进展。当进程意识到它不能获得下一个锁，就会释放已经得到的锁，然后等待一段时间，再尝试一次。当几个进程同时这么做。这个过程没有进程阻塞，甚至可以说进程正在活动，然而进程并不会继续往下执行，称为活锁。</p>
+</li>
+<li><p>饿死：进程永远得不到执行。</p>
+</li>
+</ol>
+<p>知识点6、7、8可以忽略，基本不考…</p>
+<h2 id="第七章-多机系统（Multiprocessor-System）"><a href="#第七章-多机系统（Multiprocessor-System）" class="headerlink" title="第七章 多机系统（Multiprocessor System）"></a>第七章 多机系统（Multiprocessor System）</h2><p>记住这张图就好…</p>
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706165225722.png" alt="image-20220706165225722" style="zoom:67%;" loading="lazy">
+
+<h2 id="第八章-安全（Security）"><a href="#第八章-安全（Security）" class="headerlink" title="第八章 安全（Security）"></a>第八章 安全（Security）</h2><ol>
+<li><p>Security Goals &amp; Threats</p>
+<ul>
+<li>机密性    数据暴露</li>
+<li>完整性    数据篡改</li>
+<li>可用性    拒绝服务</li>
+</ul>
+</li>
+<li><p>非对称秘钥和对称秘钥的区别</p>
+<p>对称密钥：私钥加密</p>
+<p>非对称密钥：公钥加密，私钥解密</p>
+</li>
+</ol>
+<h2 id="其他例题"><a href="#其他例题" class="headerlink" title="其他例题"></a>其他例题</h2><p>22级原题：</p>
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706165954162.png" alt="image-20220706165954162" style="zoom:67%;" loading="lazy">
+
+<p>物理地址和虚拟地址之间的转换：</p>
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706170204542.png" alt="image-20220706170204542" style="zoom:67%;" loading="lazy">
+
+<img src="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220706170258231.png" alt="image-20220706170258231" style="zoom:67%;" loading="lazy">
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>总体来说22级的考试难度不算很大，但是成绩摆在那边，我不好说。考试之前就一直再说今年要改啥啥啥的，确实改了，没有填空题了，但是感觉核心的内容还是没有太大变换。</li>
+<li>选择题有点难，我当时蒙了两个好像，简答大题也有没看到的知识点。</li>
+<li>以上知识点的总结难免有错误或者不足的地方，对今年考试的试题我也忘得差不多了，如有错误请指正。</li>
+</ol>
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>xdlbw</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/" title="西电软工操作系统复习纲要">https://xdlbw.github.io/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/06/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%8C%EF%BC%9A%E8%A7%86%E5%9B%BE%E5%8F%98%E6%8D%A2-Viewing-Transformation/" rel="next" title="计算机图形学二：视图变换-Viewing Tranformation"><span class="post-nav-text">计算机图形学二：视图变换-Viewing Tranformation</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>如果您有任何关于博客内容的相关讨论，欢迎前往 <a href="https://github.com/YunYouJun/yunyoujun.github.io/discussions" target="_blank">GitHub Discussions</a> 与我交流。</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2022 </span><a class="with-love" id="animate" target="_blank" rel="noopener" href="https://github.com/xdlbw"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></a><span class="author"> xdlbw</span></div><div class="live-time"><span>本博客已经哼哧哼哧地运行</span><span id="display_live_time"></span><span class="moe-text">(ง ˙o˙)ว</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2022-04-18T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com" target="blank" title="又拍云"><img height="30" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
