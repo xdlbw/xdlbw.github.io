@@ -1467,17 +1467,23 @@ LABEL_22<span class="token operator">:</span>
 <p>component(构件)、connector(连接件)、constraint(约束)</p>
 <p>2、**体系结构样式  Architecture styles **     小重点！（选择题可以判别是哪种体系样式结构，这个好像考了选择没考简答）</p>
 <ul>
-<li><h5 id="pipes-and-filers-管道和过滤器"><a href="#pipes-and-filers-管道和过滤器" class="headerlink" title="pipes and filers 管道和过滤器"></a>pipes and filers 管道和过滤器</h5><p>每个模块都有一组输入与输出，可做编译器（compiler）</p>
+<li><p><strong>pipes and filers 管道和过滤器</strong></p>
+<p>每个模块都有一组输入与输出，可做编译器（compiler）</p>
 </li>
-<li><h5 id="Publish-subscribe-发布-订阅"><a href="#Publish-subscribe-发布-订阅" class="headerlink" title="Publish-subscribe  发布-订阅"></a>Publish-subscribe  发布-订阅</h5><p>在发布-订阅体系结构中，订阅组件通过它表达对事件的兴趣。当另一个组件发生该事件时，订阅组件将得到通知。组件component</p>
+<li><p><strong>Publish-subscribe  发布-订阅</strong></p>
+<p>在发布-订阅体系结构中，订阅组件通过它表达对事件的兴趣。当另一个组件发生该事件时，订阅组件将得到通知。组件component</p>
 </li>
-<li><h5 id="Client-x2F-Server-客户端-x2F-服务端"><a href="#Client-x2F-Server-客户端-x2F-服务端" class="headerlink" title="Client&#x2F;Server  客户端&#x2F;服务端"></a>Client&#x2F;Server  客户端&#x2F;服务端</h5><p>在客户机-服务器架构中，<strong>服务器</strong>组件提供服务，而<strong>客户机</strong>使用请求&#x2F;应答协议访问它们。</p>
+<li><p><strong>Client&#x2F;Server  客户端&#x2F;服务端</strong></p>
+<p>在客户机-服务器架构中，<strong>服务器</strong>组件提供服务，而<strong>客户机</strong>使用请求&#x2F;应答协议访问它们。</p>
 </li>
-<li><h5 id="Repositories-存储库架构"><a href="#Repositories-存储库架构" class="headerlink" title="Repositories   存储库架构"></a>Repositories   存储库架构</h5><p>用于数据存储、搜索引擎 search engine 、库 libraries 等</p>
+<li><p><strong>Repositories   存储库架构</strong></p>
+<p>用于数据存储、搜索引擎 search engine 、库 libraries 等</p>
 </li>
-<li><h5 id="peer-to-peer"><a href="#peer-to-peer" class="headerlink" title="peer-to-peer"></a>peer-to-peer</h5><p>在对等体系结构中，每个对等点作为它自己的进程执行，并且作为其他对等组件的客户端和服务器。</p>
+<li><p><strong>peer-to-peer</strong>  </p>
+<p>在对等体系结构中，每个对等点作为它自己的进程执行，并且作为其他对等组件的客户端和服务器。</p>
 </li>
-<li><h5 id="layering-分层体系"><a href="#layering-分层体系" class="headerlink" title="layering  分层体系"></a>layering  分层体系</h5><p>High levels of <strong>abstraction</strong>  高级<strong>抽象</strong></p>
+<li><p><strong>layering  分层体系</strong></p>
+<p>High levels of <strong>abstraction</strong>  高级<strong>抽象</strong></p>
 </li>
 </ul>
 <h2 id="第六章-模块设计（Design-the-Modules）"><a href="#第六章-模块设计（Design-the-Modules）" class="headerlink" title="第六章  模块设计（Design the Modules）"></a>第六章  模块设计（Design the Modules）</h2><p>1、<strong>六耦合  coupling</strong>  超级重点！！！(知道构建耦合概念，可以列举六耦合名称，选择题可以判别是那种耦合，22年考了简答，列举几个耦合类型并解释)</p>
