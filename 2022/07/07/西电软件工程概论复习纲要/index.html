@@ -1,0 +1,341 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="xdlbw"><meta name="copyright" content="xdlbw"><meta name="generator" content="Hexo 5.4.2"><meta name="theme" content="hexo-theme-yun"><title>西电软件工程概论复习纲要 | lbw的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.2.4/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", () => {
+  Yun.utils.renderKatex();
+});</script><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"xdlbw.github.io","root":"/","title":"lbw的小窝","version":"1.8.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"想要搜些什么？","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]},"vendors":{"darken":"https://cdn.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-1LL0D86CY9"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1LL0D86CY9');
+}</script><script data-ad-client="ca-pub-2245427233262012" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M9KWR9L');</script><!-- End Google Tag Manager --><meta name="description" content="第一章  概述（Introduction）1、软件 &#x3D; 程序 + 数据 + 文档  program(instruction) , data(structure) and documents 2、软件工程：使用 系统的，有规律的，可测量的方法去开发，运行，维护软件。 Software engineering means the application of a systematic , d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="西电软件工程概论复习纲要">
+<meta property="og:url" content="https://xdlbw.github.io/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/index.html">
+<meta property="og:site_name" content="lbw的小窝">
+<meta property="og:description" content="第一章  概述（Introduction）1、软件 &#x3D; 程序 + 数据 + 文档  program(instruction) , data(structure) and documents 2、软件工程：使用 系统的，有规律的，可测量的方法去开发，运行，维护软件。 Software engineering means the application of a systematic , d">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220527214156078.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220707095952590.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220707100059278.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220707100334633.png">
+<meta property="article:published_time" content="2022-07-07T02:06:25.000Z">
+<meta property="article:modified_time" content="2022-07-07T02:09:50.209Z">
+<meta property="article:author" content="xdlbw">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xdlbw.github.io/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220527214156078.png"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="xdlbw"><img width="96" loading="lazy" src="/yun.png" alt="xdlbw"><span class="site-author-status" title="永远相信美好的事情即将发生">😊</span></a><div class="site-author-name"><a href="/about/">xdlbw</a></div><span class="site-name">lbw的小窝</span><sub class="site-subtitle">Will is power.</sub><div class="site-desciption">好看的皮囊千篇一律，有趣的灵魂万里挑一</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">11</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">6</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://blog.csdn.net/lbwnbnbnbnbnbnbn?spm=1000.2115.3001.5343" title="csdn"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-clipboard-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://qm.qq.com/cgi-bin/qm/qr?k=kZJzggTTCf4SpvEQ8lXWoi5ZjhAx0ILZ&amp;jump_from=webapi" title="我的qq：1439040668" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/xdlbw" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/xi-dian-lu-ben-wei" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/697094775?spm_id_from=333.1007.0.0" title="bilibili" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.link" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-train-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://cn.bing.com/search?q=%E5%8D%A2%E6%9C%AC%E4%BC%9F&amp;qs=n&amp;form=QBRE&amp;sp=-1&amp;pq=lu%27ben%27wei&amp;sc=8-10&amp;sk=&amp;cvid=C9786016A76A4968BD433107A7B5DC9D" title="大帅哥" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E6%A6%82%E8%BF%B0%EF%BC%88Introduction%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">第一章  概述（Introduction）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E8%BF%87%E7%A8%8B%E5%92%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88Modeling-the-Process-and-Life-Cycle%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">第二章  过程和生命周期（Modeling the Process and Life Cycle）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E8%A7%84%E5%88%92%E5%92%8C%E7%AE%A1%E7%90%86%E9%A1%B9%E7%9B%AE%EF%BC%88Planning-and-Managing-the-Project%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">第三章  规划和管理项目（Planning and Managing the Project）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%EF%BC%88Capture-the-Requirements%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">第四章  需求分析（Capture the Requirements）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E8%AE%BE%E8%AE%A1%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%EF%BC%88Design-the-Architecture%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">第五章  设计体系结构（Design the Architecture）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#pipes-and-filers-%E7%AE%A1%E9%81%93%E5%92%8C%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">5.0.0.1.</span> <span class="toc-text">pipes and filers 管道和过滤器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Publish-subscribe-%E5%8F%91%E5%B8%83-%E8%AE%A2%E9%98%85"><span class="toc-number">5.0.0.2.</span> <span class="toc-text">Publish-subscribe  发布-订阅</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Client-x2F-Server-%E5%AE%A2%E6%88%B7%E7%AB%AF-x2F-%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="toc-number">5.0.0.3.</span> <span class="toc-text">Client&#x2F;Server  客户端&#x2F;服务端</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Repositories-%E5%AD%98%E5%82%A8%E5%BA%93%E6%9E%B6%E6%9E%84"><span class="toc-number">5.0.0.4.</span> <span class="toc-text">Repositories   存储库架构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#peer-to-peer"><span class="toc-number">5.0.0.5.</span> <span class="toc-text">peer-to-peer</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#layering-%E5%88%86%E5%B1%82%E4%BD%93%E7%B3%BB"><span class="toc-number">5.0.0.6.</span> <span class="toc-text">layering  分层体系</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1%EF%BC%88Design-the-Modules%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">第六章  模块设计（Design the Modules）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E7%AB%A0-%E7%BC%96%E7%A8%8B%EF%BC%88Writing-the-programs%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">第七章  编程（Writing the programs）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%85%AB%E7%AB%A0-%E6%B5%8B%E8%AF%95%E7%A8%8B%E5%BA%8F%EF%BC%88Testing-the-Program%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">第八章  测试程序（Testing the Program）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E6%B5%8B%E8%AF%95%E7%B3%BB%E7%BB%9F%EF%BC%88Testing-the-system%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">第九章  测试系统（Testing the system）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E7%AB%A0-%E4%BA%A4%E4%BB%98%E7%B3%BB%E7%BB%9F%EF%BC%88Delivering-the-System%EF%BC%89"><span class="toc-number">10.</span> <span class="toc-text">第十章  交付系统（Delivering the System）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-%E7%BB%B4%E6%8A%A4%E7%B3%BB%E7%BB%9F%EF%BC%88Maintaining-the-System%EF%BC%89%E3%80%81"><span class="toc-number">11.</span> <span class="toc-text">第十一章  维护系统（Maintaining the System）、</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">12.</span> <span class="toc-text">总结</span></a></li></ol></div></div></div><div class="tag-cloud"><div class="tag-cloud-tags"><a href="/tags/ECB%E3%80%81CBC%E3%80%81CFB%E3%80%81OFB%E3%80%81CTR/" style="font-size: 12px; color: #999">ECB、CBC、CFB、OFB、CTR</a> <a href="/tags/MISC/" style="font-size: 12px; color: #999">MISC</a> <a href="/tags/Reverse/" style="font-size: 12px; color: #999">Reverse</a> <a href="/tags/WEB/" style="font-size: 12px; color: #999">WEB</a> <a href="/tags/%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5/" style="font-size: 30px; color: #0078e7">变换矩阵</a> <a href="/tags/%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3/" style="font-size: 12px; color: #999">暴力破解</a> <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="font-size: 12px; color: #999">渗透测试</a> <a href="/tags/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/" style="font-size: 12px; color: #999">逻辑漏洞</a></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://xdlbw.github.io/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="xdlbw"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="lbw的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">西电软件工程概论复习纲要<a class="post-edit-link" href="https://github.com/xdlbw/xdlbw.github.io/tree/master_posts/西电软件工程概论复习纲要.md" target="_blank" title="编辑" rel="noopener"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-edit-line"></use></svg></a></h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2022-07-07 10:06:25" itemprop="dateCreated datePublished" datetime="2022-07-07T10:06:25+08:00">2022-07-07</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">6.2k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">24m</span></span></span><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">软件工程概论</span></a></span></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h2 id="第一章-概述（Introduction）"><a href="#第一章-概述（Introduction）" class="headerlink" title="第一章  概述（Introduction）"></a>第一章  概述（Introduction）</h2><p>1、软件 &#x3D; <strong>程序 + 数据 + 文档</strong>  <strong>program(instruction)</strong> , <strong>data(structure)</strong> and <strong>documents</strong></p>
+<p>2、软件工程：使用 <strong>系统的，有规律的，可测量</strong>的方法去<strong>开发，运行，维护</strong>软件。</p>
+<p>Software engineering means the application of a <strong>systematic , displined and measureable</strong> approach to the <strong>development , operation and maintenance</strong> of software.</p>
+<p>3、三个模型（常考选择题，22级考）</p>
+<p>The <strong>McCall’s quality model</strong> concerns <strong>the quality of the software product</strong>      关注软件产品的质量</p>
+<p><strong>CMM</strong> concerns <strong>the quality of the process</strong> of development software product    关注软件产品开发过程的质量</p>
+<p><strong>ROI</strong> concerns <strong>the quality of</strong> the context of <strong>the bussiness environment</strong>            关注业务环境的质量</p>
+<span id="more"></span>
+
+<p>4、谁做软件工程：<strong>customer （consumer）+ developer + user</strong>    消费者+开发者+用户</p>
+<p>5、系统是<strong>对象和活动</strong>的集合，加上对象和活动之间<strong>关系的描述</strong>。</p>
+<p>system is a collection of <strong>objects</strong> and <strong>activities</strong>, plus <strong>a description of the relationships</strong> that tie the objects and activities together.</p>
+<p>6、任何要设计的实体，我们都必须做<strong>分析，设计，施工，验证和管理</strong></p>
+<p>Any entity to be engineered ,we must do <strong>analyst</strong> , <strong>designer</strong>, <strong>construction</strong>, <strong>verification</strong> and <strong>managment</strong></p>
+<p>7、什么是软件工程：软件工程是用计算机或计算机技术来求解实际问题的研究或实践。计算机科学家研究计算机的结构及理论，以及计算机的功能，而软件工程是计算机科学的一部分，因为软件工程师应用计算机科学研究的成果来构建工具和技术以满足客户的需求。</p>
+<p>8、软件开发步骤：需求分析和定义、系统设计、程序设计、程序实现（编程）、单元&#x2F;集成测试、系统测试、交付系统、系统维护</p>
+<h2 id="第二章-过程和生命周期（Modeling-the-Process-and-Life-Cycle）"><a href="#第二章-过程和生命周期（Modeling-the-Process-and-Life-Cycle）" class="headerlink" title="第二章  过程和生命周期（Modeling the Process and Life Cycle）"></a>第二章  过程和生命周期（Modeling the Process and Life Cycle）</h2><p>1、过程是一系列的顺序任务，<strong>过程 &#x3D; 步骤</strong> —— 包含：<strong>活动 + 约束 + 资源</strong></p>
+<p>We can think a set of ordered tasks as a <strong>process</strong>, a series of <strong>steps</strong> , including <strong>activities</strong> , <strong>constrains</strong> and <strong>resources</strong></p>
+<p>2、当过程涉及到构建某些<strong>产品</strong>时，我们有时将过程称为<strong>生命周期</strong></p>
+<p>When the process involves building of some <strong>product</strong> , we sometime refer to the Process as a <strong>lifecycle</strong></p>
+<p>3、软件的生命周期：<strong>概念、实现、交付、使用、维护</strong></p>
+<p>The life cycle of a software product include <strong>conception , implementation, delivery, use,</strong> and <strong>maintenance</strong></p>
+<p>4、软件过程模型（software process models）超级重点！！！（每一种模型的概念、特点以及优缺点，特别是优缺点全文背诵，22年考了瀑布模型的概念及优缺点）</p>
+<ul>
+<li><p><strong>瀑布模型 waterfall model</strong></p>
+<p>概念：瀑布模型包括<strong>需求分析，系统设计，程序设计，编码，单元和集成测试，系统测试，验收测试以及运维</strong>步骤。</p>
+<p>The waterfall mode include <strong>requirement analysis, system design, program design, coding, unit &amp; integration testing, system testing, acceptance testing ,and operation &amp; maintenance</strong> steps.</p>
+<p>特点：<strong>有效性</strong>确保系统已实现所有要求，但<strong>验证</strong>可确保每个函数正常工作。</p>
+<p>The <strong>validation</strong> ensures that the system has implemented all of the requirement, But the <strong>verification</strong> ensures that each function works correctly.</p>
+</li>
+</ul>
+<p>​		<strong>优点：（1）可强迫开发人员采用规范化的方法</strong></p>
+<p>​					<strong>（2）严格地规定了每个阶段必须提交的文档</strong></p>
+<p>​					<strong>（3）要求每个阶段交出的所有产品都必须是经过验证的</strong></p>
+<p>​		<strong>缺点：（1）由于瀑布模型几乎完全依赖于书面的规格说明，很可能导致最终开发出的软件产品不能真正满足用户的需要</strong></p>
+<p>​					<strong>（2）只适用于项目开始时需求就已经确定的情况</strong></p>
+<ul>
+<li><p><strong>V模型</strong> <strong>V model</strong> </p>
+<p>概念：V模型更明确地说明了瀑布模型中隐藏的一些<strong>迭代和返工</strong>，是瀑布模型的变种</p>
+<p>The <strong>V model</strong> makes more explicit some of the <strong>iteration</strong> and <strong>rework</strong> that are hidden In the waterfall</p>
+</li>
+</ul>
+<p>​		特点：（1）采用参与测试来验证程序设计</p>
+<p>​					（2）采用集成测试来验证体系结构设计</p>
+<p>​					（3）采用验收测试来确认需求</p>
+<p>​					（4）验证过程中发现问题即可在执行后续测试步骤前重新执行左边步骤对软件修正</p>
+<ul>
+<li><p><strong>原型化模型</strong>  <strong>prototyping model</strong> </p>
+<p>概念：在需求分析阶段对软件进行初步的分析和定义，快速开发出简单的软件原型并向用户展示，用户对软件原型进行测评后进一步提出进要求，开发人员的原型修改到用户满意为止。因此<strong>原型模型的开发更能符合需求，适合市场导向（market-driven）的产品</strong>。</p>
+<p>A prototyping model is a partially developed product that enable customers and developers。 To examine some aspect of the proposed system and decide if it is suitable or appropriate for the final product.</p>
+<p><strong>优点：（1）有助于满足用户的真实需求</strong></p>
+<p>​			<strong>（2）原型系统已经通过与用户进行交互而得到验证，据此产生的规格文档能正确描述用户的需求</strong></p>
+<p>​			<strong>（3）软件产品的开发基本上是按线性顺序进行</strong></p>
+<p>​			<strong>（4）建造出原型系统后，开发人员可以加速软件开发的过程，节约软件开发成本</strong></p>
+</li>
+<li><p><strong>增量模型</strong>  <strong>incremental model</strong>    (画大饼模型zzz)</p>
+<p>增量：将系统功能划分为诸多子系统，先开发具有一个小功能的子系统，之后不断在子系统上增加新的功能来逐渐满足所有需求</p>
+<p>迭代：第一次提交的产品就是一个完整的系统，之后在该系统的基础上不断修改，不断开发出新的版本，但是每个版本都是完整可运行的版本</p>
+<p><strong>优点：（1）能在较短时间内向用户提交完成一些有用功能的工作产品</strong></p>
+<p>​			<strong>（2）逐步增加产品的功能可以使用户有较充裕的学习时间和适应新产品</strong>		</p>
+<p>​			<strong>（3）项目失败的风险较低</strong></p>
+<p>​			<strong>（4）优先级最高的服务首先交付，然后再将其他增量构件逐次集成进来，这意味着最重要的部分将接受最多的测试</strong></p>
+<p><strong>缺点：（1）与其他模型相比需要更精心的设计</strong></p>
+</li>
+<li><p><strong>螺旋式模型  spiral model</strong> </p>
+<p>概念：瀑布模型与原型模型的组合，既可以周期性地验证客户的需求，又可以分阶段进行开发工作，能保证软件在遇到较大风险时停止，大大增强了软件的<strong>风险防控能力</strong>。但是过程很复杂，需要开发人员有丰富的风险评估能力和专业知识，适合大型项目的开发。</p>
+<p>The spiral model combine the development activities with <strong>risk</strong> management to minimize and control the <strong>risk control</strong>。</p>
+<p><strong>优点：（1）对可选方案和约束条件的强调有利于已有软件的重用，也有助于把软件质量作为软件开发的一个重要目标</strong></p>
+<p>​			<strong>（2）减少了过多测试或者测试不足带来的风险</strong>		</p>
+<p>​			<strong>（3）维护只是模型的另一个周期，因此在维护和开发之间并没有本质区别</strong></p>
+</li>
+</ul>
+<p>​		<strong>缺点：（1）要求开发人员必须具有丰富的风险评估经验和专门知识</strong></p>
+<h2 id="第三章-规划和管理项目（Planning-and-Managing-the-Project）"><a href="#第三章-规划和管理项目（Planning-and-Managing-the-Project）" class="headerlink" title="第三章  规划和管理项目（Planning and Managing the Project）"></a>第三章  规划和管理项目（Planning and Managing the Project）</h2><p>底下1-5理解即可感觉不常考</p>
+<p>1、项目进度表通过列举项目的阶段，并将每个阶段分解成独立的待完成的<strong>任务或活动</strong>，来描述一个特定项目的软件开发周期。</p>
+<p>A project schedule describes the software development cycle for a particular project by enumerating the phases or stages of the project and breaking each into discrete <strong>tasks or activities</strong> to be done.</p>
+<p>2、计划是一个<strong>时间线</strong>，显示活动何时开始和结束，以及相关开发产品何时准备就绪。</p>
+<p>The Schedule is a <strong>timeline</strong> that shows when activities will begin and end, and When the related development products will be ready.</p>
+<p>3、交付物，即客户希望在项目开发期间看到的<strong>项目</strong>。</p>
+<p>The Deliverables , that is the <strong>item</strong> that the customer expects to see during project development.</p>
+<p>4、<strong>活动</strong>是在一段时间内发生的项目的一部分</p>
+<p>An <strong>activity</strong> is a part of the project that takes place over a period of time.</p>
+<p>5、<strong>里程碑</strong>是一个活动的完成，一个特定的时间点。</p>
+<p>A <strong>milestone</strong> is the completion of an activity，a particular point in time.</p>
+<p>6、<strong>关键路径方法</strong>  <strong>Critical Path Method</strong>       必考大题！！！！一定要弄懂，具体怎么做看笔记</p>
+<p>7、<strong>交流线  lines of communication</strong>  ：如果一个工作中有n个人，那么一共有n（n-1）&#x2F; 2条交流线</p>
+<p>8、个性  characteristics ：<strong>Extrovert（外向）Introvert（内向）Intuitive（直觉  Rational（理智）</strong></p>
+<p>9、组织形式：（选择题）</p>
+<p>​	  首席程序员团队  <strong>chief programmer team</strong>：高效的组织方式</p>
+<p>​	  适用于：<strong>大项目 large scale，高确定性 high certainty，重复性 repetition</strong></p>
+<p>​	 无私的方法？？？ <strong>egoless approach</strong></p>
+<p>​	适用于：<strong>小项目 small scale，新技术 new technology，不确定性 uncertain</strong></p>
+<p>10、<img src="/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220527214156078.png" alt="image-20220527214156078" loading="lazy"></p>
+<p>（要知道每个模块包含什么，特别是风险评估）</p>
+<p>风险评估 risk assessment、风险识别 risk identification、风险分析 risk analysis、风险分级 risk prioritization、风险控制 risk control、减少风险 reduce risk、风险管理计划 risk management planning、风险解决 Risk resolution</p>
+<p>11、Give some diliverables：列出一些可交付物</p>
+<p>​		文件<br>​		功能演示<br>​		准确性演示<br>​		子系统演示<br>​		可靠性、性能或安全性演示</p>
+<p>12、Briefly describe the characteristic of software development team’s individual：描述软件开发团队个体的特征</p>
+<p>​		执行工作的能力<br>​		对工作的兴趣<br>​		使用类似工具或语言的经验<br>​		类似技术的经验<br>​		具有类似开发环境的经验<br>​		训练<br>​		与他人沟通的能力</p>
+<h2 id="第四章-需求分析（Capture-the-Requirements）"><a href="#第四章-需求分析（Capture-the-Requirements）" class="headerlink" title="第四章  需求分析（Capture the Requirements）"></a>第四章  需求分析（Capture the Requirements）</h2><p>1、需求是<strong>期望行为</strong>的一种<strong>表达</strong>。</p>
+<p>A requirement is an <strong>expression</strong> of <strong>desired behavior</strong></p>
+<p>2、The process for capturing the requirement has four steps, there are <strong>elicitation，analysis , specification,and validation。</strong></p>
+<p>捕获需求的过程有四个步骤，分别是<strong>抽取、分析、规范和验证</strong>。</p>
+<p>3、There four type of requirement, they are the <strong>fundmental requirement , Quality requirements&#x2F;nonfunctional requirements, design contraist and process constraist</strong>.（了解四种需求的概念，选择题可以判断，22年考了简答题，其对应的概念以及举例）</p>
+<p><strong>功能性需求</strong></p>
+<p>系统应与外部系统 X 通信。   System shall communicate with external system X.    </p>
+<p>必须满足哪些条件才能发送消息。   What conditions must be met for a message to be sent.</p>
+<p><strong>非功能性需求（质量需求）</strong></p>
+<p>在初始日期后不超过4小时分发的薪水支票将被读取。   Paychecks distributed no more than 4 hours after initial date are read. </p>
+<p>系统限制高级管理人员的访问权限。   System limits access to senior managers.      </p>
+<p><strong>设计约束</strong>     接口与组件限制设计</p>
+<p>**过程约束 **    技术和资源限制</p>
+<p>4、<strong>用户、设计者、测试人员</strong>是需求文档的直接使用者，而程序员不是。</p>
+<p><strong>Users, designers, and testers</strong> are direct users of requirements documents, not programmers.</p>
+<p>5、需求的特性：</p>
+<p>correct、consistent 一致性 、ambigious 模棱两可的、complete、feasible 可行的、relevent 相关的、testable 可测试的、traceable 可追踪的 、unverifiable 无法验证的</p>
+<p>6、<strong>Requirement Modeling notations  需求建模符号</strong>       必考大题！！（知道每一种建模符号的概念以及对应的uml图。22年考的是建模题，第一问好像是数据流建模，第二问是让你画uml的序列图…我没写出来）</p>
+<ul>
+<li><p><strong>Entity-relationship diagrams（ERD&#x2F;E-R）</strong></p>
+<p><strong>表示概念模型的一种方法，包含实体，联系，属性三个要素。对应UML中的类图。</strong></p>
+<p>A way to represent a conceptual model that contains three elements: <strong>entity, relationship, and attribute</strong>. Corresponds to a <strong>class diagram</strong> in UML.</p>
+</li>
+<li><p><strong>Event traces  事迹追踪</strong></p>
+<p><strong>对现实世界实体之间交换的事件序列的图形描述。对应UML中的序列图。</strong></p>
+<p>A graphical description of the sequence of events exchanged between real-world entities. Corresponds to a <strong>sequence diagram</strong> in UML.</p>
+</li>
+<li><p><strong>State machines  状态机</strong></p>
+<p><strong>系统与环境之间所有对话的图形化描述。对应UML中的状态图。</strong></p>
+<p>A graphical description of all conversations between the system and the environment. Corresponds to a <strong>state diagram</strong> in UML.</p>
+</li>
+<li><p><strong>Data-flow diagrams (DFD)  数据流图</strong></p>
+<p><strong>对功能以及从一个功能到另一个功能的数据流建模。对应UML中的用例图</strong></p>
+<p>Model features and the flow of data from one feature to another. Corresponding to the <strong>use case diagram</strong> in UML</p>
+</li>
+</ul>
+<p>7-10为大题考察可能性较低，了解即可</p>
+<p>7、Briefly describe the functions of the two approaches of prototyping.</p>
+<p><strong>一次性原型</strong>是为了更多地了解问题或建议的<strong>解决方案</strong>而开发的软件，它<strong>绝不是交付软件的一部分</strong>。</p>
+<p><strong>throwaway prototyping</strong>：A throwaway prototype is software that is developed to learn more about a problem or about a proposed solution, and that is never intended to be part of the delivered software.</p>
+<p><strong>进化原型</strong>是一种软件，开发它不仅是为了<strong>帮助我们回答问题</strong>，而且是为了<strong>整合到最终产品中</strong>。</p>
+<p><strong>evolution prototyping</strong>：an evolutionary prototype is software that is developed not only to help us answer questions but also to be incorporated into the final product.</p>
+<p>8、Briefly describe the function of the four types of the requirement.</p>
+<p><strong>functional requirement</strong>：describes required behavior in terms of required activities</p>
+<p>根据需要的活动描述需要的行为</p>
+<p><strong>qualtity requirement</strong>：describes some quality characteristic that the software solution must possess</p>
+<p>描述软件解决方案必须具备的一些质量特征</p>
+<p><strong>process constraint</strong>：a restriction on the techniques or resources that can be used to build the system</p>
+<p>对可用于构建系统的技术或资源的限制</p>
+<p><strong>design constraint</strong>：a design decision, such as choice of platform or interface components, that has already been made and that restricts the set of solutions to our problem</p>
+<p>一个已经做出的设计决策，例如平台或接口组件的选择，它限制了我们的问题的解决方案集</p>
+<p>9、Briefly describe the roles of the seven groups of stakeholders.简要描述七组利益相关者的角色</p>
+<p>客户：谁是为要开发的软件付费的人<br>客户：软件开发后购买<br>用户：使用系统<br>领域专家：熟悉软件必须自动化的问题<br>市场研究人员：进行调查以确定未来趋势和潜在客户<br>律师或审计师：熟悉政府、安全或法律要求<br>软件工程师或其他技术专家</p>
+<p>10、Briefly describe the functions of three core construct of ERD.</p>
+<p><strong>entity</strong>：represents a collection (sometimes called a class) of real-world objects that have common properties and behaviors.</p>
+<p>表示具有公共属性和行为的现实世界对象的集合(有时称为类)。</p>
+<p><strong>relationship</strong>：an edge between two entities, with a diamond in the middle of the edge specifying the type of relationship</p>
+<p>两个实体之间的边缘，边缘中间的菱形指定关系类型。</p>
+<p><strong>atrribute</strong>：an annotation on an entity that describes data or properties associated with the entity.</p>
+<p>实体上的一种注释，用于描述与该实体相关联的数据或属性。</p>
+<h2 id="第五章-设计体系结构（Design-the-Architecture）"><a href="#第五章-设计体系结构（Design-the-Architecture）" class="headerlink" title="第五章  设计体系结构（Design the Architecture）"></a>第五章  设计体系结构（Design the Architecture）</h2><p>1、软件体系结构&#x3D;构件，连接件，约束</p>
+<p>component(构件)、connector(连接件)、constraint(约束)</p>
+<p>2、**体系结构样式  Architecture styles **     小重点！（选择题可以判别是哪种体系样式结构，这个好像考了选择没考简答）</p>
+<ul>
+<li><h5 id="pipes-and-filers-管道和过滤器"><a href="#pipes-and-filers-管道和过滤器" class="headerlink" title="pipes and filers 管道和过滤器"></a>pipes and filers 管道和过滤器</h5><p>每个模块都有一组输入与输出，可做编译器（compiler）</p>
+</li>
+<li><h5 id="Publish-subscribe-发布-订阅"><a href="#Publish-subscribe-发布-订阅" class="headerlink" title="Publish-subscribe  发布-订阅"></a>Publish-subscribe  发布-订阅</h5><p>在发布-订阅体系结构中，订阅组件通过它表达对事件的兴趣。当另一个组件发生该事件时，订阅组件将得到通知。组件component</p>
+</li>
+<li><h5 id="Client-x2F-Server-客户端-x2F-服务端"><a href="#Client-x2F-Server-客户端-x2F-服务端" class="headerlink" title="Client&#x2F;Server  客户端&#x2F;服务端"></a>Client&#x2F;Server  客户端&#x2F;服务端</h5><p>在客户机-服务器架构中，<strong>服务器</strong>组件提供服务，而<strong>客户机</strong>使用请求&#x2F;应答协议访问它们。</p>
+</li>
+<li><h5 id="Repositories-存储库架构"><a href="#Repositories-存储库架构" class="headerlink" title="Repositories   存储库架构"></a>Repositories   存储库架构</h5><p>用于数据存储、搜索引擎 search engine 、库 libraries 等</p>
+</li>
+<li><h5 id="peer-to-peer"><a href="#peer-to-peer" class="headerlink" title="peer-to-peer"></a>peer-to-peer</h5><p>在对等体系结构中，每个对等点作为它自己的进程执行，并且作为其他对等组件的客户端和服务器。</p>
+</li>
+<li><h5 id="layering-分层体系"><a href="#layering-分层体系" class="headerlink" title="layering  分层体系"></a>layering  分层体系</h5><p>High levels of <strong>abstraction</strong>  高级<strong>抽象</strong></p>
+</li>
+</ul>
+<h2 id="第六章-模块设计（Design-the-Modules）"><a href="#第六章-模块设计（Design-the-Modules）" class="headerlink" title="第六章  模块设计（Design the Modules）"></a>第六章  模块设计（Design the Modules）</h2><p>1、<strong>六耦合  coupling</strong>  超级重点！！！(知道构建耦合概念，可以列举六耦合名称，选择题可以判别是那种耦合，22年考了简答，列举几个耦合类型并解释)</p>
+<p><strong>构建耦合 component coupling ：两个构件之间相互依赖或者相互作用的程度的度量</strong></p>
+<ul>
+<li><strong>Content coupling 内容耦合</strong> ：一个模块直接使用或者修改另一个模块内部的数据，或者通过非正常的入口，直接进入另一个模块的内 部。比如在某个组件的分支操作，直接进入到了另一个组件之中（one component branches into the middle of another component）。 </li>
+<li><strong>Common coupling 公共耦合</strong>：几个模块对一个公共的数据区域进行数据上的操作 </li>
+<li><strong>Control coupling 控制耦合</strong>：一个模块通过传递参数，或者函数的返回值来控制另一个模块的行为 </li>
+<li><strong>Stamp coupling 特征&#x2F;标记耦合</strong>：复杂的数据结构在模块之间传递            当复杂的数据结构在模块之间传递时，我们说模块之间存在图章耦合</li>
+<li><strong>Data coupling 数据耦合</strong> 几个模块共享几个数据的值 if only data value, and not structured data, are passed, then the modules are connected by data coupling .</li>
+<li><strong>Uncoupled  无耦合</strong></li>
+</ul>
+<p>2、**七内聚  cohesion **    超级重点！！！(知道构建内聚概念，可以列举七内聚名称，选择题可以判别是那种内聚)</p>
+<p><strong>构建内聚：一个构建功能强度的度量</strong></p>
+<ul>
+<li><strong>Coincidental cohesion  巧合内聚</strong>：模块之间毫无关系，相互之间是松散的</li>
+<li><strong>Logical cohesion  逻辑内聚</strong>：逻辑内聚力，如果它的各个部分仅通过其代码的逻辑结构相关。  例如 if-else</li>
+<li><strong>Temporal cohesion 时间内聚</strong>：一个模块完成的许多功能必须在相近的时间点完成，比如系统的初始化，这些功能通过时间因素关联在 一起。</li>
+<li><strong>Procedural cohesion  过程内聚</strong>：允许在调用前面的构件或操作之后，马上调用后面的构件或操作，即使两者之间没有数据进行传递</li>
+<li><strong>Communication cohesion  通信内聚</strong>：一个模块的所有成分都操作同一数据集或者生成同一数据集  data set</li>
+<li><strong>sequencial cohesion 顺序内聚</strong>：指一个模块中各个处理元素都密切相关于同一功能且必须顺序执行,前一功能元素的输出就是下一功能元 素的输入 </li>
+<li><strong>Functional cohesion 功能内聚</strong>：一个模块中包含对单个函数至关重要的所有元素，而该模块的所有元素对该函数的性能都至关重要。</li>
+</ul>
+<h2 id="第七章-编程（Writing-the-programs）"><a href="#第七章-编程（Writing-the-programs）" class="headerlink" title="第七章  编程（Writing the programs）"></a>第七章  编程（Writing the programs）</h2><p>1、即使在编写代码本身时，许多人也会参与其中，并且需要<strong>合作和协调</strong></p>
+<p>Even when writing the code itself, many people are sually involved, and a great deal of <strong>coorperation and coordination</strong> is required</p>
+<p>2、程序三要素：<strong>控制结构 Control Structural  算法 Algorithm  数据结构 Data Structure</strong></p>
+<p>3、<strong>文档  Documentation</strong>（要知道标题注释块包含的内容）</p>
+<p><img src="/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220707095952590.png" alt="image-20220707095952590" loading="lazy"></p>
+<h2 id="第八章-测试程序（Testing-the-Program）"><a href="#第八章-测试程序（Testing-the-Program）" class="headerlink" title="第八章  测试程序（Testing the Program）"></a>第八章  测试程序（Testing the Program）</h2><p>1、<strong>测试步骤  testing steps</strong>   （重点，理解并记住，大题，选择）：单元测试和集成测试后进行系统测试，系统测试包含四个步骤</p>
+<ul>
+<li><p><strong>单元测试  unit testing</strong> ：测试单个模块</p>
+</li>
+<li><p><strong>集成测试 Integration testing</strong> ：测试集成的模块</p>
+</li>
+<li><p><strong>系统测试 System testing</strong> ：测试整个软件系统</p>
+<ol>
+<li><strong>功能测试  function test</strong>：检查集成的系统是否按照需求中指定的那样执行它的功能</li>
+<li><strong>性能测试  performance test</strong>  :将集成的构建与非功能呢个需求进行比较</li>
+<li><strong>验收测试  acceptance test</strong>：客户参与的测试，目标是确保系统复合它们对需求的理解</li>
+<li><strong>安装测试 installation test</strong> ：在实际运行环境中的测试</li>
+</ol>
+</li>
+</ul>
+<p>补充知识点：<strong>回归测试 regression test：回归测试适用于新的版本或发布的一种测试，以验证与旧版本或发布相比，他是否仍然以同样的方式执行相同的功能。由于在测试过程中可能在修复已有故障的同时引入新的故障，故需要进行回归测试。</strong></p>
+<p>2、 <strong>测试技术  Testing techniques</strong>（选择）</p>
+<p><img src="/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220707100059278.png" alt="image-20220707100059278" loading="lazy"></p>
+<p><strong>穷举测试 exhaustive test</strong></p>
+<p>3、<strong>代码审查  code review</strong>（重点，会考大题）</p>
+<p><strong>代码走查：程序员向评审小组提交代码及其相关文档，然后评议小组评论其正确性。</strong> </p>
+<p><strong>代码审查：与走查类似但是更正式。按照一个事先准备好的问题清单来检查代码和文档</strong></p>
+<p>4、<strong>Logic flow</strong> ：这个的解法很简单，就是找到所有可能走完的路径就行了。  （大题必考！！！！22年没考）</p>
+<p>5、<strong>集成测试的几种方式 Integration testing</strong>（小重点，选择题）</p>
+<ul>
+<li><p><strong>自下而上的集成  Bottom-up integration</strong></p>
+<p>先测试软件最底部的各个独立组件再向上测试集成的组件。测试每一个集成的组件都要连带其下所属的 底层组件一并测试一遍，即将他们看作一个整体进行测试。 需要注意的是这种测试需要为编写驱动（driver components）</p>
+</li>
+<li><p><strong>自上而下的集成  Top-down integration</strong> </p>
+<p>测试主控模块，由桩模块代替所有直属模块。利用广度优先遍历或深度优先遍历，从根节点开始向下遍历，遍历结点的顺序就是测试的顺序。</p>
+</li>
+<li><p><strong>大爆炸集成  Big-bang integration</strong> </p>
+<p>类似于黑盒测试，直接将所有组件组装成一个整体，对整个系统进行测试。</p>
+</li>
+<li><p><strong>三明治集成  Sandwich integration</strong></p>
+<p>目标层（中间层）的选择问题。混合使用自底向上和自顶向下的测试方式，<strong>先采用自顶向下测试单个组件，再利用自底向上将已测试的 单个组件组装成一个整体测试。</strong></p>
+<p>eg：</p>
+</li>
+</ul>
+<img src="/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/image-20220707100334633.png" alt="image-20220707100334633" style="zoom: 33%;" loading="lazy">
+
+
+
+<h2 id="第九章-测试系统（Testing-the-system）"><a href="#第九章-测试系统（Testing-the-system）" class="headerlink" title="第九章  测试系统（Testing the system）"></a>第九章  测试系统（Testing the system）</h2><p>1、<strong>性能测试的种类  Types of performance testing</strong>（选择题居多，也有答题，要理解概念；回归测试概念考过简答）</p>
+<ul>
+<li><strong>压力测试 stress test</strong> ：在常规条件下运行软件，而是在计算机数量较少或系统资源匮乏下测试软件的性能，通常测试的 资源包括内部内存、CPU可用性、磁盘空间、网络带宽 </li>
+<li><strong>容量测试 Volumne test</strong>：产生大量测试数据来测试软件某项指标的极限值，在给定时间内能够处理的最大负载量，从而让开 发商和用户了解该软件系统的承受能力或提供服务能力。 </li>
+<li><strong>配置测试 configuration test</strong>：对电脑硬件的测试，通过对被测系统的软硬件环境进行调整，了解各种不同环境对系统性能的影响 程度，进而找到系统各项资源的最优分配原则。 </li>
+<li><strong>兼容性测试 compatibility test</strong> ：检查软件之间能否相互正确地交流共享信息。测试内容主要为不同软件版本的兼容性；不同操作系 统下软件的兼容性；新旧数据之间的兼容性等。 </li>
+<li><strong>回归测试 regression test</strong> ：回归测试是用于软件新版本的一种测试，在修改了旧代码后，重新对相同的功能进行测试，以确认修改没有引入新的错误或导致其他代码产生错误。 由于在正常情况下，对旧代码的修改往往会引入新的错误，因此回归测试的很必要的</li>
+</ul>
+<p>2、<strong>可靠性、可用性和可维护性 Reliability, availability, and maintainability</strong>（超级重点！！大题选择题）</p>
+<p><strong>可靠性：指一个系统对于给定的时间间隔内、在给定条件下无失效运作的概率</strong></p>
+<p><strong>Mean Time To Failure      R &#x3D; MTTF&#x2F;(1+MTTF)</strong></p>
+<p><strong>可维护性：在给定的使用条件下，在规定的时间间隔内，使用规定的过程和资源完成维护活动的概率</strong></p>
+<p><strong>Mean Time between Faulure        A &#x3D; MTBF(1+MTBF)</strong></p>
+<p><strong>可用性：在给定的时间点上，一个系统能够按照规格说明正确运作的概率</strong></p>
+<p><strong>Mean Time to Repair     M &#x3D; 1&#x2F;(1+MTTR)</strong></p>
+<h2 id="第十章-交付系统（Delivering-the-System）"><a href="#第十章-交付系统（Delivering-the-System）" class="headerlink" title="第十章  交付系统（Delivering the System）"></a>第十章  交付系统（Delivering the System）</h2><p>没啥重点，略过</p>
+<h2 id="第十一章-维护系统（Maintaining-the-System）、"><a href="#第十一章-维护系统（Maintaining-the-System）、" class="headerlink" title="第十一章  维护系统（Maintaining the System）、"></a>第十一章  维护系统（Maintaining the System）、</h2><p>1、<strong>Four types of maintenance activities</strong> （重点，选择，22年考了大题好像）</p>
+<ul>
+<li><p><strong>Corrective maintenance 改正性维护</strong> </p>
+<p>为了控制日常系统功能，维护团队对故障引起的问题做出响应。这种维护称为纠正性维护。</p>
+</li>
+<li><p><strong>Adaptive maintenance 适应性维护</strong> </p>
+<p>保持对系统修改的控制 假设现有的数据库管理系统升级到新版本，这种维护称为适应性维护。</p>
+</li>
+<li><p><strong>Perfective maintenance 完善性维护</strong> </p>
+<p>完善现有功能 如果客户想添加新功能，这种维护称为完善维护。</p>
+</li>
+<li><p><strong>Preventive maintenance 预防性维护</strong> </p>
+<p>防止系统性能下降到不可接受的水准</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>概念性的东西比较多，需要背诵。22年选择题考的比较怪反正，有几题我是蒙的，简答题如果上述都掌握完全没有问题，建模题就是<strong>Requirement Modeling notations  需求建模符号</strong> 那一部分，建议把ppt和书上的图都看一下。大题是一个判定表和关键路径。</p>
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>xdlbw</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://xdlbw.github.io/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/" title="西电软件工程概论复习纲要">https://xdlbw.github.io/2022/07/07/%E8%A5%BF%E7%94%B5%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/07/06/%E8%A5%BF%E7%94%B5%E8%BD%AF%E5%B7%A5%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0%E7%BA%B2%E8%A6%81/" rel="next" title="西电软工操作系统复习纲要"><span class="post-nav-text">西电软工操作系统复习纲要</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>如果您有任何关于博客内容的相关讨论，欢迎前往 <a href="https://github.com/YunYouJun/yunyoujun.github.io/discussions" target="_blank">GitHub Discussions</a> 与我交流。</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2022 </span><a class="with-love" id="animate" target="_blank" rel="noopener" href="https://github.com/xdlbw"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></a><span class="author"> xdlbw</span></div><div class="live-time"><span>本博客已经哼哧哼哧地运行</span><span id="display_live_time"></span><span class="moe-text">(ง ˙o˙)ว</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2022-04-18T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com" target="blank" title="又拍云"><img height="30" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
