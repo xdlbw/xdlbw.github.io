@@ -1593,14 +1593,16 @@ LABEL_22<span class="token operator">:</span>
       </categories>
   </entry>
   <entry>
-    <title></title>
+    <title>计算机图形学三：光栅化-Rasterization</title>
     <url>/2022/07/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%89%EF%BC%9A%E5%85%89%E6%A0%85%E5%8C%96-Rasterization/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js"></script><h1 id="光栅化（Rasterization）"><a href="#光栅化（Rasterization）" class="headerlink" title="光栅化（Rasterization）"></a>光栅化（Rasterization）</h1><h2 id="什么是光栅化？"><a href="#什么是光栅化？" class="headerlink" title="什么是光栅化？"></a>什么是光栅化？</h2><p>虎书上的解释：</p>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js"></script><h2 id="什么是光栅化？"><a href="#什么是光栅化？" class="headerlink" title="什么是光栅化？"></a>什么是光栅化？</h2><p>虎书上的解释：</p>
 <blockquote>
 <p>光栅化是对象顺序图形的中心操作，而光栅化器是任何图形管道的中心。对于输入的每个基元，光栅化器有两个任务：枚举基元覆盖的像素，并在基元上插值，称为属性。这些属性的用途将在后面的示例中明确。光栅化器的输出是一组片段，每个片段对应于基本体覆盖的像素。每个片段“存在”于特定像素处，并携带其自己的一组属性值。</p>
 </blockquote>
 <p>在上述我们针对摄像机及物体进行MVP变化后，物体被呈现在$[-1,1]^3$的标准空间中，之后经过视口变换将之映射到了$[0,width]*[0,height]$的屏幕上。那么，屏幕又是怎样将物体正确的展示出来的呢？这就是今天所要介绍的光栅化。</p>
 <p>个人理解：MVP变化所关注的是如何将物体的正确二维表示通过转换得到，而光栅化的目的就是将想要展现的物体给真正现实到屏幕上的过程（drawing onto the screen）。</p>
+<span id="more"></span>
+
 <h2 id="像素和屏幕"><a href="#像素和屏幕" class="headerlink" title="像素和屏幕"></a>像素和屏幕</h2><p>在了解屏幕之前，得知道像素是个什么东西。在我们的日常生活中，常常会接触到像素风格东西的存在，如像素风游戏，像素风图像，共有的特点是所要表现的物体及形象是通过一个个颜色不同而内部均匀的像素块堆叠而成的，与真实的形象神似但是并不确切，因为它很“模糊”。</p>
 <p>这是百度对像素的解释：像素是指由图像的小方格组成的，这些小方块都有一个明确的位置和被分配的色彩数值，小方格颜色和位置就决定该图像所呈现出来的样子。</p>
 <p>而屏幕其实就是像素的二维数组。我们平常所说的分辨率，如1920 * 1080（1080p）、1280 * 720（720p）、2k、4k，就是像素数组的大小。像素点越多，像素数组越大，屏幕分辨率越高。屏幕是典型的光栅显示。</p>
