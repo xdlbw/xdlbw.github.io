@@ -1734,7 +1734,7 @@ During rasterization<span class="token operator">:</span>
 <span id="more"></span>
 
 <h1 id="Blinn-phong-反射模型（reflection-model）"><a href="#Blinn-phong-反射模型（reflection-model）" class="headerlink" title="Blinn-phong 反射模型（reflection model）"></a>Blinn-phong 反射模型（reflection model）</h1><p>Blinn-Phong光照模型，又称为Blinn-phong反射模型（Blinn–Phong reflection model）或者 phong修正模型（modified Phong reflection model），是由 Jim Blinn于 1977 年在文章中对传统 phong光照模型基础上进行修改提出的。<strong>它是一个经验模型，并不完全符合真实世界中的光照现象</strong>，但由于实现起来简单方便，并且计算速度和得到的效果都还不错，因此在早期被广泛的使用。</p>
-<p>它将进入摄像机的光线分为三个部分，每个部分使用一种方法来计算它的贡献度，这三个部分分别是**环境光(Ambient)<strong>、</strong>漫反射(Diffuse)<strong>和</strong>高光反射(Specular)**。如下图：</p>
+<p>它将进入摄像机的光线分为三个部分，每个部分使用一种方法来计算它的贡献度，这三个部分分别是**环境光(Ambient)、漫反射(Diffuse)和高光反射(Specular)**。如下图：</p>
 <img src="/2022/07/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9B%9B%EF%BC%9A%E7%9D%80%E8%89%B2-Shading/20200422202039268.png" alt="img" style="zoom:50%;" loading="lazy">
 
 <p>在计算之前，我们先定义一些基本的向量，因为只表示方向，默认它们都为单位向量：</p>
@@ -1769,7 +1769,7 @@ During rasterization<span class="token operator">:</span>
 <blockquote>
 <p>反射系数指光（入射光）投向物体时，其表面反射光的强度与入射光的强度之比值（有多少入射光能够被反射出去，其值介于0~1之间），受入射光的投射角度、强度、波长、物体表面材料的性质以及反射光的测量角度等因素影响。一般来讲，在颜色系列中，黑色的反射系数较小，为0.03，白色的反射系数较大，为0.8。</p>
 </blockquote>
-<p>简要来说，**$K_d$与颜色有关**，这一点将在下面的部分着重讨论。</p>
+<p>简要来说，$K_d$与颜色有关，这一点将在下面的部分着重讨论。</p>
 <p>同时，我们观察漫反射公式可以发现，漫反射光照与观察方向<code>v</code>没有关系。这是可以理解的，因为<strong>漫反射光在任何反射方向上的分布都是一样的</strong>，所以无论在哪个方向观测，只要入射光线强度不变、入射光线与法线夹角不变，漫反射光照均相同。</p>
 <h2 id="镜面-x2F-高光反射（Specular-highlights）"><a href="#镜面-x2F-高光反射（Specular-highlights）" class="headerlink" title="镜面&#x2F;高光反射（Specular highlights）"></a>镜面&#x2F;高光反射（Specular highlights）</h2><p>高光反射也称为镜面反射，若物体表面很光滑，当平行入射的光线射到这个物体表面时，仍会平行地向一个方向反射出来。</p>
 <p>初中物理知识可以知道，镜面反射知道入射方向和法线方向就可以得到反射方向。如下图中一根入射光线，照射在光滑的平面上，会沿着$R$ 方向反射，由于平面并非完全光滑，所以反射光的方向并非只有$R$ 一个点，而是 $R$ 周边的一小块区域，只要眼睛(摄像机)在 $R$ 附近都可以看得到，越靠近 $R$ 反射光照强度越大。我们可以得出一条结论：<strong>高光反射和观察角度有关。</strong></p>
@@ -1779,7 +1779,7 @@ During rasterization<span class="token operator">:</span>
 <p>图示为：</p>
 <img src="/2022/07/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9B%9B%EF%BC%9A%E7%9D%80%E8%89%B2-Shading/v2-1410d0150ffd0eb4207fb88f43e1b403_720w.jpg" alt="img" style="zoom: 67%;" loading="lazy">
 
-<p>至此，我们得到了镜面反射的数值表示：<br>$$<br>L_s&#x3D;k_s(\frac{I}{r^2})max(0,cos\alpha)^p&#x3D;k_s(\frac{I}{r^2})max(0,v \cdot R)^p&#x3D;k_s(\frac{I}{r^2})max(0,n\cdot h)^p<br>$$<br>其中 $k_s$ 为镜面反射系数，$\frac{I}{r^2}$ 是当前点接受的光照强度，注意这里在max剔除大于90°的光之后，我们还乘了一个指数 $p$，添加该项的原因很直接，高光对于夹角的度数是十分敏感的，换句话说，只要观察方向稍微偏离反射方向，高光就会剧烈衰减，所以需要一个指数 $p$加速衰减，**$p$ 越大，高光越小越聚集**。图示可以明显看出 $p$ 对于加速高光衰减的效果。另外严格意义上说，镜面反射仍有接受光照能量的损失，在此为了简化不做考虑。</p>
+<p>至此，我们得到了镜面反射的数值表示：<br>$$<br>L_s&#x3D;k_s(\frac{I}{r^2})max(0,cos\alpha)^p&#x3D;k_s(\frac{I}{r^2})max(0,v \cdot R)^p&#x3D;k_s(\frac{I}{r^2})max(0,n\cdot h)^p<br>$$<br>其中 $k_s$ 为镜面反射系数，$\frac{I}{r^2}$ 是当前点接受的光照强度，注意这里在max剔除大于90°的光之后，我们还乘了一个指数 $p$，添加该项的原因很直接，高光对于夹角的度数是十分敏感的，换句话说，只要观察方向稍微偏离反射方向，高光就会剧烈衰减，所以需要一个指数 $p$加速衰减，$p$ 越大，高光越小越聚集。图示可以明显看出 $p$ 对于加速高光衰减的效果。另外严格意义上说，镜面反射仍有接受光照能量的损失，在此为了简化不做考虑。</p>
 <img src="/2022/07/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9B%9B%EF%BC%9A%E7%9D%80%E8%89%B2-Shading/20200422212300315.png" alt="在这里插入图片描述" style="zoom:50%;" loading="lazy">
 
 <p>下图中许多小球，展示了反射系数和 $p$ 值变动对高光反射效果的影响:</p>
