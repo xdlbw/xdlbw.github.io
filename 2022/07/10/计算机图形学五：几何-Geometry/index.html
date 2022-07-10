@@ -1,0 +1,315 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="xdlbw"><meta name="copyright" content="xdlbw"><meta name="generator" content="Hexo 5.4.2"><meta name="theme" content="hexo-theme-yun"><title>计算机图形学五：几何-Geometry | lbw的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.2.4/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", () => {
+  Yun.utils.renderKatex();
+});</script><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"xdlbw.github.io","root":"/","title":"lbw的小窝","version":"1.8.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"想要搜些什么？","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]},"vendors":{"darken":"https://cdn.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-1LL0D86CY9"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1LL0D86CY9');
+}</script><script data-ad-client="ca-pub-2245427233262012" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M9KWR9L');</script><!-- End Google Tag Manager --><meta name="description" content="几何（Geometry）几何与计算机图形学密不可分，图形的表达、呈现等几乎都以几何形体的方式呈现。 例如水杯：   水滴：   建筑群：   几何的形状与多少决定了渲染的复杂程度，如何表示好各种各样的模型是几何部分的主要研究内容之一。俗话说点构线，线构面，面构体，而几何形体的最基本要素，就是曲线与曲面。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机图形学五：几何-Geometry">
+<meta property="og:url" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/index.html">
+<meta property="og:site_name" content="lbw的小窝">
+<meta property="og:description" content="几何（Geometry）几何与计算机图形学密不可分，图形的表达、呈现等几乎都以几何形体的方式呈现。 例如水杯：   水滴：   建筑群：   几何的形状与多少决定了渲染的复杂程度，如何表示好各种各样的模型是几何部分的主要研究内容之一。俗话说点构线，线构面，面构体，而几何形体的最基本要素，就是曲线与曲面。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513193525634.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513193624264.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513193721721.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513194653455.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513194921740.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513200359619.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513200819866.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513200901573.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513201149745.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513201652984.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/202005132022212.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513203136928.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513203534908.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513203939268.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513195436834.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710172611891.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513204935372.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513205740564-165744539367718.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513210058260.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514201840173.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514202351960.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514202645898.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514202954557.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514203238640.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/2020051420371525.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514204252506.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710185955642.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710190109505.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710191328529.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514205439781.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710192228612.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710192941410.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710193051474.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514212901367.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516092149255.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516093746861.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516093948110.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516094130260.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710194448263.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516101638829.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516102012880.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516102323205.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516102758734.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516102941240.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516092232933.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710195515671.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/2020051610440617.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516105346220.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516110042210.png">
+<meta property="article:published_time" content="2022-07-10T08:25:19.000Z">
+<meta property="article:modified_time" content="2022-07-10T12:03:24.300Z">
+<meta property="article:author" content="xdlbw">
+<meta property="article:tag" content="几何">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513193525634.png"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="xdlbw"><img width="96" loading="lazy" src="/yun.png" alt="xdlbw"><span class="site-author-status" title="永远相信美好的事情即将发生">😊</span></a><div class="site-author-name"><a href="/about/">xdlbw</a></div><span class="site-name">lbw的小窝</span><sub class="site-subtitle">Will is power.</sub><div class="site-desciption">好看的皮囊千篇一律，有趣的灵魂万里挑一</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">14</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">6</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">11</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://blog.csdn.net/lbwnbnbnbnbnbnbn?spm=1000.2115.3001.5343" title="csdn"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-clipboard-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://qm.qq.com/cgi-bin/qm/qr?k=kZJzggTTCf4SpvEQ8lXWoi5ZjhAx0ILZ&amp;jump_from=webapi" title="我的qq：1439040668" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/xdlbw" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/xi-dian-lu-ben-wei" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/697094775?spm_id_from=333.1007.0.0" title="bilibili" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.link" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-train-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://cn.bing.com/search?q=%E5%8D%A2%E6%9C%AC%E4%BC%9F&amp;qs=n&amp;form=QBRE&amp;sp=-1&amp;pq=lu%27ben%27wei&amp;sc=8-10&amp;sk=&amp;cvid=C9786016A76A4968BD433107A7B5DC9D" title="大帅哥" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%A0%E4%BD%95%EF%BC%88Geometry%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">几何（Geometry）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9B%B2%E9%9D%A2%EF%BC%88Curved-Surface%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">曲面（Curved Surface）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%90%E5%BC%8F%E6%9B%B2%E9%9D%A2%EF%BC%88Implicit-Surface%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">隐式曲面（Implicit Surface）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%90%E5%BC%8F%E6%9B%B2%E9%9D%A2%E7%89%B9%E7%82%B9"><span class="toc-number">2.1.1.</span> <span class="toc-text">隐式曲面特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E6%95%B0%E6%9B%B2%E9%9D%A2%EF%BC%88Algebraic-Surface%EF%BC%89"><span class="toc-number">2.1.2.</span> <span class="toc-text">代数曲面（Algebraic Surface）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%9B%BA%E4%BD%93%E5%87%A0%E4%BD%95%EF%BC%88Constructive-Solid-Geometry%EF%BC%89"><span class="toc-number">2.1.3.</span> <span class="toc-text">构造固体几何（Constructive Solid Geometry）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E8%B7%9D%E7%A6%BB%E5%87%BD%E6%95%B0%EF%BC%88Signed-Distance-Function%EF%BC%89"><span class="toc-number">2.1.4.</span> <span class="toc-text">符号距离函数（Signed Distance Function）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B0%B4%E5%B9%B3%E9%9B%86%EF%BC%88Level-Set%EF%BC%89"><span class="toc-number">2.1.5.</span> <span class="toc-text">水平集（Level Set）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%9E%8B%E5%87%A0%E4%BD%95%EF%BC%88Fractals%EF%BC%89"><span class="toc-number">2.1.6.</span> <span class="toc-text">分型几何（Fractals）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E6%9B%B2%E9%9D%A2%EF%BC%88Explicit-Surface%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">显示曲面（Explicit Surface）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E6%9B%B2%E9%9D%A2%E7%89%B9%E7%82%B9"><span class="toc-number">2.2.1.</span> <span class="toc-text">显示曲面特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%82%B9%E4%BA%91%EF%BC%88Point-Cloud%EF%BC%89"><span class="toc-number">2.2.2.</span> <span class="toc-text">点云（Point Cloud）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E8%BE%B9%E5%BD%A2%E7%BD%91%E6%A0%BC-Polygon-Mesh"><span class="toc-number">2.2.3.</span> <span class="toc-text">多边形网格(Polygon Mesh)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Wavefront-Object-File%EF%BC%88-obj%EF%BC%89"><span class="toc-number">2.2.4.</span> <span class="toc-text">The Wavefront Object File（.obj）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9B%B2%E7%BA%BF%EF%BC%88Curve%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">曲线（Curve）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF%EF%BC%88Bezier-Curves%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">贝塞尔曲线（Bézier Curves）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E9%9D%A2%EF%BC%88Bezier-Surfaces%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">贝塞尔曲面（Bézier Surfaces）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B2%E9%9D%A2%E7%BB%86%E5%88%86%EF%BC%88Mesh-Subdivision%EF%BC%89"><span class="toc-number">3.3.</span> <span class="toc-text">曲面细分（Mesh Subdivision）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Loop%E7%BB%86%E5%88%86%EF%BC%88Loop-Subdivision%EF%BC%89"><span class="toc-number">3.3.1.</span> <span class="toc-text">Loop细分（Loop Subdivision）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Catmull-Clark%E7%BB%86%E5%88%86-Catmull-Clark-Subdivision%EF%BC%89"><span class="toc-number">3.3.2.</span> <span class="toc-text">Catmull-Clark细分(Catmull-Clark Subdivision）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B2%E9%9D%A2%E7%AE%80%E5%8C%96%EF%BC%88Mesh-Smplication%EF%BC%89"><span class="toc-number">3.4.</span> <span class="toc-text">曲面简化（Mesh Smplication）</span></a></li></ol></li></ol></div></div></div><div class="tag-cloud"><div class="tag-cloud-tags"><a href="/tags/ECB%E3%80%81CBC%E3%80%81CFB%E3%80%81OFB%E3%80%81CTR/" style="font-size: 12px; color: #999">ECB、CBC、CFB、OFB、CTR</a> <a href="/tags/MISC/" style="font-size: 12px; color: #999">MISC</a> <a href="/tags/Reverse/" style="font-size: 12px; color: #999">Reverse</a> <a href="/tags/WEB/" style="font-size: 12px; color: #999">WEB</a> <a href="/tags/%E5%85%89%E6%A0%85%E5%8C%96/" style="font-size: 12px; color: #999">光栅化</a> <a href="/tags/%E5%87%A0%E4%BD%95/" style="font-size: 12px; color: #999">几何</a> <a href="/tags/%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5/" style="font-size: 30px; color: #0078e7">变换矩阵</a> <a href="/tags/%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3/" style="font-size: 12px; color: #999">暴力破解</a> <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="font-size: 12px; color: #999">渗透测试</a> <a href="/tags/%E7%9D%80%E8%89%B2/" style="font-size: 12px; color: #999">着色</a> <a href="/tags/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/" style="font-size: 12px; color: #999">逻辑漏洞</a></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="xdlbw"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="lbw的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">计算机图形学五：几何-Geometry<a class="post-edit-link" href="https://github.com/xdlbw/xdlbw.github.io/tree/master_posts/计算机图形学五：几何-Geometry.md" target="_blank" title="编辑" rel="noopener"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-edit-line"></use></svg></a></h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2022-07-10 16:25:19" itemprop="dateCreated datePublished" datetime="2022-07-10T16:25:19+08:00">2022-07-10</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">5.8k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">20m</span></span></span><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">计算机图形学</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E5%87%A0%E4%BD%95/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">几何</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="几何（Geometry）"><a href="#几何（Geometry）" class="headerlink" title="几何（Geometry）"></a>几何（Geometry）</h1><p>几何与计算机图形学密不可分，图形的表达、呈现等几乎都以几何形体的方式呈现。</p>
+<p>例如水杯：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513193525634.png" alt="img" style="zoom:40%;" loading="lazy">
+
+<p>水滴：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513193624264.png" alt="img" style="zoom:40%;" loading="lazy">
+
+<p>建筑群：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513193721721.png" alt="img" style="zoom:40%;" loading="lazy">
+
+<p>几何的形状与多少决定了渲染的复杂程度，如何表示好各种各样的模型是几何部分的主要研究内容之一。俗话说点构线，线构面，面构体，而几何形体的最基本要素，就是曲线与曲面。</p>
+<span id="more"></span>
+
+<h1 id="曲面（Curved-Surface）"><a href="#曲面（Curved-Surface）" class="headerlink" title="曲面（Curved Surface）"></a>曲面（Curved Surface）</h1><h2 id="隐式曲面（Implicit-Surface）"><a href="#隐式曲面（Implicit-Surface）" class="headerlink" title="隐式曲面（Implicit Surface）"></a>隐式曲面（Implicit Surface）</h2><h3 id="隐式曲面特点"><a href="#隐式曲面特点" class="headerlink" title="隐式曲面特点"></a>隐式曲面特点</h3><p>所谓隐式曲面指的是并不会告诉你任何点的信息，只会告诉你该曲面上所有点满足的关系。来举个具体的隐式曲面的例子：<br>$$<br>x^2+y^2+z^2&#x3D;1<br>$$<br>大部分人一眼就看出来这是一个3维球体的方程，一般地的我们会把隐式曲面的代数方程写作 $f(x,y,z) &#x3D; 0$，则该球体的隐式曲面方程表示为：<br>$$<br>f(x,y,z) &#x3D; x^2 + y^2+z^2-1<br>$$<br>对于隐式方程来说因为没有给出任何点的信息，因此<strong>如何判断所给出的隐式方程描述的是一个怎样的形状十分困难</strong>，如下图这样一个例子:</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513194653455.png" alt="img" style="zoom: 33%;" loading="lazy">
+
+<p>但是它也有好处：<strong>可以十分容易的判断出一点与曲面的关系</strong>，即我们可以将具体的点坐标代入方程，如果 $f(x,y)&#x3D;0$，就说明该点是构成曲面的要素，如果 $f(x,y)&gt;0$，就说明该点在曲面外，相反的，如果 $f(x,y)&lt;0$，就说明该点在曲面内。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513194921740.png" alt="img" style="zoom: 33%;" loading="lazy">
+
+<p>当然代数曲面只是隐式曲面的一种表现形式，接下来将会一一介绍隐式曲面的其他表现形式。</p>
+<h3 id="代数曲面（Algebraic-Surface）"><a href="#代数曲面（Algebraic-Surface）" class="headerlink" title="代数曲面（Algebraic Surface）"></a>代数曲面（Algebraic Surface）</h3><p>隐式曲面可以通过上述所介绍的代数表达式得到，可以得到许许多多不同的几何曲面：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513200359619.png" alt="img" style="zoom: 50%;" loading="lazy">
+
+<p>但这种表达方式存在多种缺点，首先是只根据表达式大多数情况下根本无法确定所要表达的到底是什么模型，其次就是方程式大多只能表示规则的形状，如果是很复杂的形状的叠加又该怎么办呢？</p>
+<h3 id="构造固体几何（Constructive-Solid-Geometry）"><a href="#构造固体几何（Constructive-Solid-Geometry）" class="headerlink" title="构造固体几何（Constructive Solid Geometry）"></a>构造固体几何（Constructive Solid Geometry）</h3><p>Constructive Solid Geometry（CSG）指的是可以对各种不同的几何做布尔运算，如并，交，差：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513200819866.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>通过这些操作可以得出各种更为复杂的几何：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513200901573.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>通过CSG的方法可以一定程度上缓解隐式曲面难以表现复杂形体的困境。</p>
+<h3 id="符号距离函数（Signed-Distance-Function）"><a href="#符号距离函数（Signed-Distance-Function）" class="headerlink" title="符号距离函数（Signed Distance Function）"></a>符号距离函数（Signed Distance Function）</h3><p>首先看这么一张图：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513201149745.png" alt="在这里插入图片描述" style="zoom:50%;" loading="lazy">
+
+<p>从左往右看，是两个球体慢慢混合（blend）至一个球体，可以从中间过程看出这种混合过程伴随这球体形体的变化，显得混合的十分自然真实，如何表达出这种曲面的变换呢？</p>
+<blockquote>
+<p>符号距离函数（sign distance function），简称SDF，又可以称为定向距离函数（oriented distance function），在空间中的一个有限区域上确定一个点到区域边界的距离并同时对距离的符号进行定义：点在区域边界内部为正，外部为负，位于边界上时为0。</p>
+</blockquote>
+<p>对，我们可以通过空间任意一点到各个几何物体表面的距离，对这些距离做各种各样的运算操作最后得到的一个最终的距离函数，举一个简单的例子:</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513201652984.png" alt="在这里插入图片描述" style="zoom:50%;" loading="lazy">
+
+<p>对于这样一个二维平面，定义空间中每一个点的 $SDF$ 为该点到阴影区域右边界的垂直距离，在阴影内部为负，外部为正，右边界即为形体表面，其上点 $SDF$ 为0。因此对于 A 和 B 两种阴影来说的 $SDF$ 分别如上图下半部分所示。有了 $SDF(A),SDF(B)$ 之后对这两个距离函数选择性的做一些运算得到最终的距离函数，这里采用最简单的 $SDF &#x3D; SDF(A)+SDF(B)$ 来表达混合这一变化，最终得到的 $SDF$ 为零的点的集合即为混合之后曲面边界，对该例子来说，就是两道阴影之间中点的一条线：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/202005132022212.png" alt="在这里插入图片描述" style="zoom: 67%;" loading="lazy">
+
+<p>即符号距离函数来表达隐式曲面的最基本思路是：根据 $SDF$ 为0的点来描绘物体曲面。因此对于一开始的那个例子来说，只需合理定义空间中任意一个点的 $SDF$，再令 $SDF$ 为0即可得到混合的效果了。</p>
+<h3 id="水平集（Level-Set）"><a href="#水平集（Level-Set）" class="headerlink" title="水平集（Level Set）"></a>水平集（Level Set）</h3><p>水平集的方法其实与 $SDF$ 很像，也是找出函数值为0的地方作为曲线，但不像 $SDF$ 会空间中的每一个点有一种严格的数学定义，而是对空间用一个个格子去近似一个函数（将距离存储在表格中），如下：</p>
+<p><img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513203136928.png" alt="在这里插入图片描述" loading="lazy"></p>
+<p>对该面内的每一个点利用已经定义好的格子值进行双线性插值（前一节纹理映射提到）就可以得到任意一点的函数值，找出所有值为0的点作为曲面。（类似于地理中的等高线？？）</p>
+<p>该方法的好处是对于 $SDF$，我们可以更加显示的区空间曲线的形状。该方法广泛的运用在医学成像和物理模拟之中，例如下图我们可以记录下人体组织表面的各个密度，根据组织密度相同的点进行连接绘制得到相应组织的大致形状：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513203534908.png" alt="在这里插入图片描述" style="zoom:50%;" loading="lazy">
+
+<h3 id="分型几何（Fractals）"><a href="#分型几何（Fractals）" class="headerlink" title="分型几何（Fractals）"></a>分型几何（Fractals）</h3><p>分型几何是指许许多多自相似的形体最终所组成的几何形状。</p>
+<p>如雪花是一个六边形，放大之后会发现每一个边上又是一个六边形，再放大六边形边上的六边形边上又是六边形，就这样无限套娃，有点递归的意思。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513203939268.png" alt="在这里插入图片描述" style="zoom: 50%;" loading="lazy">
+
+<p>综上，<strong>隐式曲面具有形式简单，轻易判断点与曲面关系等优点，但难以采样曲面点和模拟过于复杂的形状</strong>。</p>
+<h2 id="显示曲面（Explicit-Surface）"><a href="#显示曲面（Explicit-Surface）" class="headerlink" title="显示曲面（Explicit Surface）"></a>显示曲面（Explicit Surface）</h2><h3 id="显示曲面特点"><a href="#显示曲面特点" class="headerlink" title="显示曲面特点"></a>显示曲面特点</h3><p>对于显式曲面来说是与隐式曲面相对应的，<strong>所有曲面的点被直接给出，或者可以通过映射关系直接得到</strong>，如下图：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513195436834.png" alt="img" style="zoom: 50%;" loading="lazy">
+
+<p>虽然没有直接给出点的数据 $x，y，z$，但是拥有 $u，v$ 的取值范围以及从 $ (u,v)\rightarrow(x,y,z)$ 的映射关系，那么只需要将所有的 $u，v$ 代入自然就可求得 $x，y，z$（类似于从texture到模型的映射）。例如：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710172611891.png" alt="image-20220710172611891" style="zoom: 50%;" loading="lazy">
+
+<p>我们可以很轻松的将所有的 $u，v$ 代入自然就可求得 $x，y，z$，进而求得整个曲面。</p>
+<p><strong>区别隐式曲面与显示曲面的关键就在于是否可以直接表示出所有的点</strong>。隐式曲面难以采样曲面上的点，但是可以轻易判断点与曲面的关系，对于显式曲面来说恰恰相反，我们可以很轻易的采样到所有的点，但是给予你任意一点却很难判断它与曲面的关系。因此没有哪一种的几何表现方式是更好的，根据具体的环境条件来选择隐式还是显式才是合理的做法。</p>
+<p>下面介绍几种显示曲面的表现形式：</p>
+<h3 id="点云（Point-Cloud）"><a href="#点云（Point-Cloud）" class="headerlink" title="点云（Point Cloud）"></a>点云（Point Cloud）</h3><p>很多很多的点构成的曲面，直接有着所有点的信息，点多模型细节就多，点少模型细节就少。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513204935372.png" alt="在这里插入图片描述" style="zoom:50%;" loading="lazy">
+
+<h3 id="多边形网格-Polygon-Mesh"><a href="#多边形网格-Polygon-Mesh" class="headerlink" title="多边形网格(Polygon Mesh)"></a>多边形网格(Polygon Mesh)</h3><p>最常用的曲面表现形式，简单来说通过定义各个多边形面的顶点以及顶点之间的连接关系就可以得到许许多多的三角形面或是四边形面，再通过这些面来近似表现出我们想要的模型效果。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513205740564-165744539367718.png" alt="在这里插入图片描述" style="zoom: 50%;" loading="lazy">
+
+<h3 id="The-Wavefront-Object-File（-obj）"><a href="#The-Wavefront-Object-File（-obj）" class="headerlink" title="The Wavefront Object File（.obj）"></a>The Wavefront Object File（.obj）</h3><p>该形式就是利用文件存储几何的信息。例如一个立方体的模型数据例子，利用<code>.obj</code>文件才存储信息：</p>
+<p>3-10行定义了立方体的8个顶点信息。</p>
+<p>12-25行定义了这些顶点的纹理坐标信息（每个面4个点，共6个面所以最多有24种不同的纹理坐标信息，这里有一些纹理对于不同面上的点是公用的）。</p>
+<p>27-34行定义了6个面的法线信息。</p>
+<p>36-47行中，$f$ 代表一个面，其中 $x&#x2F;x&#x2F;x$ 的第一位表示是哪个顶点，第二位表示该顶点纹理坐标是第几个，第三位表示法线信息是第几个。 3个 $x&#x2F;x&#x2F;x$ 表示3个顶点的信息构成一个三角形面。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200513210058260.png" alt="在这里插入图片描述" style="zoom: 67%;" loading="lazy">
+
+<h1 id="曲线（Curve）"><a href="#曲线（Curve）" class="headerlink" title="曲线（Curve）"></a>曲线（Curve）</h1><h2 id="贝塞尔曲线（Bezier-Curves）"><a href="#贝塞尔曲线（Bezier-Curves）" class="headerlink" title="贝塞尔曲线（Bézier Curves）"></a>贝塞尔曲线（Bézier Curves）</h2><p>贝塞尔曲线(Bézier curve)，又称贝兹曲线或贝济埃曲线，是应用于二维图形应用程序的数学曲线。一般的矢量图形软件通过它来精确画出曲线，<strong>贝塞尔曲线由线段与节点组成，节点是可拖动的支点，线段像可伸缩的皮筋</strong>，我们在绘图工具上看到的钢笔工具就是来做这种矢量曲线的。贝塞尔曲线是计算机图形学中相当重要的参数曲线，在一些比较成熟的位图软件中也有贝塞尔曲线工具，如PhotoShop等。</p>
+<p>贝塞尔曲线于1962，由法国工程师皮埃尔·贝塞尔（Pierre Bézier）所广泛发表，他运用贝塞尔曲线来为汽车的主体进行设计。贝塞尔曲线最初由Paul de Casteljau于1959年运用de Casteljau演算法开发，以稳定数值的方法求出贝塞尔曲线。</p>
+<p>首先看一下一条实际的贝塞尔曲线长什么样子：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514201840173.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>其中 $p_0,p_1,p_2,p_3$ 为<strong>控制点</strong>，蓝色所表示曲线就是贝塞尔曲线了，可以从图中观察到，**曲线会与初始与终止端点相切，并且经过起点 $p_0$ 与终点 $p_3$**。那么这样一条曲线究竟是怎么得到的呢？需要用到 Casteljau 算法。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514202351960.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>首先从简单的3个控制点情形出发，示意如何画出曲线。（n个控制点得到的是n-1次曲线，如图中3个控制点便是2次贝塞尔曲线）</p>
+<p>正如一开始所说，第一步选定一个时间参数 $t\in[0,1]$，在 $b_0b_1$ 线段之上利用 $t$ 值进行线性插值：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514202645898.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>即 $b_0^1 &#x3D; b_0+t*(b_1-b_0)$，得到 $b_0^1$ 之后在 $b_1b_2$ 线段上重复做相同的线性插值得到点 $b_1^1$：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514202954557.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>通过给点参数 $t$ 计算得到点 $b_0^1,b_1^1$之后将两点连接，接下来如法炮制在 $b_0^1b_1^1$ 线段之上再进行一次线性插值：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514203238640.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>如此便成功获得了如图所示的3个控制点之下的2次贝塞尔曲线上的一点 $b_0^2$了，那么对所有的 $t\in[0,1]$ 都重复上述的过程，理论上就可以得到无数个位于贝塞尔曲线上的点，进而得到贝塞尔曲线了。通过这样一个简单的3个控制点的例子，相信很快就能理解贝塞尔曲线的原理，那么对于4个控制点，5个控制点，乃至任意控制点步骤都是类似的。<strong>其核心所在就是多次的线性插值，并在生成的新的顶点所连接构成的线段之上递归的执行这个过程，直到得到最后一个顶点</strong></p>
+<p>如下图这样一个4个控制顶点的例子，步骤完全类似：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/2020051420371525.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>当然这只是图形上的表示，如何定量表示呢？同样以一开始的3个控制点为例，利用二次插值的数学公式，将贝塞尔曲线方程展开看看：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514204252506.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>其实看到这就已经非常清楚了，最终得到的贝塞尔曲线方程恰好就是一个关于参数 $t$ 的二次方程，如果细心观察的话，其实可以发现控制点的系数是非常有规律的，很像二项系数，因此可以总结规律得到一个任意控制点组成的贝塞尔曲线的方程如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710185955642.png" alt="image-20220710185955642" style="zoom:50%;" loading="lazy">
+
+<p>对于这样一个特殊系数其实也有一个多项式与之对应，正是伯恩斯坦多项式（Bernstein polynomials），其定义如图中下方所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710190109505.png" alt="image-20220710190109505" style="zoom:50%;" loading="lazy">
+
+<p>其实这就是多项式展开的那个系数，高中好像学过，我把它理解成这样：<br>$$<br>B_i^n(t)&#x3D;C_n^it^i(1-t)^{n-i}<br>$$<br>其中 $C_n^i$ 就是排列组合里面那个玩意儿。</p>
+<p>贝塞尔曲线的定义以及数学表达都介绍了，最后对贝塞尔曲线的几点性质做一个概括:</p>
+<ul>
+<li><strong>必定经过起始与终止控制点</strong></li>
+<li><strong>必定经与起始与终止线段相切</strong></li>
+<li><strong>具有仿射变换性质，可以通过移动控制点移动整条曲线</strong>（简要来说，通过由控制点得到的贝塞尔曲线进行仿射变换与对控制点进行同样的仿射变换后得到的贝塞尔曲线是一样的）</li>
+<li><strong>凸包性质，曲线一定不会超出所有控制点构成的多边形范围</strong></li>
+</ul>
+<p>什么是凸包（convex hull）？想象墙上有许多图钉，我们需要用一根橡皮筋把这些图钉围住，于是我们开始会让橡皮筋尽可能的撑大，然后松手放开橡皮筋，它所形成的多边形即为凸包，如图中蓝色曲线所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710191328529.png" alt="image-20220710191328529" style="zoom: 33%;" loading="lazy">
+
+<p>贝塞尔曲线是完美的吗？来看个有11个控制点的例子：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514205439781.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>所得到的贝塞尔曲线是完全正确的，可总感觉怪怪的，在某些点感觉根本不受控制点的“控制”。这正是由于控制点众多，很难控制局部的贝塞尔曲线形状。为了解决该问题，有人提出了分段贝塞尔曲线，即将一条高次曲线分成多条低次曲线的拼接，其中用的最多的便是用很多的3次曲线（4个控制点）来拼接，如下图：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710192228612.png" alt="image-20220710192228612" style="zoom:40%;" loading="lazy">
+
+<p>图中，①②③④点是第一段贝塞尔曲线的控制点，④⑤⑥⑦是第二段贝塞尔曲线的控制点，⑦⑧⑨⑩是第三段贝塞尔曲线的控制点，我们可以分段得到曲线之后连接。但这种表示方法也有很大的问题，如上图第二段与第三段曲线的连接点⑦处，曲线出现了非常大的偏转，如何在连接点处做到平滑的过度？</p>
+<p>我们知道贝塞尔曲线的特点，<strong>必定经与起始与终止线段相切</strong>，如上图，第一段曲线的终点斜率同线段③④的斜率，而第二段曲线的起点斜率同线段④⑤的斜率，如果这两个线段的尾部和头部的斜率一样是否就能达到平滑的额效果呢，答案是肯定的。我们要做的是<strong>确保③⑤两个点在同一条直线上且③④长度等于④⑤长度</strong>。</p>
+<p>最后要介绍一下贝塞尔曲线的连续性：</p>
+<p>$C^0$ 连续性：第一段曲线的终点为第二段曲线的起点。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710192941410.png" alt="image-20220710192941410" style="zoom: 33%;" loading="lazy">
+
+<p>$C^1$连续性：就是上述说到的平滑过渡。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710193051474.png" alt="image-20220710193051474" style="zoom: 33%;" loading="lazy">
+
+<p><a target="_blank" rel="noopener" href="https://math.hws.edu/eck/cs424/notes2013/canvas/bezier.html">贝塞尔曲线测试demo </a>挺好玩的，可以自己动手试试。</p>
+<h2 id="贝塞尔曲面（Bezier-Surfaces）"><a href="#贝塞尔曲面（Bezier-Surfaces）" class="headerlink" title="贝塞尔曲面（Bézier Surfaces）"></a>贝塞尔曲面（Bézier Surfaces）</h2><p>其实在理解了贝塞尔曲线之后，贝塞尔曲面的原理也是十分容易理解的了，无非是一个从2维到3维的过渡。</p>
+<p>如果说对于曲线来说只有一个参数 $t\in[0,1]$ 那么对于一个面来说，就应该有两个参数，分别设 $ u\in[0,1]$，$v\in[0,1]$，具体过程如下图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200514212901367.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>举一个 $4*4 &#x3D; 16$个控制点的例子，其水平面位置如图中16个黑点所示（并未表示出高度，防止图形太乱），将这16个点分成4列，图中红色圈中的为一列的具体例子。</p>
+<p><strong>第1步：在每列4个控制点之下利用第一个参数 $u$ 运用计算贝塞尔曲线的方法得到空中的四条灰色贝塞尔曲线，同时可以得到同一个 $u$ 下所示的4个蓝色点。</strong></p>
+<p><strong>第2步：在得到4个蓝色顶点之后，在这四个蓝色顶点的基础之下利用第二个参数 $v$ 便可以成功得出贝塞尔曲面上的正确一点</strong></p>
+<p><strong>第3步：遍历所有的 $u，v$ 值就可以成功得到一个贝塞尔曲面</strong></p>
+<h2 id="曲面细分（Mesh-Subdivision）"><a href="#曲面细分（Mesh-Subdivision）" class="headerlink" title="曲面细分（Mesh Subdivision）"></a>曲面细分（Mesh Subdivision）</h2><p>曲面细分是指将一个模型的面合理的分成更多小的面，从而提升模型精度，提高渲染效果，大白话就是将大三角形分成很多个小三角形。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516092149255.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>如何做呢？</p>
+<h3 id="Loop细分（Loop-Subdivision）"><a href="#Loop细分（Loop-Subdivision）" class="headerlink" title="Loop细分（Loop Subdivision）"></a>Loop细分（Loop Subdivision）</h3><p>Loop细分（Loop是发明人的姓氏，不是循环的意思…）是一种<strong>专门针对三角形面</strong>的细分方法，其核心步骤：</p>
+<p><strong>生成更多的三角形跟点</strong></p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516093746861.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>如图所示在连接每条边的中点生成一个新的三角形，原来的三角形就会被分割成4个三角形。</p>
+<p><strong>调整这些三角形或顶点的位置</strong></p>
+<p>图形的细分必然会导致位置的改变，如何合理更改位置使得模型更加美观是细分的第二步。我们将所有的顶点分为两类，一类是新生成的顶点，一类是老的原来就有的顶点，对于新生成的顶点做如下处理：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516093948110.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>这里新的顶点就是白色的那个顶点，其位置为周围4个顶点的权重之和（具体推到属于数学领域，不做深究），各顶点权重如图所示，其余边上的新顶点处理类似。</p>
+<p>对于旧的顶点，做如下处理：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516094130260.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>其实旧每个顶点的处理也十分类似，这里以图中一个白色旧顶点为例，也是其自身以及邻接顶点的权重和，但权重的设置与该旧顶点度数有关。其中 $n$ 表示点的度数，学过数据结构的应该都知道度这个概念，就是与点相连的边的个数，$u$ 跟新节点表示方法一样为权重。</p>
+<p>效果还是挺好的：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710194448263.png" alt="image-20220710194448263" style="zoom:50%;" loading="lazy">
+
+<h3 id="Catmull-Clark细分-Catmull-Clark-Subdivision）"><a href="#Catmull-Clark细分-Catmull-Clark-Subdivision）" class="headerlink" title="Catmull-Clark细分(Catmull-Clark Subdivision）"></a>Catmull-Clark细分(Catmull-Clark Subdivision）</h3><p>Loop细分只能处理三角形面的细分，那么对于不仅仅只有三角形面该怎么办呢？这也就有了Catmull-Clark细分。</p>
+<p>首先做一些定义：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516101638829.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p><strong>1. 对于所有不是四边形的面，称之为Non-quad face</strong><br><strong>2. 所有度不为4的顶点称之为奇异点，标记出来</strong><br><strong>3. 每次细分步骤如图中所示，在每个面中都添加一个点，在每条边的中点也都添加一个点，面上的新顶点连接所有边上的新顶点，进行四边形的细分。之后在每个Non-quad face中随便找一个点连接</strong></p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516102012880.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>考虑右下角几个问题，其实也是一些Catmull-Clark细分的特点：</p>
+<p><strong>1. 有几个非四边形面，就会多出几个奇异点，所以现在一共有2+2 &#x3D; 4个</strong><br><strong>2. 新多出来的奇异点的度数与原来所在面的边数相等，如这里就是3度</strong><br><strong>3. 第一次细分之后所有面都会变成四边形，且往后奇异点数目不再增加</strong></p>
+<p>这里给出一个再一次细分的结果：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516102323205.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>可以看到奇异点依然是4个，不再改变。</p>
+<p>以上我们明白了如何增加新顶点，与Loop细分类似，同样需要去调整各类顶点的位置，这里将所有的顶点分为三类，对于各类顶点位置调整如下图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516102758734.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>下图是两种细分方法的效果对比：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516102941240.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<h2 id="曲面简化（Mesh-Smplication）"><a href="#曲面简化（Mesh-Smplication）" class="headerlink" title="曲面简化（Mesh Smplication）"></a>曲面简化（Mesh Smplication）</h2><p>为了得到更好的光滑模型，我们需要进行曲面细分。那为什么要曲面简化呢，那样不是让模型精度降低了吗。没错，要的就是模型精度降低的效果。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516092232933.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>一方面，降低模型精度可以提高性能；另一方面，在某些情况下，我们根本就没有必要呈现那么完美的模型，例如：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/image-20220710195515671.png" alt="image-20220710195515671" style="zoom:50%;" loading="lazy">
+
+<p>在距离足够远的情况下，我们根本看不出来30000个三角形与3000个三角形的区别。换句话说，我们只需要在摄像机离模型十分近的情况下才需要展示精度高的模型，其他情况下适当降低精度可以大大提高计算机性能。</p>
+<p>换个角度，这是否与纹理映射中Mipmap差不多呢？在某个像素点离摄像机十分远，这个点就会对应texture中十分大的一片区域，对应mipmap，我们并不需要用 Level 等级低的贴图去渲染。这个也类似，离摄像机十分远进行“模糊”是十分有必要的。</p>
+<p>如何做呢？曲面简化所利用的一个方法叫做边坍缩（Edge collapse），如下图所示就是将一条边的两个顶点合成为一个顶点。但随之而来的问题就是，曲面简化需要尽量保持原本模型的shape，如何坍缩一条边，或者说坍缩哪一条边能够使得原模型样貌被改变的程度最小，这就是曲面简化的关键所在。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/2020051610440617.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>为此引入一个度量，即二次误差度量(Quadric Error Metrics)。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516105346220.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>即坍缩之后蓝色新顶点所在的位置与原来各个平面的垂直距离之和。如果能够使得这个误差最小那么对整个模型样貌修改一定程度上也会较小。那么其实到这整个曲面简化的算法流程已经比较清晰了：</p>
+<p><strong>1. 为模型每条边赋值，其值为坍缩这条边之后，代替两个老顶点的新顶点所能得到的最小二次误差度量</strong><br><strong>2. 选取权值最小的边做坍缩，新顶点位置为原来计算得出使得二次误差最小的位置</strong><br><strong>3. 坍缩完之后，与之相连其他的边的位置会改动，更新这些边的权值</strong><br><strong>4. 重复上述步骤，直到到达终止条件</strong></p>
+<p>这其实是一个标准的贪心算法，可能到不了全局最优解，但事实证明最终的结果依然相当不错。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/20200516110042210.png" alt="img" style="zoom:50%;" loading="lazy">
+
+
+
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>xdlbw</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/" title="计算机图形学五：几何-Geometry">https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/07/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9B%9B%EF%BC%9A%E7%9D%80%E8%89%B2-Shading/" rel="next" title="计算机图形学四：着色-Shading"><span class="post-nav-text">计算机图形学四：着色-Shading</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>如果您有任何关于博客内容的相关讨论，欢迎前往 <a href="https://github.com/YunYouJun/yunyoujun.github.io/discussions" target="_blank">GitHub Discussions</a> 与我交流。</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2022 </span><a class="with-love" id="animate" target="_blank" rel="noopener" href="https://github.com/xdlbw"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></a><span class="author"> xdlbw</span></div><div class="live-time"><span>本博客已经哼哧哼哧地运行</span><span id="display_live_time"></span><span class="moe-text">(ง ˙o˙)ว</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2022-04-18T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com" target="blank" title="又拍云"><img height="30" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
