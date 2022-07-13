@@ -1,0 +1,515 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="xdlbw"><meta name="copyright" content="xdlbw"><meta name="generator" content="Hexo 5.4.2"><meta name="theme" content="hexo-theme-yun"><title>计算机图形学六：光线追踪-Ray Tracing | lbw的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.2.4/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", () => {
+  Yun.utils.renderKatex();
+});</script><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"xdlbw.github.io","root":"/","title":"lbw的小窝","version":"1.8.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"想要搜些什么？","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]},"vendors":{"darken":"https://cdn.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-1LL0D86CY9"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1LL0D86CY9');
+}</script><script data-ad-client="ca-pub-2245427233262012" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M9KWR9L');</script><!-- End Google Tag Manager --><meta name="description" content="阴影映射（Shadow Mapping）其实这应该是属于纹理映射这一块的知识，但是闫老师当时没说，知道几何的最后一块才说，因为这又与光线追踪有关，所以我就把它记录于此。 前面我们说过着色，它仅仅考虑着色点与光照这两者，忽略了其他物体甚至自身对于着色点的遮挡关系，这显然是不对的。光源被遮挡，必然会产生阴影，而光栅化并不能很好的表示这种阴影。而阴影映射可以较好的解决这个问题。 再来一遍废话，为什么会有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机图形学六：光线追踪-Ray Tracing">
+<meta property="og:url" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/index.html">
+<meta property="og:site_name" content="lbw的小窝">
+<meta property="og:description" content="阴影映射（Shadow Mapping）其实这应该是属于纹理映射这一块的知识，但是闫老师当时没说，知道几何的最后一块才说，因为这又与光线追踪有关，所以我就把它记录于此。 前面我们说过着色，它仅仅考虑着色点与光照这两者，忽略了其他物体甚至自身对于着色点的遮挡关系，这显然是不对的。光源被遮挡，必然会产生阴影，而光栅化并不能很好的表示这种阴影。而阴影映射可以较好的解决这个问题。 再来一遍废话，为什么会有">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516142332876.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516142544728.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516143052471.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516143538544.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516143958291.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516144150611.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MDY1NTA5,size_16,color_FFFFFF,t_70.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200523140117832.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200523141859616.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200523142634629.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200523142939262.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020052314423168.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200523144513629.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020052609151634.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200526091858120.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200526092104756.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020052609234616.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200526092649274.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200526093018274.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020052609334887.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200526093617207.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528093734847.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528094537824.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528131009255.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528095003118.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528101328638.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528101945807.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713114520935.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528110932164.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020052811195387.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713135706361.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713140549132.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713141033794.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602161606617.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602161924326.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020060216290468.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602163858748.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602163550415.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602164048533.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602165347815.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602171017427.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602172100580.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602173920190.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602174516592.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602175841463.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602183834969.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602184807155.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602185152756.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602190239224.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020060219245867.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602192631208.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602192803160.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602193117114.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602193941152.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602194505631.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713152814326.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713152909307.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020060219535985.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602200341414.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602200239736.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602200259364.png">
+<meta property="og:image" content="https://blogs.nvidia.com/wp-content/uploads/2022/03/path-tracing-ray-tracing-rasterization-672x353.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608145324235.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608150124150.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608151822251.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608152759132.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608154331950.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608154548826.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608155149815.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020060816013460.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608160521691.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608160911411.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608161049501.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608161623874.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608162504928.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608162750373.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608163948436.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608165058497.png">
+<meta property="og:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608165458404.png">
+<meta property="article:published_time" content="2022-07-10T12:06:18.000Z">
+<meta property="article:modified_time" content="2022-07-13T08:52:22.118Z">
+<meta property="article:author" content="xdlbw">
+<meta property="article:tag" content="光线追踪">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516142332876.png"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="xdlbw"><img width="96" loading="lazy" src="/yun.png" alt="xdlbw"><span class="site-author-status" title="永远相信美好的事情即将发生">😊</span></a><div class="site-author-name"><a href="/about/">xdlbw</a></div><span class="site-name">lbw的小窝</span><sub class="site-subtitle">Will is power.</sub><div class="site-desciption">好看的皮囊千篇一律，有趣的灵魂万里挑一</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">15</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">6</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">12</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://blog.csdn.net/lbwnbnbnbnbnbnbn?spm=1000.2115.3001.5343" title="csdn"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-clipboard-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://qm.qq.com/cgi-bin/qm/qr?k=kZJzggTTCf4SpvEQ8lXWoi5ZjhAx0ILZ&amp;jump_from=webapi" title="我的qq：1439040668" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/xdlbw" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/xi-dian-lu-ben-wei" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/697094775?spm_id_from=333.1007.0.0" title="bilibili" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.link" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-train-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" target="_blank" rel="noopener" href="https://cn.bing.com/search?q=%E5%8D%A2%E6%9C%AC%E4%BC%9F&amp;qs=n&amp;form=QBRE&amp;sp=-1&amp;pq=lu%27ben%27wei&amp;sc=8-10&amp;sk=&amp;cvid=C9786016A76A4968BD433107A7B5DC9D" title="大帅哥" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%98%B4%E5%BD%B1%E6%98%A0%E5%B0%84%EF%BC%88Shadow-Mapping%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">阴影映射（Shadow Mapping）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Whitted-Style-%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA"><span class="toc-number">2.</span> <span class="toc-text">Whitted-Style 光线追踪</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">2.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%89%E7%BA%BF%E4%B8%8E%E7%89%A9%E4%BD%93%E6%B1%82%E4%BA%A4"><span class="toc-number">2.2.</span> <span class="toc-text">光线与物体求交</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%89%E7%BA%BF%E7%9A%84%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95"><span class="toc-number">2.2.1.</span> <span class="toc-text">光线的表示方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%89%E7%BA%BF%E4%B8%8E%E9%9A%90%E5%BC%8F%E6%9B%B2%E9%9D%A2%E6%B1%82%E4%BA%A4"><span class="toc-number">2.2.2.</span> <span class="toc-text">光线与隐式曲面求交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%89%E7%BA%BF%E4%B8%8E%E6%98%BE%E7%A4%BA%E6%9B%B2%E9%9D%A2%E6%B1%82%E4%BA%A4"><span class="toc-number">2.2.3.</span> <span class="toc-text">光线与显示曲面求交</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%8A%A0%E9%80%9F"><span class="toc-number">2.3.</span> <span class="toc-text">如何加速</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%B4%E5%AF%B9%E9%BD%90%E5%8C%85%E5%9B%B4%E7%9B%92%EF%BC%88Axis-Aligned-Bounding-Box%EF%BC%89"><span class="toc-number">2.3.1.</span> <span class="toc-text">轴对齐包围盒（Axis-Aligned Bounding Box）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9D%87%E5%8C%80%E7%BD%91%E6%A0%BC%EF%BC%88Uniform-Grids%EF%BC%89"><span class="toc-number">2.3.2.</span> <span class="toc-text">均匀网格（Uniform Grids）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KD-Tree%E7%A9%BA%E9%97%B4%E5%88%92%E5%88%86%EF%BC%88Spatial-Partitions%EF%BC%89"><span class="toc-number">2.3.3.</span> <span class="toc-text">KD-Tree空间划分（Spatial Partitions）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bounding-Volume-Hierarchy%EF%BC%88Object-Partitions%EF%BC%89"><span class="toc-number">2.3.4.</span> <span class="toc-text">Bounding Volume Hierarchy（Object Partitions）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BE%90%E5%B0%84%E5%BA%A6%E9%87%8F%E5%AD%A6%EF%BC%88Radiometry%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">辐射度量学（Radiometry）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%AA%81%E7%84%B6%E6%89%AF%E8%BF%99%E4%B8%AA%EF%BC%9F"><span class="toc-number">3.1.</span> <span class="toc-text">为什么突然扯这个？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%BF%85%E8%A6%81%E5%AE%9A%E4%B9%89"><span class="toc-number">3.2.</span> <span class="toc-text">一些必要定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%90%E5%B0%84%E8%83%BD%E9%87%8F%EF%BC%88Radiant-Energy%EF%BC%89%E5%92%8C%E8%BE%90%E5%B0%84%E9%80%9A%E9%87%8F-x2F-%E5%8A%9F%E7%8E%87%EF%BC%88Radiant-Flux-x2F-Power%EF%BC%89"><span class="toc-number">3.2.1.</span> <span class="toc-text">辐射能量（Radiant Energy）和辐射通量&#x2F;功率（Radiant Flux&#x2F;Power）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%90%E5%B0%84%E5%BC%BA%E5%BA%A6%EF%BC%88Radiant-Intensity%EF%BC%89"><span class="toc-number">3.2.2.</span> <span class="toc-text">辐射强度（Radiant Intensity）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#irradiance"><span class="toc-number">3.2.3.</span> <span class="toc-text">irradiance</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#radiance"><span class="toc-number">3.2.4.</span> <span class="toc-text">radiance</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8C%E5%90%91%E5%8F%8D%E5%B0%84%E5%88%86%E5%B8%83%E5%87%BD%E6%95%B0%EF%BC%88BRDF%EF%BC%89"><span class="toc-number">3.3.</span> <span class="toc-text">双向反射分布函数（BRDF）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E6%96%B9%E7%A8%8B%EF%BC%88The-Rendering-Equation%EF%BC%89"><span class="toc-number">3.4.</span> <span class="toc-text">渲染方程（The Rendering Equation）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B7%AF%E5%BE%84%E8%BF%BD%E8%B8%AA%EF%BC%88Path-Tracing%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">路径追踪（Path Tracing）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B%E7%A7%AF%E5%88%86%EF%BC%88Monte-Carlo-Integration%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">蒙特卡洛积分（Monte Carlo Integration）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B%E8%B7%AF%E5%BE%84%E8%BF%BD%E8%B8%AA%EF%BC%88Monte-Carlo-Path-Tracing%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">蒙特卡洛路径追踪（Monte Carlo Path Tracing）</span></a></li></ol></li></ol></div></div></div><div class="tag-cloud"><div class="tag-cloud-tags"><a href="/tags/ECB%E3%80%81CBC%E3%80%81CFB%E3%80%81OFB%E3%80%81CTR/" style="font-size: 12px; color: #999">ECB、CBC、CFB、OFB、CTR</a> <a href="/tags/MISC/" style="font-size: 12px; color: #999">MISC</a> <a href="/tags/Reverse/" style="font-size: 12px; color: #999">Reverse</a> <a href="/tags/WEB/" style="font-size: 12px; color: #999">WEB</a> <a href="/tags/%E5%85%89%E6%A0%85%E5%8C%96/" style="font-size: 12px; color: #999">光栅化</a> <a href="/tags/%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA/" style="font-size: 12px; color: #999">光线追踪</a> <a href="/tags/%E5%87%A0%E4%BD%95/" style="font-size: 12px; color: #999">几何</a> <a href="/tags/%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5/" style="font-size: 30px; color: #0078e7">变换矩阵</a> <a href="/tags/%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3/" style="font-size: 12px; color: #999">暴力破解</a> <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="font-size: 12px; color: #999">渗透测试</a> <a href="/tags/%E7%9D%80%E8%89%B2/" style="font-size: 12px; color: #999">着色</a> <a href="/tags/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E/" style="font-size: 12px; color: #999">逻辑漏洞</a></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="xdlbw"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="lbw的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">计算机图形学六：光线追踪-Ray Tracing<a class="post-edit-link" href="https://github.com/xdlbw/xdlbw.github.io/tree/master_posts/计算机图形学六：光线追踪-Ray-Tracing.md" target="_blank" title="编辑" rel="noopener"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-edit-line"></use></svg></a></h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2022-07-10 20:06:18" itemprop="dateCreated datePublished" datetime="2022-07-10T20:06:18+08:00">2022-07-10</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2022-07-13 16:52:22" itemprop="dateModified" datetime="2022-07-13T16:52:22+08:00">2022-07-13</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">12.2k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">43m</span></span></span><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">计算机图形学</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">光线追踪</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="阴影映射（Shadow-Mapping）"><a href="#阴影映射（Shadow-Mapping）" class="headerlink" title="阴影映射（Shadow Mapping）"></a>阴影映射（Shadow Mapping）</h1><p>其实这应该是属于纹理映射这一块的知识，但是闫老师当时没说，知道几何的最后一块才说，因为这又与光线追踪有关，所以我就把它记录于此。</p>
+<p>前面我们说过着色，它仅仅考虑着色点与光照这两者，忽略了其他物体甚至自身对于着色点的遮挡关系，这显然是不对的。光源被遮挡，必然会产生阴影，而光栅化并不能很好的表示这种阴影。而阴影映射可以较好的解决这个问题。</p>
+<p>再来一遍废话，为什么会有阴影？</p>
+<p><strong>因为光源照射不到，更具体点，摄像机能看到的地方，光源“看”不见。</strong></p>
+<p>而这正是启发阴影贴图这种做法的动机，接下来我们便来看看详细过程是怎么样的。</p>
+<p><strong>第一步，把光源当做一个摄像机让它去看，去渲染整个场景一遍从而得到从光源视角的深度Buffer，记为 $d_{map}$。它被记录在 shadow map中。如图中就记录了四个点的深度</strong></p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516142332876.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>**第二步，从设定好的摄像机位置去真正的渲染场景得到摄像机视角的深度Buffer，记为 $d$ **</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516142544728.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>**第三步，将所有摄像机视角可见点，利用光源视角下的那一套投影矩阵，重新投影回光源，找到与shadow map上对应的 $d_{map}$ **</p>
+<p><strong>如果该点的 $d_{map}$ 与 $d$ 相等，则说明此点可被光源与摄像机共同看见，因此不在阴影中，如下图橘色线条这种情况：</strong></p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516143052471.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p><strong>如果该点的 $d_{map}$ 小于 $d$  ，则说明此点不可被光源看见，但摄像机看得见，即该点前方有物体遮挡，因此在阴影中，如下图红色线这种情况：</strong></p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516143538544.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>如此便能确定每个可见像素点是否在阴影之中了，如果在阴影之中就不去计算Blinn-Phong中的镜面反射项与漫反射项。效果如下图：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516143958291.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>对应可视化的shadow map如下，距离光源越近代表深度越小，所以颜色越黑（同Z-Buffer），反之亦然：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200516144150611.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>阴影映射这种方式确实可以较好表示阴影，但它仍有限制：只适用于点光源，只能描述硬阴影。</p>
+<p>什么是硬阴影？什么是软阴影？软硬阴影示意如下，上方棱角分明为硬阴影，下方为软阴影：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MDY1NTA5,size_16,color_FFFFFF,t_70.png" alt="在这里插入图片描述" style="zoom: 80%;" loading="lazy">
+
+<p>可见现实生活中，软阴影更符合认知，在阴影与没有阴影之间有一个渐变的过度，更加自然。产生软阴影是因为光源具有体积，导致，有的地方完全看不到光源（本影, Umbra）， 有的地方能看到一部分光源（半影，Penumbra）。所以阴影的边缘会有过渡的情况，从而产生软阴影，就像上图中太阳与地球的示意一样（全日食与半日食）。</p>
+<h1 id="Whitted-Style-光线追踪"><a href="#Whitted-Style-光线追踪" class="headerlink" title="Whitted-Style 光线追踪"></a>Whitted-Style 光线追踪</h1><p>首先要清楚的是，我们为什么需要光线追踪？</p>
+<p>在光栅化着色这一章节中，我们介绍了Blinn-Phong反射模型，但这个模型的 bug 之处也是十分明显的，它只考虑了光源到物体的直接光照，其它的间接光照一概不考虑，物体之前的遮挡关系也不考虑。这显然是不对的，例如：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200523140117832.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>如上图中房屋顶部的所接受到的光可不仅仅是Blinn-Phong模型考虑的直接光源，还有可能是来自窗外的光源照射到地板，再发生反射照射到了房屋顶部，而这部分光是局部光照模型没有考虑到的，而光线追踪正是为了解决这种问题所提出的一种全局光照模型。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>光线追踪，顾名思义，核心是光线。首先对光线做一些假设：</p>
+<p><strong>1. 光线一定沿着直线传播</strong><br><strong>2. 光线之间无法碰撞</strong><br><strong>3. 光线路径可逆，即从A发出的到B的光线，一定也可以从B发出到A（中途可发生反射和折射）</strong></p>
+<p>人为什么能看到不同的物体？是因为从物体表面上有光进入了人眼。那由上述的假设是不是也可理解为人眼发出了很多感知光线碰撞到了物体，所以可以看见呢？在古代可还真就有不少人这么想：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200523141859616.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>当然现代物理知识已经告诉我们这种观点是错误的，但是并不妨碍从中获取一些灵感：<strong>光路可逆</strong>，所有进入到人眼的光，都可从人眼发出光按照原路反方向返回，那么利用这种<strong>模拟从人眼发射光线的方法不就可以还原出所有的光路</strong>了呢？这就是光线追踪的核心想法，反其道而行之。</p>
+<p><strong>第一步：Ray Casting</strong></p>
+<p>从人眼（摄像机）向近投影平面上的每一个像素点发射一条光线，判断与场景物体的交点，示意图如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200523142634629.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>当然一条光线自然可能会与不止一个物体相交，但是考虑遮挡关系，只去找最近的交点。接着连接该交点和光源，只要判断这条连线之间是否有物体存在就可以知道该交点是否在阴影之中（原理同上述shadow mapping）：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200523142939262.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>紧接着，自然可以利用Blinn-Phong模型对这个点进行局部光照模型计算，对该像素进行着色，那么遍历所有近投影平面上的像素就能得到一张完整的图像。到目前位置，这与Blinn-Phong模型的思路如出一辙。</p>
+<p><strong>第二步 Recursive (Whitted-Style) Ray Tracing</strong></p>
+<p>考虑第一步中所做的Ray Casting，该条光线第一个与圆球物体相交，假设该圆球是一个玻璃球，那么便会发生镜面反射，如图：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020052314423168.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>当然除了镜面反射之外，也存在折射，同时反射与折射出去的光线会可能与场景中的物体再次碰撞，发生第二次折射与反射：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200523144513629.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>当然，还有其他“无数次的反射与折射”</p>
+<p>从图中可以见到，不仅仅是与圆球相交的那一点可以贡献光到达眼睛，折射与反射之后再与物体相交的点也可以贡献光（<strong>光路可逆原理</strong>）。简而言之，除了直接从光源照射到圆球交点再沿着 eye rays（第一条发射的光线）到眼睛中，也可能存在这样一种情形，有光照射到其他物体，再沿着eye rays的反射或折射的光线方向传回人眼。</p>
+<p>因此每一个着色点的颜色贡献来自这样种几类型 <strong>直接光照，反射方向间接光，折射方向间接光（如果有折射的话）</strong></p>
+<p>下一步将这些所有交点与光源连接，称这些线为shadow rays（因为可以用来检测阴影），计算这些所有点的局部光照模型的结果，将其按照光线能量权重累加，最终得到近投影平面上该像素点的颜色。这就是一个全局光照模型，因为不仅仅考虑了直接光源的贡献，还考虑各种折射与反射光线的贡献。</p>
+<p>以上就是光线追踪的整个过程，还有额外几点要注意的：</p>
+<ol>
+<li>整体过程是一个递归（光无限的折射反射）的过程，因此需要一定的递归终止条件，比如说允许的最大反射或折射次数为10。</li>
+<li>光线在每次反射和折射之后都有能量损耗的，由系数决定，因此越往后的折射和反射光贡献的能量越小。</li>
+<li>如果反射或折射光线没有碰撞到物体，一般直接返回一个背景色。</li>
+</ol>
+<p>参考伪代码如下：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">RayTracing (original_point, ray_direction, objects, depth)&#123;  &#x2F;&#x2F;着色点，光线方向，物体，深度
+	if(depth &gt; maxDepth)
+		return color(0,0,0);          &#x2F;&#x2F;深度测试
+	if(IsHitobject(original_point, ray_direction, objects))&#123;     &#x2F;&#x2F;如果光线与物体有交点
+		hitPoint &#x3D; GetHitPoint();     &#x2F;&#x2F;找到交点
+		normal &#x3D; GetNormal();         &#x2F;&#x2F;找到法线
+        
+		reflectionDirection &#x3D; reflect(ray_direction,normal); &#x2F;&#x2F;求得反射方向
+		refractionDirection &#x3D; refract(ray_direction,normal); &#x2F;&#x2F;求得折射方向，如果没有折射，舍弃折射项
+        
+		local_ color &#x3D; BlinnPhongShader(original_point,normal,light_position)   &#x2F;&#x2F;着色
+            
+		return local color
+			+ k1*RayTracing(hitPoint,reflectionDirection,objects,depth + 1);    &#x2F;&#x2F;继续从该反射光线求反射折射
+			+ k2*RayTracing(hitPoint,refractionDirection,objects,depth + 1);    &#x2F;&#x2F;继续从该折射光线求反射折射
+    &#125;
+	else
+		return background color;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="光线与物体求交"><a href="#光线与物体求交" class="headerlink" title="光线与物体求交"></a>光线与物体求交</h2><p>上述Whitted-Style模型中有一个重要的问题，我们如何得到光线与物体的交点呢？在讨论之前，我们先对光线进行一个定义。</p>
+<h3 id="光线的表示方法"><a href="#光线的表示方法" class="headerlink" title="光线的表示方法"></a>光线的表示方法</h3><p>将每一条光线想象成一条射线，那么每一条光线都会由起点及方向这两个属性所固定，如下图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020052609151634.png" alt="img" style="zoom: 50%;" loading="lazy">
+
+<p>除了起点 $\bold{o}$ ，以及光线方向 $\bold{d}$ 之外，还额外定义了一个参数 $t$ 来表示光线行进的长度（ $t$ 当然是非负数，因为方向已定）。</p>
+<h3 id="光线与隐式曲面求交"><a href="#光线与隐式曲面求交" class="headerlink" title="光线与隐式曲面求交"></a>光线与隐式曲面求交</h3><p>首先计算光线与隐式曲面的交点的方法，以一个球体为例，二者表示方程如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200526091858120.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>光线的表示方法在上节已经介绍过，对于一个球体来说，其表面上所有点 $\bold{p}$ , 到圆心 $\bold{c}$ 的距离是固定为 $R$ 的， 也就得到了上述的球的隐式曲面方程。那么对于一个光线会在什么时候与球相交呢？</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200526092104756.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>这个应该初中生都知道吧（嘻嘻），当然是在一个点既满足光线方程，又满足球体方程的时候，所以可以计算如下，把 $\bold{p} &#x3D; \bold{o}+t\bold{d}$ 代入球体方程，利用一元二次方程的解法即可得到参数 $t$ 值：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020052609234616.png" alt="img" style="zoom: 50%;" loading="lazy">
+
+<p>同样的根据 $b^2-4ac$ 的正负关系，即可判断光线与球是一个交点还是两个交点又或是没有交点，这个应该初中生都知道吧（嘻嘻）。</p>
+<p>虽然这里只举了对一个球的隐式曲面交点的计算，对于所有其他隐式曲面过程都是类似的，只要将光线方程代入求解 $t$ 即可：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200526092649274.png" alt="在这里插入图片描述" style="zoom:50%;" loading="lazy">
+
+<h3 id="光线与显示曲面求交"><a href="#光线与显示曲面求交" class="headerlink" title="光线与显示曲面求交"></a>光线与显示曲面求交</h3><p>在几何中提到过，最常用的曲面表示形式，是通过定义各个多边形面的顶点以及顶点之间的连接关系得到许许多多的三角形面。因此如何判断一条光线与显示曲面的交点，其实也就是计算光线与三角形面的交点。进一步想，直接求光线是否与三角形有交点可能比较难，我们可以通过先求光线是否与该三角形所在平面有交点，再判断交点是否在三角形内来进行判断。对于任意一个平面，可以用如下图中的式子表达：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200526093018274.png" alt="在这里插入图片描述" style="zoom:50%;" loading="lazy">
+
+<p> $\bold{N}$ 是平面的法线， $\bold{p’}$ 是平面内的一点（这两个元素就可以确定一个平面了，想想看是不是这样）。 而 $ax+by+cz+d&#x3D;0$ 是高数中对平面的一般化表示。那么到这里其实已经成功把对显示曲面的求交又转化为了类似隐式曲面求交的方法。</p>
+<p>首先给出如何计算光线与平面交点的过程：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020052609334887.png" alt="在这里插入图片描述" style="zoom: 50%;" loading="lazy">
+
+<p>得到参数 $t$ 之后，自然可以计算出交点，如何判断交点是否在三角形内的问题以及多次讨论：可以用右手定则，也可以用重心坐标。但是这种方法略显繁琐，能不能一步就得到结果呢？利用重心坐标就可以：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200526093617207.png" alt="在这里插入图片描述" style="zoom:50%;" loading="lazy">
+
+<p>重心坐标可以表示位于三角形面内的任意一点，我们直接让它等于光线表达式，求解 $t,b_1,b_2$ 即可。如何求解多项式，线性代数中克莱姆法则可以解决（当然我已经忘了）…</p>
+<p>至此，whited-style光线追踪的第一个小问题得以解决。相比与光栅化中所使用的的Blinn-Phong模型，光线追踪显著了提升了图像质量，但随之而来的问题是渲染速度过慢。<strong>因为在判断光线与场景交点的时候，需要去进行所有三角形面与光线的求交，而且这仅仅是对一个像素而言</strong>。那么总体来说光是进行光线与三角形的求交这样一个计算过程就一共要： <code>像素数量*三角形面数量*弹射次数</code> 这么多次，如下图这样一个场景，一共就有10.7M的三角形面，你可以想象一共要多少次求交运算吗？</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528093734847.png" alt="img" style="zoom: 50%;" loading="lazy">
+
+<p>因此必须要寻求一些办法加速光线追踪的方法。</p>
+<h2 id="如何加速"><a href="#如何加速" class="headerlink" title="如何加速"></a>如何加速</h2><h3 id="轴对齐包围盒（Axis-Aligned-Bounding-Box）"><a href="#轴对齐包围盒（Axis-Aligned-Bounding-Box）" class="headerlink" title="轴对齐包围盒（Axis-Aligned Bounding Box）"></a>轴对齐包围盒（Axis-Aligned Bounding Box）</h3><p>AABB（Axis-Aligned Bounding Box）的提出是十分自然的，当有的光线显然不会与一个物体相交的时候，那么自然也没有必要去遍历该物体的所有三角形面，因此利用一个包围盒包住该物体，<strong>在与该物体的三角面计算求交之前先判断光线是否与包围盒相交，倘若连包围盒都与光线没有交点的话，那么显然不会与物体的三角面有交点</strong>。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528094537824.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>而所谓AABB也是一种包围盒，也是由三对平面的交集构成，只不过AABB的任意一对平面都与 $x-axis，y-axis$ 或者 $z-axis$ 垂直，所以称之为轴对齐包围盒。如下图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528131009255.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>之所以这么设置的原因是为了方便进行光线与包围盒的求交运算。那么问题就转换成了如何求光线与包围盒的交点。</p>
+<p>我们以2D的AABB为例，因此只有 $x，y$ 两对平面，3D情况可类推：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528095003118.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>如上图最左边所示，求出光线与 $x$ 平面的交点，将先进入的交点（偏小的那个）记为 $t_{min}$， 后出去的交点（偏大的那个）记为 $t_{max}$，紧接着如中间图所示计算出光线与y平面的两个交点同样记为另外一组 $t_{min}$ 和 $t_{max}$，当然计算的过程中要注意如果任意的 $t &lt; 0$，那么这代表的是光线反向传播与对应平面的交点。</p>
+<p>我们得到了光线与一对 $x$ 平面的交点，与一对 $y$ 平面的交点，究竟哪些点才是真正与盒子的交点呢？要明白：</p>
+<p><strong>1. 只有当光线进入了所有的平面才算是真正进入了盒子中</strong><br><strong>2. 只要当光线离开了任意平面就算是真正离开了盒子</strong></p>
+<p>所以对每对平面的 $t_{min}$ 和 $t_{max}$ 做如下运算：<br>$$<br>t_{enter} &#x3D;max[t_{min}]\quad \quad \quad t_{exit} &#x3D;min[t_{max}]<br>$$<br>其中 $t_{enter} &#x3D;max[t_{min}]$ 和 $t_{exit} &#x3D;min[t_{max}]$ 分别对应了上述两点条件，而对应所举的2D例子，最终求出了两个真正的与包围盒的交点如最右边图所示。图形上可以理解为两者交集。</p>
+<p>光线一定会与包围盒有交点吗？显然不是，那么什么条件下才会有交点呢？</p>
+<p>当 $t_{enter}&lt;t_{exit}$ 的时候，光线所在直线一定在盒子中待过一段时间，也必然存在交点。但光线并不是直线，而是射线，除了保证了光线所在的直线在盒子里待过一段时间，还要考虑实际物理意义，具体如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528101328638.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>当 $t_{exit}&lt;0$ 时，可以想象光的起始点是在物体之前，所以才需要反向延伸，这种情况下是不可能有交点的。而 $t_{exit}&gt;&#x3D;0， t_{enter}&lt;0$ 时，对应光的起始位置原本就在包围盒内，所以一定与之相交。综上，光线与包围盒有交点的充分必要条件为：<br>$$<br>t_{enter}&lt;t_{exit}\quad \quad \quad t_{exit}&gt;&#x3D;0<br>$$<br>包围盒也是曲面（特殊的曲面，与 $xyz$ 轴垂直），自然可以用显示曲面的方法计算交点，直接套用得到：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528101945807.png" alt="img" style="zoom: 50%;" loading="lazy">
+
+<h3 id="均匀网格（Uniform-Grids）"><a href="#均匀网格（Uniform-Grids）" class="headerlink" title="均匀网格（Uniform Grids）"></a>均匀网格（Uniform Grids）</h3><p>现在已经可以通过事先对每个物体求一个包围盒，在与三角形面求交之前先对包围盒求交，达到不错加速效果。但是考虑这样两个极端情况：</p>
+<p><strong>1. 整个场景只有一个极其复杂的单一人物模型，那么只对这一个物体做包围盒的话，相当于对效率没有任何提升</strong><br><strong>2. 整个场景充斥着大量的细小模型，如草，花之类的，每个模型可能只有很少的面，如果此时对每个物体求包围盒，得到的包围盒数量会相当之多，对于光线追踪效率来说效率提升有限</strong></p>
+<p>基于以上两点考虑，<strong>AABB并不应只局限于以物体模型为单位，可以更加精细的考虑到以面为单位</strong>。另外对于场景的许许多多包围盒来说应该要有一种数据结构将其统领起来。因此如何更好的划分场景形成不同的AABB，使得划分之后的AABB能够更好的加速光线追踪，这就是接下来要考虑的问题关键！</p>
+<p>最简单的划分方法，均匀网格。</p>
+<p>第一步对所要考虑的场景找一个包围盒，第二步均匀划分这个大包围盒成网格，第三步在每个重叠小包围盒上存储物体模型信息，最后根据光线的方向与判断出所有相交的方格（这一步可以利用bresenham算法，移步至<a href="%5B(1%E6%9D%A1%E6%B6%88%E6%81%AF">直线光栅化</a> 计算机图形学三：光栅化-Rasterization_西电卢本伟的博客-CSDN博客](<a target="_blank" rel="noopener" href="https://blog.csdn.net/lbwnbnbnbnbnbnbn/article/details/125676084?spm=1001.2014.3001.5502))%E4%BA%86%E8%A7%A3%EF%BC%89%EF%BC%8C%E5%80%98%E8%8B%A5%E6%96%B9%E6%A0%BC%E4%B8%AD%E5%AD%98%E5%82%A8%E6%9C%89%E7%89%A9%E4%BD%93%EF%BC%8C%E5%86%8D%E8%BF%9B%E4%B8%80%E6%AD%A5%E4%B8%8E%E6%96%B9%E6%A0%BC%E4%B8%AD%E7%9A%84%E7%89%A9%E4%BD%93%E6%A8%A1%E5%9E%8B%E6%88%96%E6%98%AF%E9%9D%A2%E6%B1%82%E4%BA%A4%E3%80%82">https://blog.csdn.net/lbwnbnbnbnbnbnbn/article/details/125676084?spm=1001.2014.3001.5502))了解），倘若方格中存储有物体，再进一步与方格中的物体模型或是面求交。</a></p>
+<p><img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713114520935.png" alt="image-20220713114520935" loading="lazy"></p>
+<p>以上就是均匀网格划分的全部过程了，简单来说就是将空间划分为多个均匀的小的AABB，再根据光线方向找出相交grid（这一步并不需要判断所有方格，可以用brenham类似的方法来做），再判断grid中是否存储了模型信息，若有则进一步求交。（这种划分方法假设了找出相交方格要比直接判断与物体求交相对容易，因此划分方格数的多少也是性能的关键：方格太少，没有加速效果；方格太多，判断与方格的求交可能会拖累效率）</p>
+<p>因此这种方法最适合的场景就是空间中均匀布满了三角形面，如下图这种场景：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200528110932164.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>如果说场景较为空旷，物体较小且分离得比较开，那么均匀分割的效果就会很差了，因为会有很多无效的方格与光线的求交过程。</p>
+<h3 id="KD-Tree空间划分（Spatial-Partitions）"><a href="#KD-Tree空间划分（Spatial-Partitions）" class="headerlink" title="KD-Tree空间划分（Spatial Partitions）"></a>KD-Tree空间划分（Spatial Partitions）</h3><p>一些常用的空间划分方法：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020052811195387.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>第一种Oct-Tree，也就是八叉树，每次将空间分为8个相等的部分，再递归的对子空间进行划分。因为图中是2维例子，所以只划分了4部分。当划分的子空间足够小或是空间中三角形面的数量很少的时候会停止划分。这种方法的显著缺点是，随着维度的上升划分的空间数量会呈指数级增长。</p>
+<p>第二种KD-Tree，其每次将空间划分为两部分，且划分依次沿着 $x-axis，y-axis，z-axis$ （保持最规整的空间区域），如图中所示，第一次横着将2维空间分为上下，第二次再竖着将上下两个子空间分别划分为左右部分，依次递归划分，终止条件与八叉树类似。</p>
+<p>第三种BSP-Tree，其与KD-Tree类似，唯一不同的是划分不再沿着固定一轴，可以任意方向划分，缺点自然是划分的空间没有规则性，求交困难。</p>
+<p>为什么这种分法叫树？看下面的KD-Tree就可以知道答案。</p>
+<p>第一步将空间分为两部分，第二步对左右两个子空间换个方向再分为两部分（这里只画出了有半部分）</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713135706361.png" alt="image-20220713135706361" style="zoom: 80%;" loading="lazy">
+
+<p>如此递归的划分下去，且在划分过程当中遵循这样几点：</p>
+<p><strong>1. 依次沿着 $x-axis,y-axis,z-axis$ 划分，使得空间被划分的更加平衡</strong><br><strong>2. 划分的位置由空间中三角面的分布决定，具体细节不展开</strong><br><strong>3. 叶子节点存储对应空间的所有物体或三角面信息，中间节点仅存储指针指向两个子空间</strong><br><strong>4. 当划分空间太小或是子空间内只有少量三角形则停止划分</strong></p>
+<p>当KD-Tree建立完成之后，如何进行光线与物体求交判断呢？过程如下：</p>
+<p>第一步判断光线是否与最外层的包围盒相交，如果相交进一步判断是否与对应的两个子空间相交（因图中做了简化，最大包围盒的左半边并没继续进行划分，实际上应该要划分的，所以左半部分对应的1号空间是叶子节点），如果光线与之相交，进一步判断与存储与叶子节点的物体信息求交。左半边判断完之后，接着判断右半部分，同样如果对于有半部分存在相交情况，则对于右半部分的所有子空间，递归的执行这个步骤即可。</p>
+<p><img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713140549132.png" alt="image-20220713140549132" loading="lazy"></p>
+<p><strong>优点：</strong></p>
+<p>利用KD-Tree的结构来构建AABB的好处是倘若光线与哪一部分空间不相交，那么则可以省略该部分空间所有子空间的判断过程，在原始纯粹的AABB之上更进一步提升了加速效率。</p>
+<p><strong>缺点</strong>：</p>
+<p>缺点是<strong>判断包围盒与三角面的是否相交较难</strong>，因此划分的过程不是那么想象的简单，其次<strong>同一个三角面可能被不同的包围盒同时占有，这两个不同包围盒内的叶节点会同时存储这一个三角形面</strong>。</p>
+<p>KD-Tree划分方法技术在业界之中逐渐不再被使用，但依然有很多借鉴参考价值。</p>
+<h3 id="Bounding-Volume-Hierarchy（Object-Partitions）"><a href="#Bounding-Volume-Hierarchy（Object-Partitions）" class="headerlink" title="Bounding Volume Hierarchy（Object Partitions）"></a>Bounding Volume Hierarchy（Object Partitions）</h3><p>BVH与前几种方法最显著的区别就是，<strong>不再以空间作为划分依据，而是从对象的角度考虑，即三角形面</strong>，过程如下：</p>
+<p>第一步同样找出场景的整体包围盒作为根节点，第二步找到合适的划分点，将最大包围盒内的三角形面分为两部分，再分别重新就算新的包围盒，此时<strong>包围盒会重叠，但一个三角形面只会被存储在唯一的包围盒内，而这也就解决了KD-Tree的缺点！</strong></p>
+<p>接下来与KD-Tree的建立类似，递归的对所有子空间重复该步骤</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713141033794.png" alt="image-20220713141033794" style="zoom: 67%;" loading="lazy">
+
+<p>最终可以建立出如上图的所示的树形结构，同样为了画图方便，只进行了左半部分的划分，右半部分其实同理。</p>
+<p>细节：</p>
+<ol>
+<li>每次划分一般选择最长的那一轴划分，假设是x轴，那么划分点选择所有三角面的重心坐标在x坐标上的中位数进行划分，如此便能保证划分的三角形左右两边三角形数量尽可能差不多，<strong>当然也就使得树形结构建立的更加平衡，深度更小，平均搜索次数更少，提高了效率</strong>，学过数据结构的应该都知道。</li>
+<li>与KD-Tree一样，中间节点不存储物体三角面信息，只在叶节点中存储，终止条件可设定为当前包围盒内三角形数量足够少。</li>
+</ol>
+<p>最后给出这样一个BVH加速结构遍历节点的伪代码参考：</p>
+<pre class="line-numbers language-glsl" data-language="glsl"><code class="language-glsl"><span class="token function">Intersect</span><span class="token punctuation">(</span>Ray ray<span class="token punctuation">,</span> BVH node<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span>ray misses node<span class="token punctuation">.</span>bbox<span class="token punctuation">)</span> <span class="token keyword">return</span><span class="token punctuation">;</span>              <span class="token comment">//光线与包围盒不相交</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span>node is a leaf node <span class="token punctuation">)</span>                      <span class="token comment">//光线与包围盒相交且交点位于叶子节点</span>
+		test intersection with a1l objs<span class="token punctuation">;</span>           <span class="token comment">//光线与叶子节点中存储的物体信息进行求交</span>
+		<span class="token keyword">return</span> closest intersection<span class="token punctuation">;</span>
+    
+	hit1 <span class="token operator">=</span> <span class="token function">Intersect</span><span class="token punctuation">(</span>ray<span class="token punctuation">,</span> node<span class="token punctuation">.</span>child1<span class="token punctuation">)</span><span class="token punctuation">;</span>            <span class="token comment">//递归计算左孩子</span>
+	hit2 <span class="token operator">=</span> <span class="token function">Intersect</span><span class="token punctuation">(</span>ray<span class="token punctuation">,</span> node<span class="token punctuation">.</span>child2<span class="token punctuation">)</span><span class="token punctuation">;</span>            <span class="token comment">//递归计算右孩子</span>
+	<span class="token keyword">return</span> the closer of hit1<span class="token punctuation">,</span> hit2<span class="token punctuation">;</span>               <span class="token comment">//返回值为最近的交点</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>至此，基本的基于Whitted-Style光线追踪的知识到此为止，以下部分为进阶部分。</p>
+<h1 id="辐射度量学（Radiometry）"><a href="#辐射度量学（Radiometry）" class="headerlink" title="辐射度量学（Radiometry）"></a>辐射度量学（Radiometry）</h1><h2 id="为什么突然扯这个？"><a href="#为什么突然扯这个？" class="headerlink" title="为什么突然扯这个？"></a>为什么突然扯这个？</h2><p>在Blinn-Phong模型中，我们时如何定义光线的，好像根本就没有定义。就算最基本的光的强度我们都是简单的用 $I$ 来表示。这肯定是不对。其次，上述的Whited-Style光线追踪模型，它真的是一个正确的模型吗？显然不是，原因如下：</p>
+<p><strong>1. whited-style光线追踪只考虑了光滑面的镜面反射与折射，并没有对漫反射的光线进行追踪，而是直接返回当前着色点颜色</strong><br><strong>2. 在计算光源直接照射的贡献时，使用了Blinn-Phong模型，而Blinn-Phong模型本身就是一个不准确的经验模型，使用的这种模型的whited-style光线追踪自身自然也是不正确的</strong></p>
+<p>为此，更好的渲染模型路径追踪出现了，而在这之前，我们必须掌握一些辐射度量学的知识，它是对光照的一套测量系统和单位，能够准确的描述光线的物理性质。</p>
+<h2 id="一些必要定义"><a href="#一些必要定义" class="headerlink" title="一些必要定义"></a>一些必要定义</h2><h3 id="辐射能量（Radiant-Energy）和辐射通量-x2F-功率（Radiant-Flux-x2F-Power）"><a href="#辐射能量（Radiant-Energy）和辐射通量-x2F-功率（Radiant-Flux-x2F-Power）" class="headerlink" title="辐射能量（Radiant Energy）和辐射通量&#x2F;功率（Radiant Flux&#x2F;Power）"></a>辐射能量（Radiant Energy）和辐射通量&#x2F;功率（Radiant Flux&#x2F;Power）</h3><p>首先看一看Radiant energy的定义：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602161606617.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>所谓辐射能量其实非常直观，就是辐射出来的电磁能量，单位为焦耳。可以用物理当中的做功的大小来进行类比。</p>
+<p>接下来是Radiant flux(power)：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602161924326.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>所谓辐射通量或者说辐射功率，其实就是在辐射能量的基础之上除以时间，也就是单位时间的能量。同样也可以用物理当中的功率来进行类比。</p>
+<h3 id="辐射强度（Radiant-Intensity）"><a href="#辐射强度（Radiant-Intensity）" class="headerlink" title="辐射强度（Radiant Intensity）"></a>辐射强度（Radiant Intensity）</h3><p> Radiant itensity是指从一个光源出发某一方向上的亮度。看它的数学定义：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020060216290468.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>概括来说就是<strong>从光源发出的每单位立体角上的功率</strong>。立体角（solid angle）又是什么？</p>
+<p>solid angle其实就是对应二维空间中圆的弧度在三维空间中球上的拓展。首先看在二维计算弧度公式如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602163858748.png" alt="img" style="zoom: 50%;" loading="lazy">
+
+<p>即 $\theta &#x3D; \frac{l}{r}$ (中学知识)，那么对应在三维上的球的弧度(立体角)，只需进行一个简单的扩展如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602163550415.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>即立体角度所对应球上的投影面积比上半径的平方，整个球的立体角为 $4\pi$（整个球的面积是 $4 \pi^2r^2$，再除以 $r^2$）。</p>
+<p>那么对于Radiant intensity的定义当中，微分立体角 $d\omega$ 计算如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602164048533.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>这图就跟那高数书上二重积分一样一样的。首先确定空间中一个方向（通过 $\theta,\phi$），在这两个角度上分别增加一个微分值，则可以计算出如图中所示的对应到球上的投影面积。其中 $rd\theta$ 就是微分面积元的高，$rsin\theta d\phi$是微分面积元的宽，二者相乘，自然就是面积了，再根据立体角的定义除以 $r^2$ 即可得到微分立体角了。</p>
+<p>上述确定空间中一个方向（通过 $\theta,\phi$），这个方向就是为 $\omega$，然后才在此基础之上分别对 $\theta,\phi$ 增加 $d\theta,d\phi$ 经计算得到最终的 $d\omega$ ，因此Radiant intensity的物理含义此时就很清楚了，为光源向某一方向所发射出的单位立体角的功率，简而言之就是光源在某个方向上的亮度。（一定要弄清，不然极有可能和下面两个概念弄混）</p>
+<p>最后举一个对各向同性点光源计算Radiant intensity的例子：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602165347815.png" alt="img" style="zoom: 50%;" loading="lazy">
+
+<p>因为各项同性点光源所有方向上的亮度都与方向无关，因此立体角可以直接积分出来为 $4\pi$，最终计算得 $I &#x3D; \frac{\Phi}{4\pi}$。</p>
+<h3 id="irradiance"><a href="#irradiance" class="headerlink" title="irradiance"></a>irradiance</h3><p>没有合适的中文翻译，直接用英文了。来看irradiance的数学定义：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602171017427.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>由图可见，irradiance是指<strong>每单位照射面积所接收到的power</strong>。回想Blinn-Phong模型漫反射那个部分，我们考虑光线强度与什么有关呢？是入射光线与着色点的夹角以及光线自身的强度。在入射光线与着色点的夹角这块，着重强调了我们需要乘上一个 $cos\theta$。此外，光线自身的强度越远会越加衰减：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602172100580.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>该现象完全可以用irradiance解释，因为光的功率始终一致，离点光源所照射到的圆球面积也就越大，因此根据irradiance的式子，分母的面积值也就越大，irradiance也就越小。</p>
+<h3 id="radiance"><a href="#radiance" class="headerlink" title="radiance"></a>radiance</h3><p>最后来看radiance的定义：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602173920190.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>radiance就是指<strong>每单位立体角，每单位垂直面积的功率</strong>，直观来看的话，很像是Intensity和irradiance的结合。<strong>它同时指定了光的方向与照射到的表面所接受到的亮度</strong>。</p>
+<p>但这里有一个细微的区别，在irradiance中定义的<strong>每单位照射面积</strong>，而在radiance当中，为了更好的使其成为描述一条光线传播中的亮度，且在传播过程当中大小不随方向改变，所以在定义中关于接收面积的部分是<strong>每单位垂直面积</strong>，而这一点的不同也正解释了图中式子分母上的 $cos\theta$ ，具体可以观察如下图：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602174516592.png" alt="img" style="zoom: 50%;" loading="lazy">
+
+<p>即图中的 $dA$ 是irradiance中定义所对应的，而 ${d} A^{\perp}$才是radiance中所定义的面积。二者之间的关系为${d} A^{\perp} &#x3D; dAcos\theta$。</p>
+<p>在理解了radiance和irradiance的定义之后，再讨论讨论它们之间的关系，通过二者的定义式子，不难得出如下结果：<br>$$<br>L(p,\omega)&#x3D;\frac{dE(p)}{d\omega cos\theta}<br>$$<br>进一步推导得到：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602175841463.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>观察一下积分后的式子，$E(p)$ 就是点 $p$ 的irradiance，其物理含义是上文所提到过的点 $p$ 上<strong>每单位照射面积的功率</strong>，而 $L_i(p,\omega)$ 是radiance，指入射光<strong>每立体角，每垂直面积的功率</strong>，因此积分式子右边的 $cos\theta$ 解释了垂直面积，而对 $d\omega$ 积分，则是相当于对所有不同角度的入射光线做一个求和。那么该积分式子的物理含义便是，<strong>一个点（微分面积元）所接收到的亮度（irradiance），由所有不同方向的入射光线亮度（radiance）共同贡献得到</strong>。</p>
+<h2 id="双向反射分布函数（BRDF）"><a href="#双向反射分布函数（BRDF）" class="headerlink" title="双向反射分布函数（BRDF）"></a>双向反射分布函数（BRDF）</h2><p>通过上述所有辐射度量学各种概念的定义之后，我们可以从这样一个角度理解光线的反射，如下图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602183834969.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p><strong>一个点（微分面积元）在接受到一定方向上的亮度（$dE(\omega_i)$）之后，再向不同方向把能量辐射出去（$dL_r(\omega_r)$）</strong></p>
+<p>直观的理解，不同物体表面材质自然会把一定方向上的入射亮度 $dE(\omega_i)$ 反射到不同的方向的光线上 $dL_r(\omega_r)$。用上述概念解释，就是着色点所收到的irradiance经过反射产生radiance到其他方向。如理想光滑表面会把入射光线完全反射到镜面反射方向，其它方向则完全没有；如理想粗糙表面会把入射光线均匀的反射到所有方向。因此所谓<code>BRDF</code>就是描述这样一个从不同方向入射之后，反射光线分布情况的函数，定义如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602184807155.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>上图中下方的式子即为BRDF，它就收两个参数入射光方向 $\omega_i$，反射光方向 $\omega_r$，函数值为反射光的radiance与入射光的irradiance的比值。</p>
+<p>借助BRDF，可以定义出反射方程如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602185152756.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>即摄像机所接受到的 $\omega_r$ 方向上的反射光，是由所有不同方向上入射光线的irradiance经过反射贡献得到的（图中式子的$L_{i}\left(\mathrm{p}, \omega_{i}\right) \cos \theta_{i} \mathrm{d} \omega_{i}$），而不同方向入射光线的irradiance对反射方向 $\omega_r$ 的贡献程度则由物体表面材质决定，所以乘上了一个BRDF函数。如果对上述几个物理量的定义明确的话，这个式子并不难看懂。</p>
+<p>至此通过辐射度量学，以及BRDF最终得到的反射方程正是一个几乎完全正确的光照模型了。再仔细观察一下反射方程：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602190239224.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>不难发现，入射光线的radiance不仅仅是光源所造成，还有可能是其他物体上着色点的反射光线的radiance，恰好反射到当前的着色点，而其他物体上的反射光线的radiance依然也是这么个情况。这与whitted-style当中的光线追踪过程十分类似，也是一个递归的过程，所以说想要解这样一个方程还是比较难的。</p>
+<h2 id="渲染方程（The-Rendering-Equation）"><a href="#渲染方程（The-Rendering-Equation）" class="headerlink" title="渲染方程（The Rendering Equation）"></a>渲染方程（The Rendering Equation）</h2><p>反射方程明白了，渲染方程也就水到渠成。上述我们并没有讨论物体自身的发光情况，渲染方程就是在反射方程的基础之上添加了一个自发光项（Emission term）：<br>$$<br>L_o(p,\omega_o)&#x3D;L_e(p,\omega_o)+\int_{\Omega^+} L_i(p,\omega_i)f_r(p,\omega_i,\omega_o)(n \cdot \omega_i)d\omega_i<br>$$<br>其中 $L_e(p,\omega_o)$ 为自发光项，反射方程中的 $cos\theta$ 用 $n\cdot\omega_i$代替。</p>
+<p>接下来从一个点光源和单个物体的场景开始理解渲染方程：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020060219245867.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>点光源对一个点来说自然只有一个方向有入射光，所以这里没有了积分。多个点光源照射一个物体的情况：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602192631208.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>将这些所有的点光源的贡献全部求和即可，那么如果点光源变成了面光源呢？如下图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602192803160.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>其实面光源就相当于无穷多个点光源的集合，只需要对面光源所在的立体角范围进行积分，并且能够确定不同立体角方向的面光源的入射光radiance即可。那么更进一步再在场景当中加入其它物体，使得物体之间发生光线交互之后是什么情况呢：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602193117114.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>如上图所示，可以把其它物体同样考虑成面光源，对其所占立体角进行积分即可，只不过对其它物体的立体角积分不像是面光源所有入射方向都有radiance，物体的立体角可能只有个别几个方向有入射的radiance（即多次物体间光线反射之后才恰好照射到着色点），其它方向没有，但本质上都可以视作是面光源。</p>
+<p>观察一下图中的渲染方程可以发现除了两个入射和反射的radiance，其它所有项都是知道的，可以将上式进一步写成如下图下方所示的式子：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602193941152.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>其中各项与原渲染方程中一一对应（这种简写在数学中很常见），再接着进一步化简，把该式子离散化写为线性的形式：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602194505631.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>经过两步不是很清楚但其实是正确的数学推导之后（狗头），得到了这样一个式子：<br>$$<br>L&#x3D;E+KL<br>$$<br>其中 $L$ 其实就是想要求得的反射光，$E$ 是自发光其实就是光源的发光项，$K$可以理解为对光线进行反射的一种算子操作。那么利用线性代数的知识很容易就可以推导出 $L$ 的结果如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713152814326.png" alt="image-20220713152814326" style="zoom:50%;" loading="lazy">
+
+<p>其中 $I$ 为单位矩阵，再接着对 $(I-K)^{-1}$ 使用广义二项式定理得到：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/image-20220713152909307.png" alt="image-20220713152909307" style="zoom:50%;" loading="lazy">
+
+<p>仔细观察这个式子，注意 $E$ 是光源所发出的光，$K$ 为反射算子，这样一个式子的物理含义如下图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020060219535985.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>$E$ 为自身发出的光，$KE$ 则代表对光源反射一次的结果，即直接光照，那么前两项之和就是光栅化当中Blinn-phong模型着色所考虑的结果。而对于全局光照来说，可不能就考虑这么几项，光在空间中是经过无数次的反射折射的，故方程正确地考虑了 $K^2E$ ，即一次弹射的间接照明，$K^3E$ 就是两次弹射的间接照明，依次类推。</p>
+<p>一次反射直接光照，没有被光照直接照射的地方全部都是黑色的：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602200341414.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>两次反射，考虑到一次弹射的间接光照，没有被光源直接照射的地方由于收到了其他物体反射过来的光，不再是黑色：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602200239736.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>三次反射，考虑到两次弹射的间接光照，相较于两次又有新的反射折射，亮度继续增加：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200602200259364.png" alt="img" style="zoom: 50%;" loading="lazy">
+
+<p>但光线能量传播终究是有损失的，越来越多的反射折射会使得增加的亮度越来越少，最终收敛于一个峰值。</p>
+<h1 id="路径追踪（Path-Tracing）"><a href="#路径追踪（Path-Tracing）" class="headerlink" title="路径追踪（Path Tracing）"></a>路径追踪（Path Tracing）</h1><p>可以看看英伟达的官博 <a target="_blank" rel="noopener" href="https://blogs.nvidia.com/blog/2022/03/23/what-is-path-tracing/">What Is Path Tracing? </a></p>
+<p>其中给了这么一幅图：</p>
+<p><img src="https://blogs.nvidia.com/wp-content/uploads/2022/03/path-tracing-ray-tracing-rasterization-672x353.png" alt="img" loading="lazy"></p>
+<p>可以看到效果还是挺明显的，path tracing更加炫酷（但我为啥觉得ray tracing更真实呢哈哈）。总之来说，path tracing相较于ray tracing有更好的渲染效果（上面介绍辐射度量学就说了）。</p>
+<p>要想实现路径追踪，就要用到上述的渲染方程，具体定义及数学公式是给出来了，但是如何解是一个问题。为此，引入蒙特卡洛积分。</p>
+<h2 id="蒙特卡洛积分（Monte-Carlo-Integration）"><a href="#蒙特卡洛积分（Monte-Carlo-Integration）" class="headerlink" title="蒙特卡洛积分（Monte Carlo Integration）"></a>蒙特卡洛积分（Monte Carlo Integration）</h2><p><strong>蒙特卡洛积分的目的：</strong> 当一个积分很难通过解析的方式得到答案的时候可以通过蒙特卡洛的方式近似得到积分结果，如下图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608145324235.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>显然对于这样一个函数，很难去用一个数学式子去表示，因此无法用一般解析的方法直接求得积分值，而这时候就可以采用蒙特卡洛的思想了。</p>
+<p><strong>蒙特卡洛积分的原理及做法：</strong> 对函数值进行多次采样求均值作为积分值的近似。</p>
+<p>该做法十分容易理解，想象一下如果对上图这个函数值进行<strong>均匀采样</strong>的话，其实就相当于将整个积分面积切成了许许多多个长方形，然后将这些小长方形的面积全部加起来。它可以指定一个分布来对被积分的值进行采样，定义如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608150124150.png" alt="img" style="zoom: 50%;" loading="lazy">
+
+<p>如图所示，我们希望求出一个函数 $f(x)$ 在积分域 $[ a , b ]$上的积分值，选定一个采样的分布 $p(x)$，概率论中称之为概率密度函数。</p>
+<blockquote>
+<p>在数学中，连续型随机变量的<strong>概率密度函数</strong>（probability density function，pdf），在不至于混淆时可以简称为<strong>密度函数</strong>，是一个描述这个随机变量的输出值，在某个确定的取值点附近的可能性的函数。而随机变量的取值落在某个区域之内的概率则为概率密度函数在这个区域上的积分。当概率密度函数存在的时候，累积分布函数是概率密度函数的积分。概率密度函数一般以小写标记。</p>
+<p>满足的性质：$\int _{-\infty}^{+\infty}f(x)dx&#x3D;1$</p>
+</blockquote>
+<p>为了方便，所有的采样都使用均匀采样，因此很容易推出：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608151822251.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>我们只需要知道，<strong>蒙特卡洛在此来说就是一个帮助求得困难积分值的方法，具体方法是用采样点的函数值除以该点的概率密度，将所有点所得的值相加最后取平均数即得所求函数得定积分值</strong>。</p>
+<h2 id="蒙特卡洛路径追踪（Monte-Carlo-Path-Tracing）"><a href="#蒙特卡洛路径追踪（Monte-Carlo-Path-Tracing）" class="headerlink" title="蒙特卡洛路径追踪（Monte Carlo Path Tracing）"></a>蒙特卡洛路径追踪（Monte Carlo Path Tracing）</h2><p>有了这个基础，我们就可以解渲染方程了，先回顾一下：<br>$$<br>L_o(p,\omega_o)&#x3D;L_e(p,\omega_o)+\int_{\Omega^+} L_i(p,\omega_i)f_r(p,\omega_i,\omega_o)(n \cdot \omega_i)d\omega_i<br>$$<br>要想解出以上方程的解主要有两个难点：</p>
+<ol>
+<li>积分的计算</li>
+<li>递归形式</li>
+</ol>
+<p>我们先对渲染方程做出一点小修改，先不考虑发光项 $L_e(p,\omega_o)$，以方便进行计算推导：<br>$$<br>L_o(p,\omega_o)&#x3D;\int_{\Omega^+} L_i(p,\omega_i)f_r(p,\omega_i,\omega_o)(n \cdot \omega_i)d\omega_i<br>$$<br>观察该修改过之后的方程其实就只是一个单纯的积分计算了，其物理含义为着色点 $p$ 到摄像机或人眼的Radiance值。</p>
+<p>从具体例子出发，首先仅仅考虑直接光照：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608152759132.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>由蒙特卡洛积分我们知道，对于一个困难积分只要选定一个被积分变量的采样分布即可得到积分结果的近似值，而此时的被积分值为 $\omega_i$，选定 $\omega_i \sim p(\omega_i)$ ，不难得出积分近似结果如下：<br>$$<br>L_o(p,\omega_o)&#x3D;\frac{1}{N}\sum^N_{i&#x3D;1}\frac{L_i(p,\omega_i)f_r(p,\omega_i,\omega_o)(n \cdot \omega_i)}{p(\omega_i)}<br>$$<br>单独考虑直接光照，因此只有当采样的方向 $\omega_i$ 击中光源的时候，光源才会对该着色点有贡献，计算伪代码如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608154331950.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>显然单独仅仅考虑直接光照自然是不够的，还需要间接光照，即当采样的 $\omega_i$ 方向碰撞到了别的物体，如下图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608154548826.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>此时采样的光线碰撞到了另一个物体的 $Q$ 点，那么该条路径对着色点 $P$ 的贡献是多少呢？自然是<strong>在点 $Q$ 的直接光照再乘上反射到该方向上的百分比了</strong>。这是一个类似光线追踪的递归过程，不同在于该方法通过对光线方向的采样从而找出一条条可行的路径，这也正是为什么叫路径追踪的原因，伪代码如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608155149815.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>至此，我们成功通过蒙特卡洛的方式解出了渲染方程的积分值，也通过考虑直接光照与间接光照解决了递归的问题。但该方法至此有一个非常致命的问题：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/2020060816013460.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>通过每次对光线方向的采样从而解出方程，假设每次采样100条，那么从人眼出发的第一次采样就是100条，在进行第二次反射之后再采样就是10000条，依次类推，反射越多次光线数量便会爆炸增长，计算量会无法负担，那么如何才能使得光线数量不爆炸增长呢？<strong>只有每次采样都只采用一个方向。</strong></p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608160521691.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>每次如果只采样一个方向那么所带来的问题也是显而易见的，积分计算的结果不准确，虽然蒙特卡洛积分是无偏估计，但样本越少显然偏差越大。但该问题很好解决，如果每次只去寻找一条路径结果不好，那么重复多次寻找到多条路径，将多条路径的结果求得平均即可。如下图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608160911411.png" alt="img" style="zoom: 67%;" loading="lazy">
+
+<p>改良之后的Path Tracing伪代码如下：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608161049501.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>通过对经过像素的光线重复采样，每次在反射的时候只按分布随机选取一个方向，解决了只对经过像素的光线采样一次，而对反射光线按分布采样多次所导致的光线爆炸问题。</p>
+<p>那么现在所有的问题都解决了吗？还没有，之前一直强调的递归问题（上述中体现在shade函数里）没有解决。在现实世界中，光线确实无限折射反射的，但是在程序中我们要确保有穷性，但是人为给一个限定的反射限定次数又显得很怪（ray tracing中我们是这样做的），我们并不知道最好的反射次数是多少。这里十分精妙得采用了俄罗斯轮盘赌(Russian Roulette)。</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608161623874.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>给你一把左轮，两发子弹，你不知道哪一发会真正的射出子弹，因此拿这把左轮射自己，你有4&#x2F;6的概率活下来，这就是俄罗斯轮盘赌的概念。将其应用在路径追踪当中，首先设定一个概率 $P$ , 有 $P$ 的概率光线会继续递归并设置返回值为 $L_o &#x2F;P$ ，有 $1-P$ 的概率光线停止递归，并返回0。这样巧妙的设定之下光线一定会在某次反射之后停止递归，并且计算的结果依然是无偏的，因为Radiance的期望不变，证明如下：<br>$$<br>E&#x3D;P*\frac{L_o}{P}+(1-P)*0&#x3D;L_o<br>$$<br>shade函数的伪代码变更如下，使得可以停止递归了：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608162504928.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>至此，路径追踪算法只剩最后一个小问题。就是效率非常的低下，如图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608162750373.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>在每次计算直接光照的时候，通过均匀采样任选一个方向，但只有较少得光线可以返回光源，尤其当光源较小的时候，这种现象越明显，大量采样的光线都被浪费了。</p>
+<p>因此在计算直接光照的时候改进为<strong>直接对光源进行采样</strong>。这样所有采样的光线都一定会击中光源（如果中间没有别的物体），没有光线再会被浪费了。假设光源的面积为A，那么对光源进行采样的 $pdf &#x3D; \frac{1}{A}$（因为 $\int \operatorname{pdf} d A&#x3D;1$，概论密度函数性质），但原始的渲染方程：<br>$$<br>L_o(p,\omega_o)&#x3D;\int_{\Omega^+} L_i(p,\omega_i)f_r(p,\omega_i,\omega_o)(n \cdot \omega_i)d\omega_i<br>$$<br>很明显是对光线方向 $\omega_i$ 进行积分的，如果想要对光源进行采样的并依然使用蒙题卡洛的方法，那么一定要将其修改为对光源面积 $dA$ 的积分，换言之就是需要找到 $dA$ 与 $\omega_i$ 的关系即可。如下图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608163948436.png" alt="img" style="zoom:50%;" loading="lazy">
+
+<p>关系式中的 $cos\theta^{\prime}$ 是为了计算出光源上微分面积元正对半球的面积，之后再按照立体角的定义 $\mathrm{d} \omega&#x3D;\frac{\mathrm{d} A}{r^{2}}$，除以着色点 $x$ 与光源采样点 $x’$ 距离的平方即可。于是根据图中二者的关系可将渲染方程改写如下：<br>$$<br>L_o(p,\omega_o)&#x3D;\int_{\Omega^+} L_i(p,\omega_i)f_r(p,\omega_i,\omega_o)(n \cdot \omega_i)d\omega_i<br>&#x3D;\int_{A} L_i(p,\omega_i)f_r(p,\omega_i,\omega_o)\frac{cos\theta cos\theta^{\prime}}{||x’-x||^2}dA<br>$$<br>这样便成功从 $\omega_i$ 积分转到了对光源面积 $A$ 的积分，就可以利用蒙特卡洛的方法对光源进行采样从而计算直接光照的积分值了，对于间接光照，依然采用先前的方法进行光线方向的均匀采样。最终伪代码如下，分直接光照和间接光照两部分计算：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608165058497.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>计算直接光照的时候还需要判断光源与着色点之间是否有物体遮挡（上述我们假设了两者之间没有别的物体），该做法也很简单，只需从着色点 $x$ 向光源采样点 $x’$ 发出一条检测光线判断是否与光源之外的物体相交即可，如果有遮挡，直接光照这部分就没有了。如图所示：</p>
+<img src="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/20200608165458404.png" alt="img" style="zoom:67%;" loading="lazy">
+
+<p>至此，我们终于理顺了完整的路径追踪。整个过程还算是比较清晰的，发现问题解决问题，是学习任意一门学问都要经历的过程。</p>
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>xdlbw</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/" title="计算机图形学六：光线追踪-Ray Tracing">https://xdlbw.github.io/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%AD%EF%BC%9A%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA-Ray-Tracing/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/07/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%BA%94%EF%BC%9A%E5%87%A0%E4%BD%95-Geometry/" rel="next" title="计算机图形学五：几何-Geometry"><span class="post-nav-text">计算机图形学五：几何-Geometry</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>如果您有任何关于博客内容的相关讨论，欢迎前往 <a href="https://github.com/YunYouJun/yunyoujun.github.io/discussions" target="_blank">GitHub Discussions</a> 与我交流。</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2022 </span><a class="with-love" id="animate" target="_blank" rel="noopener" href="https://github.com/xdlbw"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></a><span class="author"> xdlbw</span></div><div class="live-time"><span>本博客已经哼哧哼哧地运行</span><span id="display_live_time"></span><span class="moe-text">(ง ˙o˙)ว</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2022-04-18T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com" target="blank" title="又拍云"><img height="30" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
